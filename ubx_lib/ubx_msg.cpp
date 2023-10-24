@@ -70,7 +70,7 @@ const std::map<uint8_t, std::string> GNSS_FIX_TYPE = {
 
 /**
  * @brief   Should index into current message and return the payload of the UBX
- * message
+            message
  * @param   msg      ubx message stored as vector (dynmaic list)
  * @return  Returns the payload of the message as new vector
  */
@@ -91,8 +91,8 @@ std::vector<uint8_t> payloadFromMessage(const std::vector<uint8_t> &msg) {
 
 /**
  * @brief   Creates a ubx message given message class and id. If a length is
- specified the message will be populated with 0x00. If a payload is specified
- the message will be populated with the payloads content.
+            specified the message will be populated with 0x00. If a payload is
+ specified the message will be populated with the payloads content.
  * @param   msg_class   1 byte
  * @param   msg_id      1 byte
  * @param   length      default to 0
@@ -144,4 +144,157 @@ std::pair<uint8_t, uint8_t> computeChecksum(const std::vector<uint8_t> &msg) {
   }
 
   return {ck_a, ck_b};
+}
+
+/**
+ * @brief   Converts msg class into user readable string
+ * @param   msg_cls   msg class is in byte or numerical form
+ * @return  Returns string form of msg class
+ */
+std::string msgClassToString(uint8_t msg_cls) {
+  if (msg_cls == NAV_CLASS) {
+    return "Navigation";
+  } else if (msg_cls == RXM_CLASS) {
+    return "Receiver Manager";
+  } else if (msg_cls == INF_CLASS) {
+    return "Information";
+  } else if (msg_cls == ACK_CLASS) {
+    return "ACK/NAK";
+  } else if (msg_cls == CFG_CLASS) {
+    return "Configuration";
+  } else if (msg_cls == UPD_CLASS) {
+    return "Firmware update";
+  } else if (msg_cls == MON_CLASS) {
+    return "Monitoring";
+  } else if (msg_cls == AID_CLASS) {
+    return "AssistNow messages";
+  } else if (msg_cls == TIM_CLASS) {
+    return "Timing";
+  } else if (msg_cls == ESF_CLASS) {
+    return "External Sensor Fusion Messages";
+  } else if (msg_cls == MGA_CLASS) {
+    return "Multiple GNSS Assistance Messages";
+  } else if (msg_cls == LOG_CLASS) {
+    return "Logging";
+  } else if (msg_cls == SEC_CLASS) {
+    return "Security";
+  } else if (msg_cls == HNR_CLASS) {
+    return "High rate navigation results";
+  } else {
+    return std::to_string(msg_cls);
+  }
+}
+
+/**
+ * @brief   This function simply converts the msg_id (message identifier) to a
+ string. It returns the string representation of the msg_id as-is.
+ */
+std::string msg_id_to_string(uint8_t msg_id) { return std::to_string(msg_id); }
+
+/**
+ * @brief   This function converts a 2-byte sequence represented in
+ little-endian byte order (least significant byte first) into an integer. It
+ performs bitwise operations to combine the bytes into a single integer value.
+ */
+uint16_t u2_to_int(const std::vector<uint8_t> &little_endian_bytes) {
+  if (little_endian_bytes.size() < 2) {
+    // Handle error or return a default value
+    return 0;
+  }
+  return (static_cast<uint16_t>(little_endian_bytes[1]) << 8) |
+         little_endian_bytes[0];
+}
+
+/**
+ * @brief   Similar to the previous function, this one converts a 4-byte
+ sequence in little-endian order into an integer by performing bitwise
+ operations to combine the bytes into a single 32-bit integer.
+ */
+uint32_t u4_to_int(const std::vector<uint8_t> &little_endian_bytes) {
+  if (little_endian_bytes.size() < 4) {
+    // Handle error or return a default value
+    return 0;
+  }
+  return (static_cast<uint32_t>(little_endian_bytes[3]) << 24) |
+         (static_cast<uint32_t>(little_endian_bytes[2]) << 16) |
+         (static_cast<uint32_t>(little_endian_bytes[1]) << 8) |
+         little_endian_bytes[0];
+}
+
+/**
+ * @brief   This function converts a 2-byte sequence in little-endian order into
+ * a signed integer.
+ */
+int16_t i2_to_int(const std::vector<uint8_t> &little_endian_bytes) {
+  if (little_endian_bytes.size() < 2) {
+    // Handle error or return a default value
+    return 0;
+  }
+  return static_cast<int16_t>(
+      (static_cast<uint16_t>(little_endian_bytes[1]) << 8) |
+      little_endian_bytes[0]);
+}
+
+/**
+ * @brief   Similar to the previous function, this one converts a 4-byte
+ sequence in little-endian order into a signed 32-bit integer
+ */
+int32_t i4_to_int(const std::vector<uint8_t> &little_endian_bytes) {
+  if (little_endian_bytes.size() < 4) {
+    // Handle error or return a default value
+    return 0;
+  }
+  return static_cast<int32_t>(
+      (static_cast<uint32_t>(little_endian_bytes[3]) << 24) |
+      (static_cast<uint32_t>(little_endian_bytes[2]) << 16) |
+      (static_cast<uint32_t>(little_endian_bytes[1]) << 8) |
+      little_endian_bytes[0]);
+}
+
+/**
+ * @brief   This function converts an integer into a 2-byte sequence represented
+            in little-endian byte order.
+ */
+std::vector<uint8_t> int_to_u2(uint16_t integer) {
+  return {static_cast<uint8_t>(integer), static_cast<uint8_t>(integer >> 8)};
+}
+
+/**
+ * @brief   Similar to the previous function, this one converts an integer into
+ a 4-byte sequence in little-endian byte order
+ */
+std::vector<uint8_t> int_to_u4(uint32_t integer) {
+  return {static_cast<uint8_t>(integer), static_cast<uint8_t>(integer >> 8),
+          static_cast<uint8_t>(integer >> 16),
+          static_cast<uint8_t>(integer >> 24)};
+}
+
+/**
+ * @brief   This function converts an integer into a 2-byte sequence in
+ little-endian order, treating it as a signed integer.
+ */
+std::vector<uint8_t> int_to_i2(int16_t integer) {
+  return int_to_u2(static_cast<uint16_t>(integer));
+}
+
+/**
+ * @brief   Similar to the previous function, this one converts an integer into
+ a 4-byte sequence in little-endian order, treating it as a signed 32-bit
+ integer.
+ */
+std::vector<uint8_t> int_to_i4(int32_t integer) {
+  return int_to_u4(static_cast<uint32_t>(integer));
+}
+
+/**
+ * @brief   This function looks up a GNSS fix type and if a match is found, it
+ returns the corresponding string representation of the fix type. If no match is
+ found, it returns the string "reserved / no fix."
+ */
+std::string get_gnss_fix_type(uint8_t fix_flag) {
+  auto it = GNSS_FIX_TYPE.find(fix_flag);
+  if (it != GNSS_FIX_TYPE.end()) {
+    return it->second;
+  }
+  return "reserved / no fix";
 }
