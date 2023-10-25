@@ -63,7 +63,9 @@ int32_t SAM_M8Q::available_bytes() {
  * @param   buffer  Vector containing the message to be written
  */
 void SAM_M8Q::write_message(const std::vector<uint8_t>& buffer) {
-    // ...
+  SMBus bus(curr_i2c_bus);
+  i2c_msg msg_out(curr_i2c_addr, I2C_MSG_WRITE, buffer.size(), const_cast<uint8_t*>(buffer.data()));
+  bus.i2c_rdwr({msg_out});
 }
 
 /**
@@ -71,7 +73,21 @@ void SAM_M8Q::write_message(const std::vector<uint8_t>& buffer) {
  * @return  Vector containing the read message
  */
 std::vector<uint8_t> SAM_M8Q::read_message() {
-    // ...
+  int32_t msg_length = available_bytes();
+  std::vector<uint8_t> msg;
+
+  if (msg_length > UBX_MSG::MAX_MESSAGE_LENGTH) {
+	  return msg;
+  }
+
+  {
+	  SMBus bus(curr_i2c_bus);
+	  for (int32_t i = 0; i < msg_length; ++i) {
+		  msg.push_back(bus.read_byte_data(curr_i2c_addr, DATA_STREAM_REGISTER));
+	  }
+  }
+
+  return msg;
 }
 
 /**
@@ -81,7 +97,6 @@ std::vector<uint8_t> SAM_M8Q::read_message() {
  * @return  Vector containing the received message
  */
 std::vector<uint8_t> SAM_M8Q::poll_message(int32_t msg_class, int32_t msg_id) {
-    // ...
 }
 
 /**
@@ -104,7 +119,6 @@ std::vector<uint8_t> SAM_M8Q::wait_for_message(int32_t time_out_s, double interv
  * @return  True if the message was acknowledged, false otherwise
  */
 bool SAM_M8Q::wait_for_acknowledge(int32_t msg_class, int32_t msg_id, bool verbose) {
-    // ...
 }
 
 /**
@@ -114,6 +128,5 @@ bool SAM_M8Q::wait_for_acknowledge(int32_t msg_class, int32_t msg_id, bool verbo
  * @return  A map containing the PVT data
  */
 std::map<std::string, int32_t> SAM_M8Q::get_pvt(bool polling, int32_t time_out_s) {
-    // ...
 }
 
