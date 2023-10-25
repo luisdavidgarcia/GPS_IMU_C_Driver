@@ -9,7 +9,9 @@ SAM_M8Q::SAM_M8Q(int32_t i2c_addr, int32_t i2c_bus) : curr_i2c_addr(i2c_addr), c
  * @brief   Sets the communication protocol to UBX (only) both for input and output
  */
 void SAM_M8Q::ubx_only() {
-    // ...
+  std::vector<uint8_t> payload = {0x00, 0x00, 0x00, 0x00, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00};
+  std::vector<uint8_t> message = UBX_MSG::compose_message(UBX_MSG::CFG_CLASS, UBX_MSG::CFG_PRT, 20, payload);
+  write_message(message);
 }
 
 /**
@@ -21,7 +23,7 @@ void SAM_M8Q::ubx_only() {
  * @param   freq        Frequency value
  */
 void SAM_M8Q::set_message_frequency(int32_t msg_class, int32_t msg_id, int32_t freq) {
-    // ...
+
 }
 
 /**
