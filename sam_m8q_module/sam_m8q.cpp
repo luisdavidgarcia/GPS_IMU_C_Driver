@@ -23,7 +23,9 @@ void SAM_M8Q::ubx_only() {
  * @param   freq        Frequency value
  */
 void SAM_M8Q::set_message_frequency(int32_t msg_class, int32_t msg_id, int32_t freq) {
-
+    std::vector<uint8_t> payload = {static_cast<uint8_t>(msg_class), static_cast<uint8_t>(msg_id), static_cast<uint8_t>(freq), 0x00, 0x00, 0x00, 0x00, 0x00};
+    std::vector<uint8_t> message = UBX_MSG::compose_message(UBX_MSG::CFG_CLASS, UBX_MSG::CFG_MSG, 8, payload);
+    write_message(message);
 }
 
 /**
