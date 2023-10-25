@@ -9,6 +9,7 @@
 
 #define DEFAULT_I2C_ADDRESS 0x42
 #define DATA_STREAM_REGISTER 0xFF
+#define DEFAULT_I2C_BUS 1 
 
 #define YEAR_TAG "year"
 #define MONTH_TAG "month"
@@ -43,14 +44,31 @@
 #define MAGNETIC_DECLINATION_TAG "magnetic_declination"
 #define MAG_DEC_ACCURACY_TAG "mag_deg_acc"
 
-class SAM_M8Q {
-  public:
-	
-	// Constructor
-	// Methods
-  
-  private:
+#include <vector>
+#include <map>
+#include "UBX_MSG.h"  // Include the UBX message handling header
 
-}
+class SAM_M8Q {
+  private:
+      int32_t curr_i2c_addr;
+      int32_t curr_i2c_bus;
+      std::map<std::string, int32_t> pvt_data;
+
+  public:
+      // Constructor
+      SAM_M8Q(int32_t i2c_addr = DEFAULT_I2C_ADDRESS, int32_t i2c_bus = 1);
+      // Destructor
+      ~SAM_M8Q() = default;
+      void ubx_only();
+      void set_message_frequency(int32_t msg_class, int32_t msg_id, int32_t freq);
+      void set_measurement_frequency(int32_t measurement_period_ms, int32_t navigation_rate, int32_t timeref);
+      int32_t available_bytes();
+      void write_message(const std::vector<uint8_t>& buffer);
+      std::vector<uint8_t> read_message();
+      std::vector<uint8_t> poll_message(int32_t msg_class, int32_t msg_id);
+      std::vector<uint8_t> wait_for_message(int32_t time_out_s, double interval_s, int32_t msg_cls, int32_t msg_id);
+      bool wait_for_acknowledge(int32_t msg_class, int32_t msg_id, bool verbose);
+      std::map<std::string, int32_t> get_pvt(bool polling, int32_t time_out_s);
+};
 
 #endif // SAM_M8Q
