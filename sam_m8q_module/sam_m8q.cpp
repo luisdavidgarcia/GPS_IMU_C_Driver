@@ -97,6 +97,9 @@ std::vector<uint8_t> SAM_M8Q::read_message() {
  * @return  Vector containing the received message
  */
 std::vector<uint8_t> SAM_M8Q::poll_message(int32_t msg_class, int32_t msg_id) {
+  std::vector<uint8_t> msg = UBX_MSG::compose_message(msg_class, msg_id, 0);
+  write_message(msg);
+  return wait_for_message(1, 0.01, msg_class, msg_id);
 }
 
 /**
@@ -108,7 +111,19 @@ std::vector<uint8_t> SAM_M8Q::poll_message(int32_t msg_class, int32_t msg_id) {
  * @return  Vector containing the received message, or an empty vector if timed out
  */
 std::vector<uint8_t> SAM_M8Q::wait_for_message(int32_t time_out_s, double interval_s, int32_t msg_cls, int32_t msg_id) {
-    // ...
+  auto start_time = std::chrono::high_resolution_clock::now();
+  std::vector<uint8_t> to_compare = {UBX_MSG::SYNC_CHAR_1, UBX_MSG::SYNC_CHAR_2, static_cast<uint8_t>(msg_cls), static_cast<uint8_t>(msg_id)};
+  std::vector<uint8_t> msg;
+
+  while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - start_time).count() < time_out_s) {
+	  msg = read_message();
+	  if (msg.size() >= to_compare.size() && std::equal(to_compare.begin(), to_compare.end(), msg.begin())) {
+		  return msg;
+	  }
+	  std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int32_t>(interval_s * 1000)));
+  }
+
+  return msg;
 }
 
 /**
