@@ -134,6 +134,20 @@ std::vector<uint8_t> SAM_M8Q::wait_for_message(int32_t time_out_s, double interv
  * @return  True if the message was acknowledged, false otherwise
  */
 bool SAM_M8Q::wait_for_acknowledge(int32_t msg_class, int32_t msg_id, bool verbose) {
+    bool ack = false;
+    std::vector<uint8_t> msg = wait_for_message(1, 0.01, UBX_MSG::ACK_CLASS);
+    if (!msg.empty()) {
+        if (msg[3] == UBX_MSG::ACK_ACK && msg[6] == static_cast<uint8_t>(msg_class) && msg[7] == static_cast<uint8_t>(msg_id)) {
+            ack = true;
+        }
+    }
+
+    if (verbose) {
+        std::cout << " A message of class : " << UBX_MSG::msg_class_to_string(msg[6]) << " and id : " << static_cast<int32_t>(msg[7])
+                  << " was " << (ack ? "" : "not ") << "acknowledged" << std::endl;
+    }
+
+    return ack;
 }
 
 /**
