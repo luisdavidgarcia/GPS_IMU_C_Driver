@@ -35,7 +35,12 @@ void SAM_M8Q::set_message_frequency(int32_t msg_class, int32_t msg_id, int32_t f
  * @param   timeref                 The time system to which measurements are aligned
  */
 void SAM_M8Q::set_measurement_frequency(int32_t measurement_period_ms, int32_t navigation_rate, int32_t timeref) {
-    // ...
+    std::vector<uint8_t> payload = UBX_MSG::int_to_u2(measurement_period_ms);
+    payload.insert(payload.end(), UBX_MSG::int_to_u2(navigation_rate).begin(), UBX_MSG::int_to_u2(navigation_rate).end());
+    payload.insert(payload.end(), UBX_MSG::int_to_u2(timeref).begin(), UBX_MSG::int_to_u2(timeref).end());
+
+    std::vector<uint8_t> message = UBX_MSG::compose_message(UBX_MSG::CFG_CLASS, UBX_MSG::CFG_RATE, 6, payload);
+    write_message(message);
 }
 
 /**
@@ -44,7 +49,13 @@ void SAM_M8Q::set_measurement_frequency(int32_t measurement_period_ms, int32_t n
  * @return  Number of available bytes
  */
 int32_t SAM_M8Q::available_bytes() {
-    // ...
+  uint8_t msb, lsb;
+  {
+	  SMBus bus(curr_i2c_bus);
+	  msb = bus.read_byte_data(curr_i2c_addr, DATA_STREAM_REGISTER);
+	  lsb = bus.read_byte_data(curr_i2c_addr, DATA_STREAM_REGISTER + 1);
+  }
+  return (msb << 8) | lsb;
 }
 
 /**
