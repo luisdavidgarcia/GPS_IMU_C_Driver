@@ -157,5 +157,109 @@ bool SAM_M8Q::wait_for_acknowledge(int32_t msg_class, int32_t msg_id, bool verbo
  * @return  A map containing the PVT data
  */
 std::map<std::string, int32_t> SAM_M8Q::get_pvt(bool polling, int32_t time_out_s) {
+    if (polling) {
+        std::vector<uint8_t> message = UBX_MSG::compose_message(UBX_MSG::NAV_CLASS, UBX_MSG::NAV_PVT);
+        write_message(message);
+    }
+
+    std::vector<uint8_t> read = wait_for_message(time_out_s, 0.01, UBX_MSG::NAV_CLASS, UBX_MSG::NAV_PVT);
+    std::map<std::string, int32_t> pvt_data;
+
+    if (!read.empty()) {
+        int32_t start_payload = 6;
+
+        // WARNING: POSITION_DOP AND ITOW ARE MISSING (NOT RETRIEVED)
+
+        // Time solution
+        int32_t year = UBX_MSG::u2_to_int({read[start_payload + 4], read[start_payload + 5]});
+        int32_t month = read[start_payload + 6];
+        int32_t day = read[start_payload + 7];
+        int32_t hour = read[start_payload + 8];
+        int32_t minutes = read[start_payload + 9];
+        int32_t sec = read[start_payload + 10];
+        int32_t valid_flag = read[start_payload + 11];
+
+        // clarifying flags
+        bool valid_date = valid_flag & 0x01;
+        bool valid_time = valid_flag & 0x02;
+        bool fully_resolved = valid_flag & 0x04;
+        bool valid_mag = valid_flag & 0x08;
+
+        // GNSS fix and flags
+        int32_t gnss_fix = UBX_MSG::get_gnss_fix_type(read[start_payload + 20]);
+        std::vector<uint8_t> fix_status_flags(read.begin() + start_payload + 21, read.begin() + start_payload + 23);
+        int32_t num_satellites = read[start_payload + 23];
+
+        // longitude and latitude are in Degrees
+        double longitude = UBX_MSG::i4_to_int({read[start_payload + 24], read[start_payload + 25], read[start_payload + 26], read[start_payload + 27]}) * 1e-07;
+        double latitude = UBX_MSG::i4_to_int({read[start_payload + 28], read[start_payload + 29], read[start_payload + 30], read[start_payload + 31]}) * 1e-07;
+
+        // height, mean sea level height in millimeters
+        int32_t height = UBX_MSG::i4_to_int({read[start_payload + 32], read[start_payload + 33], read[start_payload + 34], read[start_payload + 35]});
+        int32_t height_MSL = UBX_MSG::i4_to_int({read[start_payload + 36], read[start_payload + 37], read[start_payload + 38], read[start_payload + 39]});
+
+        // horizontal and vertical accuracy estimates in millimeters
+        int32_t h_acc = UBX_MSG::u4_to_int({read[start_payload + 40], read[start_payload + 41], read[start_payload + 42], read[start_payload + 43]});
+        int32_t v_acc = UBX_MSG::u4_to_int({read[start_payload + 44], read[start_payload + 45], read[start_payload + 46], read[start_payload + 47]});
+
+        // North East Down velocity in mm / s
+        int32_t n_vel = UBX_MSG::i4_to_int({read[start_payload + 48], read[start_payload + 49], read[start_payload + 50], read[start_payload + 51]});
+        int32_t e_vel = UBX_MSG::i4_to_int({read[start_payload + 52], read[start_payload + 53], read[start_payload + 54], read[start_payload + 55]});
+        int32_t d_vel = UBX_MSG::i4_to_int({read[start_payload + 56], read[start_payload + 57], read[start_payload + 58], read[start_payload + 59]});
+
+        // Ground speed in mm / s and heading of motion in degrees + speed and heading accuracy estimates
+        int32_t g_speed = UBX_MSG::i4_to_int({read[start_payload + 60], read[start_payload + 61], read[start_payload + 62], read[start_payload + 63]});
+        double motion_heading = UBX_MSG::i4_to_int({read[start_payload + 64], read[start_payload + 65], read[start_payload + 66], read[start_payload + 67]}) * 1e-05;
+        int32_t s_acc = UBX_MSG::u4_to_int({read[start_payload + 68], read[start_payload + 69], read[start_payload + 70], read[start_payload + 71]});
+        double m_acc = UBX_MSG::u4_to_int({read[start_payload + 72], read[start_payload + 73], read[start_payload + 74], read[start_payload + 75]}) * 1e-05;
+
+        // Heading of vehicle in degrees
+        double vehicle_heading = UBX_MSG::i4_to_int({read[start_payload + 84], read[start_payload + 85], read[start_payload + 86], read[start_payload + 87]}) * 1e-05;
+
+        // Magnetic declination and magnetic declination accuracy both in degrees
+        double mag_deg = UBX_MSG::i2_to_int({read[start_payload + 88], read[start_payload + 89]}) * 1e-02;
+        double mag_deg_acc = UBX_MSG::u2_to_int({read[start_payload + 90], read[start_payload + 91]}) * 1e-02;
+
+        // time
+        pvt_data[YEAR_TAG] = year;
+        pvt_data[MONTH_TAG] = month;
+        pvt_data[DAY_TAG] = day;
+        pvt_data[HOUR_TAG] = hour;
+        pvt_data[MINUTE_TAG] = minutes;
+        pvt_data[SECOND_TAG] = sec;
+
+        // flags
+        pvt_data[VALID_TIME_TAG] = valid_time;
+        pvt_data[VALID_DATE_TAG] = valid_date;
+        pvt_data[FULLY_RESOLVED_TAG] = fully_resolved;
+        pvt_data[VALID_MAG_DEC_TAG] = valid_mag;
+
+        // GNSS
+        pvt_data[GNSS_FIX_TAG] = gnss_fix;
+        pvt_data[FIX_STATUS_FLAGS_TAG] = fix_status_flags;
+        pvt_data[NUM_SATELLITES_TAG] = num_satellites;
+
+        // Coordinates
+        pvt_data[LONGITUDE_TAG] = longitude;
+        pvt_data[LATITUDE_TAG] = latitude;
+        pvt_data[ELLIPSOID_HEIGHT_TAG] = height;
+        pvt_data[MSL_HEIGHT_TAG] = height_MSL;
+        pvt_data[HORIZONTAL_ACCURACY_TAG] = h_acc;
+        pvt_data[VERTICAL_ACCURACY_TAG] = v_acc;
+
+        // Velocity and heading
+        pvt_data[NED_VELOCITY_TAG] = std::make_tuple(n_vel, e_vel, d_vel);
+        pvt_data[GROUND_SPEED_TAG] = g_speed;
+        pvt_data[VEHICLE_HEADING_TAG] = vehicle_heading;
+        pvt_data[MOTION_HEADING_TAG] = motion_heading;
+        pvt_data[SPEED_ACCURACY_TAG] = s_acc;
+        pvt_data[HEADING_ACCURACY_TAG] = m_acc;
+
+        // Magnetic declination
+        pvt_data[MAGNETIC_DECLINATION_TAG] = mag_deg;
+        pvt_data[MAG_DEC_ACCURACY_TAG] = mag_deg_acc;
+    }
+
+    return pvt_data;
 }
 
