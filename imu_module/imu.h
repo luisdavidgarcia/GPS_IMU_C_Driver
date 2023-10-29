@@ -12,6 +12,7 @@
 #define MAGNETO_REG_START   0x00
 #define GYRO_REG_START      0x00
 #define DATA_SIZE           6
+#define BYTE_SHIFT_AMOUNT   8
 
 class Imu {
 private:
