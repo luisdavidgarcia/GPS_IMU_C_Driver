@@ -6,6 +6,8 @@
 #include <sys/ioctl.h>
 #include <time.h>
 
+#define SLAVE_ADDRESS 0x42
+
 class Imu {
 private:
     int i2c_fd;
