@@ -8,6 +8,10 @@
 
 #define SLAVE_ADDRESS 0x42
 #define TIME_DELAY_MS 1000
+#define ACCEL_REG_START     0x00
+#define MAGNETO_REG_START   0x00
+#define GYRO_REG_START      0x00
+#define DATA_SIZE           6
 
 class Imu {
 private:

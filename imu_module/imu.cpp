@@ -52,6 +52,7 @@ void Imu::Telementary(int delay) {
         time_t t = time(NULL);
         struct tm *tm_info = localtime(&t);
         printf("%s", asctime(tm_info));
+        readSensorData();
         printAccel();
         printMag();
         printGyro();
