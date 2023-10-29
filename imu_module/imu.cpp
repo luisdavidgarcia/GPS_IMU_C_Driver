@@ -42,3 +42,19 @@ void Imu::printGyro() {
     printf("Gyroscope (radians/s): (%0.3f, %0.3f, %0.3f)\n",
            gyroscope[0], gyroscope[1], gyroscope[2]);
 }
+
+/**
+ * @brief   Continuously print sensor data with a specified delay.
+ * @param   delay   Delay in milliseconds between data prints.
+ */
+void Imu::Telementary(int delay) {
+    while (true) {
+        time_t t = time(NULL);
+        struct tm *tm_info = localtime(&t);
+        printf("%s", asctime(tm_info));
+        printAccel();
+        printMag();
+        printGyro();
+        usleep(delay * TIME_DELAY_MS);
+    }
+}

@@ -7,6 +7,7 @@
 #include <time.h>
 
 #define SLAVE_ADDRESS 0x42
+#define TIME_DELAY_MS 1000
 
 class Imu {
 private:
