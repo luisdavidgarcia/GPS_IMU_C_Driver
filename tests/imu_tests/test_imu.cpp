@@ -1,18 +1,20 @@
-#include <stdio.h>
-#include <string>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <stdlib.h>
 #include "../../imu_module/imu.h"
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 extern "C" {
-    #include <i2c/smbus.h>
-    #include <linux/i2c-dev.h>
+#include <i2c/smbus.h>
+#include <linux/i2c-dev.h>
 }
 
 int main(void) {
-    printf("Hi there!\n");
+  Imu imu_module;
 
-    return EXIT_SUCCESS;
+  imu_module.Telementary(1000);
+
+  return EXIT_SUCCESS;
 }
