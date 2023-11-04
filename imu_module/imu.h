@@ -1,12 +1,16 @@
 #ifndef IMU_H
 #define IMU_H
 
-#include <linux/i2c-dev.h>
-#include <linux/i2c.h>
+extern "C" {
+    #include <linux/i2c-dev.h>
+    #include <linux/i2c.h>
+    #include <i2c/smbus.h>
+}
 #include <sys/ioctl.h>
 #include <time.h>
+#include <cstdint>
 
-#define SLAVE_ADDRESS 0x42
+#define SLAVE_ADDRESS 0x69
 #define TIME_DELAY_MS 1000
 #define ACCEL_REG_START     0x00
 #define MAGNETO_REG_START   0x00
