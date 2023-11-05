@@ -35,8 +35,9 @@ void Imu::readSensorData() {
   // uint8_t buffer[DATA_SIZE];
   uint8_t accel_mag_buffer[ACCEL_MAG_DATA_SIZE];
   uint8_t buf[1];
-  buf[0] = i2c_smbus_read_byte_data(i2c_fd, 0xEA);
-  printf("Read First Byte: 0%x\n", buf[0]);
+  buf[0] = i2c_smbus_read_byte_data(i2c_fd, 0x00);
+  buf[1] = i2c_smbus_read_byte_data(i2c_fd, 0x46);
+  printf("Read First Byte: 0x%x%x\n", buf[0], buf[1]);
   i2c_smbus_write_byte(i2c_fd, ACCEL_REG_START);
   i2c_smbus_read_i2c_block_data(i2c_fd, ACCEL_REG_START, ACCEL_MAG_DATA_SIZE,
                                 accel_mag_buffer);
