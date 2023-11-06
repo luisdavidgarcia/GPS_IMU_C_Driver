@@ -129,9 +129,9 @@ int main() {
     gyro_z_h = i2c_smbus_read_byte_data(i2c_file, 0x37);
     gyro_z_l = i2c_smbus_read_byte_data(i2c_file, 0x38);
 
-    int16_t gyro_x = (gyro_x_h << 8) | (gyro_x_l && 0xFF);
-    int16_t gyro_y = (gyro_y_h << 8) | (gyro_y_l && 0xFF);
-    int16_t gyro_z = (gyro_z_h << 8) | (gyro_z_l && 0xFF);
+    int16_t gyro_x = (gyro_x_h << 8) | (gyro_x_l & 0xFF);
+    int16_t gyro_y = (gyro_y_h << 8) | (gyro_y_l & 0xFF);
+    int16_t gyro_z = (gyro_z_h << 8) | (gyro_z_l & 0xFF);
 
     uint8_t accel_x_h, accel_x_l, accel_y_h, accel_y_l, accel_z_h, accel_z_l;
     accel_x_h = i2c_smbus_read_byte_data(i2c_file, 0x2D);
@@ -141,9 +141,9 @@ int main() {
     accel_z_h = i2c_smbus_read_byte_data(i2c_file, 0x31);
     accel_z_l = i2c_smbus_read_byte_data(i2c_file, 0x32);
 
-    int16_t accel_x = (accel_x_h << 8) | accel_x_l;
-    int16_t accel_y = (accel_y_h << 8) | accel_y_l;
-    int16_t accel_z = (accel_z_h << 8) | accel_z_l;
+    int16_t accel_x = (accel_x_h << 8) | (accel_x_l & 0xFF);
+    int16_t accel_y = (accel_y_h << 8) | (accel_y_l & 0xFF);
+    int16_t accel_z = (accel_z_h << 8) | (accel_z_l & 0xFF);
 
     printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
     printf("Accel X: %d Accel Y: %d Accel Z: %d\n", accel_x, accel_y, accel_z);
