@@ -31,7 +31,43 @@ int main() {
 
   // Set  ICM-20948 I2C address
   int addr = 0x69;
-  ioctl(i2c_file, I2C_SLAVE, addr);
+  if (ioctl(i2c_file, I2C_SLAVE, addr) < 0) {
+    return -1;
+  }
+
+  // Check ID
+  if (i2c_smbus_read_byte_data(i2c_file, 0x00) != 0xEA) {
+    return -1;
+  }
+
+  // Software Reset
+  i2c_smbus_write_byte_data(i2c_file, 0x03, 0x80);
+
+  // Sleep Mode
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01)
+
+  // Start Magnometer
+
+  // Set continuous sampling mode
+  i2c_smbus_write_byte_data(i2c_file, 0x03, 0x38);
+
+  // Set accelerometer full scale to +/-2g
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00)
+
+  // Set gyroscope full scale to +/-250dps
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00);
+
+  // Set DLPF bandwidth
+  // First Accel
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x01); 
+  // Second Gyro
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01); 
+
+  // Disable DLPF
+  // First Accel
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00); 
+  // Second Gyro
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00); 
 
   /*
   // Select user bank 0
