@@ -53,7 +53,23 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x20);
 
   // Start Magnometer
+  // Master Pass Through set to false
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x0F, 0x00); 
 
+  // Enable Master
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x17);
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x03, 0x20); 
+  
+  // Reset Mag
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x0C, 0x20); 
+
+
+
+  /*
   // Set continuous sampling mode
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x05, 0x00);
@@ -81,8 +97,8 @@ int main() {
   // Second Gyro
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   uint8_t val = i2c_smbus_read_byte_data(i2c_file, 0x7F); //set bank
-  printf("Val at 0x7F: 0x%x", val);
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00); 
+  */
 
   /*
   // Select user bank 0
