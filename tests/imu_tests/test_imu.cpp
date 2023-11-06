@@ -32,11 +32,13 @@ int main() {
   // Set  ICM-20948 I2C address
   int addr = 0x69;
   if (ioctl(i2c_file, I2C_SLAVE, addr) < 0) {
+    printf("Failed to Set Bus\n");
     return -1;
   }
 
   // Check ID
   if (i2c_smbus_read_byte_data(i2c_file, 0x00) != 0xEA) {
+    printf("Failed to Identify Chip\n");
     return -1;
   }
 
@@ -46,11 +48,11 @@ int main() {
 
   // Sleep Mode
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x40);
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x00);
 
   // Turn off Low Power
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x20);
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x00);
 
   // Start Magnometer
   // Master Pass Through set to false
@@ -67,9 +69,6 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x0C, 0x20); 
 
-
-
-  /*
   // Set continuous sampling mode
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x05, 0x00);
@@ -96,9 +95,7 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00); 
   // Second Gyro
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  uint8_t val = i2c_smbus_read_byte_data(i2c_file, 0x7F); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00); 
-  */
 
   /*
   // Select user bank 0
@@ -132,9 +129,9 @@ int main() {
     gyro_z_h = i2c_smbus_read_byte_data(i2c_file, 0x37);
     gyro_z_l = i2c_smbus_read_byte_data(i2c_file, 0x38);
 
-    int16_t gyro_x = (gyro_x_h << 8) | gyro_x_l;
-    int16_t gyro_y = (gyro_y_h << 8) | gyro_y_l;
-    int16_t gyro_z = (gyro_z_h << 8) | gyro_z_l;
+    int16_t gyro_x = (gyro_x_h << 8) | (gyro_x_l && 0xFF);
+    int16_t gyro_y = (gyro_y_h << 8) | (gyro_y_l && 0xFF);
+    int16_t gyro_z = (gyro_z_h << 8) | (gyro_z_l && 0xFF);
 
     uint8_t accel_x_h, accel_x_l, accel_y_h, accel_y_l, accel_z_h, accel_z_l;
     accel_x_h = i2c_smbus_read_byte_data(i2c_file, 0x2D);
