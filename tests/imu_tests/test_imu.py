@@ -47,6 +47,7 @@ import sys
 
 def runExample():
     print("\nSparkFun 9DoF ICM-20948 Sensor  Example 1\n")
+    import pdb; pdb.set_trace()
     IMU = qwiic_icm20948.QwiicIcm20948()
 
     if IMU.connected == False:
