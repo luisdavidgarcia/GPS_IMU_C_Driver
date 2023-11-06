@@ -1,4 +1,4 @@
-#include "../../imu_module/imu.h"
+// #include "../../imu_module/imu.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,31 +25,35 @@ int main(void) {
 */
 
 int main() {
-
+  // Set I2C bus
   int i2c_file;
   i2c_file = open("/dev/i2c-1", O_RDWR);
 
-  // ICM-20948 I2C address
+  // Set  ICM-20948 I2C address
   int addr = 0x69;
-
   ioctl(i2c_file, I2C_SLAVE, addr);
 
+  /*
   // Select user bank 0
   uint8_t bank_sel = 0x7F;
   uint8_t bank_val = 0x02;
   i2c_smbus_write_byte_data(i2c_file, bank_sel, bank_val);
 
   // Configure gyroscope full scale range to +/- 2000 dps
-  uint8_t gyro_config = 0x11 << 1;
+  uint8_t gyro_config = 0b11 << 1;
   i2c_smbus_write_byte_data(i2c_file, 0x01, gyro_config);
 
   // Set gyroscope ODR to 1125 Hz
-  // uint8_t gyro_smplrt_div = 0x01;
-  // i2c_smbus_write_byte_data(i2c_file, 0x00, gyro_smplrt_div);
+  uint8_t gyro_smplrt_div = 0x01;
+  i2c_smbus_write_byte_data(i2c_file, 0x00, gyro_smplrt_div);
 
   // Enable gyroscope measurment
   uint8_t pwr_mgmt_2 = 0x000;
   i2c_smbus_write_byte_data(i2c_file, 0x07, pwr_mgmt_2);
+
+  // Configure  Accelemoeter
+  uint8_t
+  */
 
   while (1) {
     // Read gyroscope data
@@ -65,9 +69,20 @@ int main() {
     int16_t gyro_y = (gyro_y_h << 8) | gyro_y_l;
     int16_t gyro_z = (gyro_z_h << 8) | gyro_z_l;
 
-    printf("Gyro X: %d\n", gyro_x);
-    printf("Gyro Y: %d\n", gyro_y);
-    printf("Gyro Z: %d\n", gyro_z);
+    uint8_t accel_x_h, accel_x_l, accel_y_h, accel_y_l, accel_z_h, accel_z_l;
+    accel_x_h = i2c_smbus_read_byte_data(i2c_file, 0x2D);
+    accel_x_l = i2c_smbus_read_byte_data(i2c_file, 0x2E);
+    accel_y_h = i2c_smbus_read_byte_data(i2c_file, 0x2F);
+    accel_y_l = i2c_smbus_read_byte_data(i2c_file, 0x30);
+    accel_z_h = i2c_smbus_read_byte_data(i2c_file, 0x31);
+    accel_z_l = i2c_smbus_read_byte_data(i2c_file, 0x32);
+
+    int16_t accel_x = (accel_x_h << 8) | accel_x_l;
+    int16_t accel_y = (accel_y_h << 8) | accel_y_l;
+    int16_t accel_z = (accel_z_h << 8) | accel_z_l;
+
+    printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
+    printf("Accel X: %d Accel Y: %d Accel Z: %d\n", accel_x, accel_y, accel_z);
 
     sleep(1);
   }
