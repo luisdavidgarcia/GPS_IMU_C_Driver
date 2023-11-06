@@ -1,6 +1,5 @@
 // #include "../../imu_module/imu.h"
-#include <fcntl.h>
-#include <stdio.h>
+#include <fcntl.h> #include <stdio.h>
 #include <stdlib.h>
 #include <string>
 #include <sys/ioctl.h>
@@ -69,6 +68,16 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x0C, 0x20); 
 
+  // Set the slave address and the Rw flag
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x03, 0x8C); 
+
+  // Set slave sub
+  i2c_smbus_write_byte_data(i2c_file, 0x04, 0x10); 
+
+  // Set control Info
+  i2c_smbus_write_byte_data(i2c_file, 0x05, 0x89); 
+
   // Set continuous sampling mode
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x05, 0x00);
@@ -84,10 +93,10 @@ int main() {
   // Set DLPF bandwidth
   // First Accel
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00); 
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x38); 
   // Second Gyro
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00); 
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x38); 
 
   // Disable DLPF
   // First Accel
