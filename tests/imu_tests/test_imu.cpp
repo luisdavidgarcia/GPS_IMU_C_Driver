@@ -44,15 +44,39 @@ int main() {
 
   // Software Reset
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); // set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x80);
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x81);
 
   // Sleep Mode
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x00);
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
 
   // Turn off Low Power
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x00);
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
+
+  // Set Scalling
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x05, 0x40);
+
+  // Set accelerometer full scale to +/-2g
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x01);
+
+  // Set gyroscope full scale to +/-250dps
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
+
+  // set low pass filter for both accel and gyro (separate functions)
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x39);
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x39); 
+  
+  // disable digital low pass filters on both accel and gyro
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x38);
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x38); 
 
   // Start Magnometer
   // Master Pass Through set to false
@@ -64,70 +88,23 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x17);
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x03, 0x20); 
-  
-  // Reset Mag
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x0C, 0x20); 
 
-  // Set the slave address and the Rw flag
+  // Transact directly with an I2C device, one byte at a time
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x13, 0x0C); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x31); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x16, 0x08); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x15, 0x80); 
+
+  // Set up Slaves with Master  
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x03, 0x8C); 
-
-  // Set slave sub
   i2c_smbus_write_byte_data(i2c_file, 0x04, 0x10); 
-
-  // Set control Info
   i2c_smbus_write_byte_data(i2c_file, 0x05, 0x89); 
 
-  // Set continuous sampling mode
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x05, 0x00);
-
-  // Set accelerometer full scale to +/-2g
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00);
-
-  // Set gyroscope full scale to +/-250dps
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00);
-
-  // Set DLPF bandwidth
-  // First Accel
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x38); 
-  // Second Gyro
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x38); 
-
-  // Disable DLPF
-  // First Accel
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00); 
-  // Second Gyro
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00); 
-
-  /*
-  // Select user bank 0
-  uint8_t bank_sel = 0x7F;
-  uint8_t bank_val = 0x02;
-  i2c_smbus_write_byte_data(i2c_file, bank_sel, bank_val);
-
-  // Configure gyroscope full scale range to +/- 2000 dps
-  uint8_t gyro_config = 0b11 << 1;
-  i2c_smbus_write_byte_data(i2c_file, 0x01, gyro_config);
-
-  // Set gyroscope ODR to 1125 Hz
-  uint8_t gyro_smplrt_div = 0x01;
-  i2c_smbus_write_byte_data(i2c_file, 0x00, gyro_smplrt_div);
-
-  // Enable gyroscope measurment
-  uint8_t pwr_mgmt_2 = 0x000;
-  i2c_smbus_write_byte_data(i2c_file, 0x07, pwr_mgmt_2);
-
-  // Configure  Accelemoeter
-  uint8_t
-  */
 
   while (1) {
     // Read gyroscope data
