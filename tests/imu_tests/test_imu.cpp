@@ -41,32 +41,45 @@ int main() {
   }
 
   // Software Reset
-  i2c_smbus_write_byte_data(i2c_file, 0x03, 0x80);
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); // set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x80);
 
   // Sleep Mode
-  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x40);
+
+  // Turn off Low Power
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x20);
 
   // Start Magnometer
 
   // Set continuous sampling mode
-  i2c_smbus_write_byte_data(i2c_file, 0x03, 0x38);
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x05, 0x00);
 
   // Set accelerometer full scale to +/-2g
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00);
 
   // Set gyroscope full scale to +/-250dps
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00);
 
   // Set DLPF bandwidth
   // First Accel
-  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x01); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00); 
   // Second Gyro
-  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00); 
 
   // Disable DLPF
   // First Accel
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00); 
   // Second Gyro
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00); 
 
   /*
