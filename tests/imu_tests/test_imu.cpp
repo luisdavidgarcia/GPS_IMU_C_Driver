@@ -44,7 +44,7 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x03, 0x80);
 
   // Sleep Mode
-  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01)
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
 
   // Start Magnometer
 
@@ -52,7 +52,7 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x03, 0x38);
 
   // Set accelerometer full scale to +/-2g
-  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00)
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00);
 
   // Set gyroscope full scale to +/-250dps
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00);
