@@ -80,6 +80,8 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x14, 0x00); 
   // Second Gyro
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  uint8_t val = i2c_smbus_read_byte_data(i2c_file, 0x7F); //set bank
+  printf("Val at 0x7F: 0x%x", val);
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x00); 
 
   /*
