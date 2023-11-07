@@ -157,8 +157,8 @@ void Imu::Telementary(int delay) {
     printf("%s", asctime(tm_info));
     readSensorData();
     printAccel();
-    printMag();
     printGyro();
+    printMag();
     usleep(delay * TIME_DELAY_MS);
   }
 }
