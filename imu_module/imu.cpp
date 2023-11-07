@@ -17,18 +17,7 @@ Imu::Imu() {
 
 Imu::~Imu() { close(i2c_fd); }
 
-Imu::begin() {
-  // Set I2C bus
-  int i2c_file;
-  i2c_file = open("/dev/i2c-1", O_RDWR);
-
-  // Set  ICM-20948 I2C address
-  int addr = 0x69;
-  if (ioctl(i2c_file, I2C_SLAVE, addr) < 0) {
-    printf("Failed to Set Bus\n");
-    return -1;
-  }
-
+void Imu::begin() {
   // Check ID
   if (i2c_smbus_read_byte_data(i2c_file, 0x00) != 0xEA) {
     printf("Failed to Identify Chip\n");
@@ -129,7 +118,7 @@ void Imu::readSensorData() {
     // Converting Raw Mag Data to Readable data 
     magnetometer[0] = (mag_x_l << 8) | (mag_x_h & 0xFF);
     magnetometer[1] = (mag_y_l << 8) | (mag_y_h & 0xFF);
-    magentometer[2] = (mag_z_l << 8) | (mag_z_h & 0xFF);
+    magnetometer[2] = (mag_z_l << 8) | (mag_z_h & 0xFF);
 }
 
 /**
