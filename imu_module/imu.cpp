@@ -126,7 +126,7 @@ void Imu::readSensorData() {
  * @brief   Print accelerometer data to console.
  */
 void Imu::printAccel() {
-  printf("Acceleration (m/s^2): (%0.3f, %0.3f, %0.3f)\n", accelerometer[0],
+  printf("Acceleration (m/s^2): (%d, %d, %d)\n", accelerometer[0],
          accelerometer[1], accelerometer[2]);
 }
 
@@ -134,7 +134,7 @@ void Imu::printAccel() {
  * @brief   Print magnetometer data to console.
  */
 void Imu::printMag() {
-  printf("Magnetometer (uTesla): (%0.3f, %0.3f, %0.3f)\n", magnetometer[0],
+  printf("Magnetometer (uTesla): (%d, %d, %d)\n", magnetometer[0],
          magnetometer[1], magnetometer[2]);
 }
 
@@ -142,7 +142,7 @@ void Imu::printMag() {
  * @brief   Print gyroscope data to console.
  */
 void Imu::printGyro() {
-  printf("Gyroscope (radians/s): (%0.3f, %0.3f, %0.3f)\n", gyroscope[0],
+  printf("Gyroscope (radians/s): (%d, %d, %d)\n", gyroscope[0],
          gyroscope[1], gyroscope[2]);
 }
 
