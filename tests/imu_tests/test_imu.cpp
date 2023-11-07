@@ -39,7 +39,6 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
 
-  /*
   // Turn off Low Power
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
@@ -55,7 +54,6 @@ int main() {
   // Set gyroscope full scale to +/-250dps
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank 
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
-  */
 
   /*
   // set low pass filter for both accel and gyro (separate functions)
