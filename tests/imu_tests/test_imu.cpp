@@ -138,7 +138,7 @@ int main() {
     int16_t mag_y = (mag_y_l << 8) | (mag_y_h & 0xFF);
     int16_t mag_z = (mag_z_h << 8) | (mag_z_l & 0xFF);
 
-    double angle = atan2(mag_y,max_x);
+    double angle = atan2(mag_y,mag_x);
     angle = (180* angle) / 3.14;
     printf("Angle of Mag: %f\n", angle);
 
