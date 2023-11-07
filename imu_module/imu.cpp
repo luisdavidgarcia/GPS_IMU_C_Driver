@@ -18,6 +18,8 @@ Imu::Imu() {
   if (i2c_smbus_read_byte_data(i2c_fd, 0x00) != 0xEA) {
     perror("Failed to identify chip");
   }
+
+  begin();
 }
 
 Imu::~Imu() { close(i2c_fd); }

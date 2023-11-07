@@ -1,4 +1,4 @@
-// #include "../../imu_module/imu.h"
+#include "../../imu_module/imu.h"
 #include <fcntl.h> 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +14,7 @@ extern "C" {
 }
 
 int main(void) {
+  Imu imu_module; 
   printf("Hello world!\n");
 
   return 0;
