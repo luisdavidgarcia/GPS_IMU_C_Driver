@@ -58,6 +58,7 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
   */
 
+  /*
   // set low pass filter for both accel and gyro (separate functions)
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x14, 0x39);
@@ -69,6 +70,7 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x14, 0x38);
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x38); 
+  */
 
   // Start Magnometer
   // Master Pass Through set to false
@@ -136,8 +138,9 @@ int main() {
 
     int16_t mag_x = (mag_x_l << 8) | (mag_x_h & 0xFF);
     int16_t mag_y = (mag_y_l << 8) | (mag_y_h & 0xFF);
-    int16_t mag_z = (mag_z_h << 8) | (mag_z_l & 0xFF);
+    int16_t mag_z = (mag_z_l << 8) | (mag_z_h & 0xFF);
 
+    // DEBUG: THIS IS ONLY FOR TESTING WILL REMOVE LATER
     double angle = atan2(mag_y,mag_x);
     angle = (180* angle) / 3.14;
     printf("Angle of Mag: %f\n", angle);
