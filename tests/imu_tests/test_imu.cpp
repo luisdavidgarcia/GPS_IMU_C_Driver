@@ -80,10 +80,9 @@ int main() {
 
   // Start Magnometer
   // Master Pass Through set to false
-  //i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
-  //i2c_smbus_write_byte_data(i2c_file, 0x0F, 0x00); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x0F, 0x00); 
 
-  /*
   // Enable Master
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x17);
@@ -106,8 +105,6 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x04, 0x10); 
   i2c_smbus_write_byte_data(i2c_file, 0x05, 0x89); 
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
-  */
-
 
   while (1) {
     i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
