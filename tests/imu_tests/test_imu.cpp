@@ -134,7 +134,7 @@ int main() {
     mag_z_l = i2c_smbus_read_byte_data(i2c_file, 0x41);
 
     int16_t mag_x = (mag_x_l << 8) | (mag_x_h & 0xFF);
-    int16_t mag_y = (mag_y_h << 8) | (mag_y_l & 0xFF);
+    int16_t mag_y = (mag_y_l << 8) | (mag_y_h & 0xFF);
     int16_t mag_z = (mag_z_h << 8) | (mag_z_l & 0xFF);
 
     printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
