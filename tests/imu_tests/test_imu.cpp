@@ -30,10 +30,11 @@ int main() {
     return -1;
   }
 
+/*
   // Software Reset
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); // set bank
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x80);
-/*
+*/
   // Sleep Mode
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
@@ -45,7 +46,7 @@ int main() {
   // Set Scalling
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x05, 0x40);
-  */
+  //
 
   /*
   // Set accelerometer full scale to +/-2g
