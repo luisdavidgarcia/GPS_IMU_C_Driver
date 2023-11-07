@@ -142,9 +142,9 @@ int main() {
     mag_z_h = i2c_smbus_read_byte_data(i2c_file, 0x40);
     mag_z_l = i2c_smbus_read_byte_data(i2c_file, 0x41);
 
-    int16_t mag_x = (mag_x_l << 8) | (mag_x_h & 0xFF);
-    int16_t mag_y = (mag_y_l << 8) | (mag_y_h & 0xFF);
-    int16_t mag_z = (mag_z_l << 8) | (mag_z_h & 0xFF);
+    float mag_x = (mag_x_l << 8) | (mag_x_h & 0xFF);
+    float mag_y = (mag_y_l << 8) | (mag_y_h & 0xFF);
+    float mag_z = (mag_z_l << 8) | (mag_z_h & 0xFF);
 
     // DEBUG: THIS IS ONLY FOR TESTING WILL REMOVE LATER
     double angle = atan2(mag_y,mag_x);
@@ -153,7 +153,8 @@ int main() {
 
     printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
     printf("Accel X: %d Accel Y: %d Accel Z: %d\n", accel_x, accel_y, accel_z);
-    printf("Mag X: %d Mag Y: %d Mag Z: %d\n", mag_x, mag_y, mag_z);
+    //printf("Mag X: %d Mag Y: %d Mag Z: %d\n", mag_x, mag_y, mag_z);
+    printf("Mag X: %f Mag Y: %f Mag Z: %f\n", mag_x, mag_y, mag_z);
 
     sleep(1);
   }
