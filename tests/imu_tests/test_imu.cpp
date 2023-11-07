@@ -67,10 +67,10 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
 
   // set low pass filter for both accel and gyro (separate functions)
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x39);
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x39); 
+  //i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  //i2c_smbus_write_byte_data(i2c_file, 0x14, 0x39);
+  //i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
+  //i2c_smbus_write_byte_data(i2c_file, 0x01, 0x39); 
   
   // disable digital low pass filters on both accel and gyro
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
@@ -80,8 +80,8 @@ int main() {
 
   // Start Magnometer
   // Master Pass Through set to false
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
-  i2c_smbus_write_byte_data(i2c_file, 0x0F, 0x00); 
+  //i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  //i2c_smbus_write_byte_data(i2c_file, 0x0F, 0x00); 
 
   /*
   // Enable Master
