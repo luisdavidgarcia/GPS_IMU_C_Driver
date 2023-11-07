@@ -13,14 +13,14 @@ extern "C" {
 #include <linux/i2c-dev.h>
 }
 
-int main(void) {
+int main_copy(void) {
   Imu imu_module; 
   imu_module.Telementary(1000);
 
   return 0;
 }
 
-int main_copy() {
+int main() {
   // Set I2C bus
   int i2c_file;
   i2c_file = open("/dev/i2c-1", O_RDWR);
