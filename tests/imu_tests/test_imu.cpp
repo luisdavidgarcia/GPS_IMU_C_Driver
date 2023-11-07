@@ -46,13 +46,10 @@ int main() {
   // Set Scalling
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x05, 0x40);
-  //
-
-  /*
+  
   // Set accelerometer full scale to +/-2g
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x14, 0x01);
-  */
 
   // Set gyroscope full scale to +/-250dps
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
