@@ -53,9 +53,9 @@ extern "C" {
 class Imu {
 private:
   int i2c_fd;
-  float accelerometer[3];
-  float magnetometer[3];
-  float gyroscope[3];
+  int16_t accelerometer[3];
+  int16_t magnetometer[3];
+  int16_t gyroscope[3];
   void begin(void);
   void readSensorData(void);
 

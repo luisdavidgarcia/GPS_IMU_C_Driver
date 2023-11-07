@@ -13,14 +13,14 @@ extern "C" {
 #include <linux/i2c-dev.h>
 }
 
-int main_copy(void) {
+int main(void) {
   Imu imu_module; 
   imu_module.Telementary(1000);
 
   return 0;
 }
 
-int main() {
+int main_copy() {
   // Set I2C bus
   int i2c_file;
   i2c_file = open("/dev/i2c-1", O_RDWR);
@@ -142,9 +142,9 @@ int main() {
     mag_z_h = i2c_smbus_read_byte_data(i2c_file, 0x40);
     mag_z_l = i2c_smbus_read_byte_data(i2c_file, 0x41);
 
-    float mag_x = (mag_x_l << 8) | (mag_x_h & 0xFF);
-    float mag_y = (mag_y_l << 8) | (mag_y_h & 0xFF);
-    float mag_z = (mag_z_l << 8) | (mag_z_h & 0xFF);
+    int16_t mag_x = (mag_x_l << 8) | (mag_x_h & 0xFF);
+    int16_t mag_y = (mag_y_l << 8) | (mag_y_h & 0xFF);
+    int16_t mag_z = (mag_z_l << 8) | (mag_z_h & 0xFF);
 
     // DEBUG: THIS IS ONLY FOR TESTING WILL REMOVE LATER
     double angle = atan2(mag_y,mag_x);
