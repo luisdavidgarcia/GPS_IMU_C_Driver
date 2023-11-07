@@ -13,17 +13,16 @@ Imu::Imu() {
   if (ioctl(i2c_fd, I2C_SLAVE, SLAVE_ADDRESS) < 0) {
     perror("Failed to acquire bus access and/or talk to slave");
   }
+
+  // Check ID
+  if (i2c_smbus_read_byte_data(i2c_fd, 0x00) != 0xEA) {
+    perror("Failed to identify chip");
+  }
 }
 
 Imu::~Imu() { close(i2c_fd); }
 
 void Imu::begin() {
-  // Check ID
-  if (i2c_smbus_read_byte_data(i2c_file, 0x00) != 0xEA) {
-    printf("Failed to Identify Chip\n");
-    return -1;
-  }
-
   // TODO: Create error_handler for register writes
   
   // Select Clock to Automatic (Init Accel and Gyro)
