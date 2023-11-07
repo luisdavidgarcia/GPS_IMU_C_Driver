@@ -78,12 +78,10 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x38); 
 
-  /*
   // Start Magnometer
   // Master Pass Through set to false
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x0F, 0x00); 
-  */
 
   // Enable Master
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
@@ -91,7 +89,6 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x03, 0x20); 
 
-  /*
   // Transact directly with an I2C device, one byte at a time
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x13, 0x0C); 
@@ -101,13 +98,13 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x16, 0x08); 
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x15, 0x80); 
-  */
 
   // Set up Slaves with Master  
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x03, 0x8C); 
   i2c_smbus_write_byte_data(i2c_file, 0x04, 0x10); 
   i2c_smbus_write_byte_data(i2c_file, 0x05, 0x89); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
 
 
   while (1) {
