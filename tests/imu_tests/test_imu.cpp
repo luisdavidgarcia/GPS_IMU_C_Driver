@@ -12,18 +12,6 @@ extern "C" {
 #include <linux/i2c-dev.h>
 }
 
-/*
-int main(void) {
-  Imu imu_module;
-
-  imu_module.Telementary(1000);
-
-  return EXIT_SUCCESS;
-}
-#include <i2c/smbus.h>
-#include <stdio.h>
-*/
-
 int main() {
   // Set I2C bus
   int i2c_file;
@@ -42,11 +30,10 @@ int main() {
     return -1;
   }
 
-  /*
   // Software Reset
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); // set bank
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x81);
-
+/*
   // Sleep Mode
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
@@ -67,8 +54,7 @@ int main() {
   */
 
   // Set gyroscope full scale to +/-250dps
-  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank
-  //i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
 
   /*
