@@ -17,6 +17,61 @@ Imu::Imu() {
 
 Imu::~Imu() { close(i2c_fd); }
 
+Imu::begin() {
+  // Set I2C bus
+  int i2c_file;
+  i2c_file = open("/dev/i2c-1", O_RDWR);
+
+  // Set  ICM-20948 I2C address
+  int addr = 0x69;
+  if (ioctl(i2c_file, I2C_SLAVE, addr) < 0) {
+    printf("Failed to Set Bus\n");
+    return -1;
+  }
+
+  // Check ID
+  if (i2c_smbus_read_byte_data(i2c_file, 0x00) != 0xEA) {
+    printf("Failed to Identify Chip\n");
+    return -1;
+  }
+
+  // TODO: Create error_handler for register writes
+  
+  // Select Clock to Automatic (Init Accel and Gyro)
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
+
+  /* Init Magnometer */
+  // Master Pass Through set to false (For Magnometer)
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x0F, 0x00); 
+
+  // Enable Master (For Magnometer)
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x01, 0x17);
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x03, 0x20); 
+
+  // Transact directly with an I2C device, one byte at a time (For Magnometer)
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x13, 0x0C); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x14, 0x31); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x16, 0x08); 
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x15, 0x80); 
+
+  // Set up Slaves with Master (For Magnometer)
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x30); //set bank
+  i2c_smbus_write_byte_data(i2c_file, 0x03, 0x8C); 
+  i2c_smbus_write_byte_data(i2c_file, 0x04, 0x10); 
+  i2c_smbus_write_byte_data(i2c_file, 0x05, 0x89); 
+
+  /* Reset Bank to Zero 0 For Reading Data */
+  i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
+}
+
 /**
  * @brief   Read sensor data from IMU over I2C.
  *          Replace this section with your actual I2C communication to read
@@ -31,64 +86,50 @@ Imu::~Imu() { close(i2c_fd); }
  *          gyroscope[2] = <read gyroscope Z value>;
  */
 void Imu::readSensorData() {
-  // Read accelerometer data
-  // uint8_t buffer[DATA_SIZE];
-  uint8_t accel_mag_buffer[ACCEL_MAG_DATA_SIZE];
-  uint8_t buf[1];
-  buf[0] = i2c_smbus_read_byte_data(i2c_fd, 0x00);
-  buf[1] = i2c_smbus_read_byte_data(i2c_fd, 0x46);
-  printf("Read First Byte: 0x%x%x\n", buf[0], buf[1]);
-  i2c_smbus_write_byte(i2c_fd, ACCEL_REG_START);
-  i2c_smbus_read_i2c_block_data(i2c_fd, ACCEL_REG_START, ACCEL_MAG_DATA_SIZE,
-                                accel_mag_buffer);
+    /* Reset bank to 0 on every read */
+    i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
 
-  // i2c_smbus_read_i2c_block_data(i2c_fd, ACCEL_REG_START, DATA_SIZE, buffer);
-  accelerometer[0] = (int16_t)(accel_mag_buffer[0] << BYTE_SHIFT_AMOUNT |
-                               accel_mag_buffer[1]) >>
-                     2;
-  accelerometer[1] = (int16_t)(accel_mag_buffer[2] << BYTE_SHIFT_AMOUNT |
-                               accel_mag_buffer[3]) >>
-                     2;
-  accelerometer[2] = (int16_t)(accel_mag_buffer[4] << BYTE_SHIFT_AMOUNT |
-                               accel_mag_buffer[5]) >>
-                     2;
+    /* Read accelerometer data */
+    uint8_t accel_x_h, accel_x_l, accel_y_h, accel_y_l, accel_z_h, accel_z_l;
+    accel_x_h = i2c_smbus_read_byte_data(i2c_file, 0x2D);
+    accel_x_l = i2c_smbus_read_byte_data(i2c_file, 0x2E);
+    accel_y_h = i2c_smbus_read_byte_data(i2c_file, 0x2F);
+    accel_y_l = i2c_smbus_read_byte_data(i2c_file, 0x30);
+    accel_z_h = i2c_smbus_read_byte_data(i2c_file, 0x31);
+    accel_z_l = i2c_smbus_read_byte_data(i2c_file, 0x32);
 
-  // Convert raw accelerometer data to M/S^2
-  accelerometer[0] *= ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-  accelerometer[1] *= ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-  accelerometer[2] *= ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+    // Converting Raw Accel Data to Readable data 
+    accelerometer[0] = (accel_x_h << 8) | (accel_x_l & 0xFF);
+    accelerometer[1] = (accel_y_h << 8) | (accel_y_l & 0xFF);
+    accelerometer[2] = (accel_z_h << 8) | (accel_z_l & 0xFF);
 
-  // Read magnetometer data
-  // uint8_t buffer[DATA_SIZE];
-  // i2c_smbus_read_i2c_block_data(i2c_fd, MAGNETO_REG_START, DATA_SIZE,
-  // buffer);
-  magnetometer[0] =
-      (int16_t)(accel_mag_buffer[6] << BYTE_SHIFT_AMOUNT | accel_mag_buffer[7]);
-  magnetometer[1] =
-      (int16_t)(accel_mag_buffer[8] << BYTE_SHIFT_AMOUNT | accel_mag_buffer[9]);
-  magnetometer[2] = (int16_t)(accel_mag_buffer[10] << BYTE_SHIFT_AMOUNT |
-                              accel_mag_buffer[11]);
+    /* Read gyroscope data */
+    uint8_t gyro_x_h, gyro_x_l, gyro_y_h, gyro_y_l, gyro_z_h, gyro_z_l;
+    gyro_x_h = i2c_smbus_read_byte_data(i2c_file, 0x33);
+    gyro_x_l = i2c_smbus_read_byte_data(i2c_file, 0x34);
+    gyro_y_h = i2c_smbus_read_byte_data(i2c_file, 0x35);
+    gyro_y_l = i2c_smbus_read_byte_data(i2c_file, 0x36);
+    gyro_z_h = i2c_smbus_read_byte_data(i2c_file, 0x37);
+    gyro_z_l = i2c_smbus_read_byte_data(i2c_file, 0x38);
 
-  magnetometer[0] *= MAG_UT_LSB;
-  magnetometer[1] *= MAG_UT_LSB;
-  magnetometer[2] *= MAG_UT_LSB;
+    // Converting Raw Gyro Data to Readable data 
+    gyroscope[0] = (gyro_x_h << 8) | (gyro_x_l & 0xFF);
+    gyroscope[1] = (gyro_y_h << 8) | (gyro_y_l & 0xFF);
+    gyroscope[2] = (gyro_z_h << 8) | (gyro_z_l & 0xFF);
 
-  // Read gyroscope data
-  // uint8_t gryo_buffer[DATA_SIZE];
-  uint8_t gyro_buffer[GYRO_DATA_SIZE];
-  i2c_smbus_write_byte(i2c_fd, GYRO_REG_START);
-  i2c_smbus_read_i2c_block_data(i2c_fd, GYRO_REG_START, GYRO_DATA_SIZE,
-                                gyro_buffer);
-  gyroscope[0] =
-      (int16_t)(gyro_buffer[0] << BYTE_SHIFT_AMOUNT | gyro_buffer[1]);
-  gyroscope[1] =
-      (int16_t)(gyro_buffer[2] << BYTE_SHIFT_AMOUNT | gyro_buffer[3]);
-  gyroscope[2] =
-      (int16_t)(gyro_buffer[4] << BYTE_SHIFT_AMOUNT | gyro_buffer[5]);
+    /* Read magentometer data */
+    uint8_t mag_x_h, mag_x_l, mag_y_h, mag_y_l, mag_z_h, mag_z_l;
+    mag_x_h = i2c_smbus_read_byte_data(i2c_file, 0x3C);
+    mag_x_l = i2c_smbus_read_byte_data(i2c_file, 0x3D);
+    mag_y_h = i2c_smbus_read_byte_data(i2c_file, 0x3E);
+    mag_y_l = i2c_smbus_read_byte_data(i2c_file, 0x3F);
+    mag_z_h = i2c_smbus_read_byte_data(i2c_file, 0x40);
+    mag_z_l = i2c_smbus_read_byte_data(i2c_file, 0x41);
 
-  gyroscope[0] *= GYRO_SENSITIVITY_250DPS;
-  gyroscope[1] *= GYRO_SENSITIVITY_250DPS;
-  gyroscope[2] *= GYRO_SENSITIVITY_250DPS;
+    // Converting Raw Mag Data to Readable data 
+    magnetometer[0] = (mag_x_l << 8) | (mag_x_h & 0xFF);
+    magnetometer[1] = (mag_y_l << 8) | (mag_y_h & 0xFF);
+    magentometer[2] = (mag_z_l << 8) | (mag_z_h & 0xFF);
 }
 
 /**

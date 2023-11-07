@@ -13,7 +13,13 @@ extern "C" {
 #include <linux/i2c-dev.h>
 }
 
-int main() {
+int main(void) {
+  printf("Hello world!\n");
+
+  return 0;
+}
+
+int main_copy() {
   // Set I2C bus
   int i2c_file;
   i2c_file = open("/dev/i2c-1", O_RDWR);
@@ -127,7 +133,6 @@ int main() {
     int16_t accel_y = (accel_y_h << 8) | (accel_y_l & 0xFF);
     int16_t accel_z = (accel_z_h << 8) | (accel_z_l & 0xFF);
 
-    /* Need to Fix this part to get actual Readings */
     uint8_t mag_x_h, mag_x_l, mag_y_h, mag_y_l, mag_z_h, mag_z_l;
     mag_x_h = i2c_smbus_read_byte_data(i2c_file, 0x3C);
     mag_x_l = i2c_smbus_read_byte_data(i2c_file, 0x3D);
@@ -156,3 +161,5 @@ int main() {
 
   return 0;
 }
+
+

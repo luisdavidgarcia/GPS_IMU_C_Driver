@@ -56,8 +56,8 @@ private:
   float accelerometer[3];
   float magnetometer[3];
   float gyroscope[3];
-
-  void readSensorData();
+  void begin(void);
+  void readSensorData(void);
 
 public:
   Imu();
