@@ -145,8 +145,8 @@ int main() {
     angle = (180* angle) / 3.14;
     printf("Angle of Mag: %f\n", angle);
 
-    //printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
-    //printf("Accel X: %d Accel Y: %d Accel Z: %d\n", accel_x, accel_y, accel_z);
+    printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
+    printf("Accel X: %d Accel Y: %d Accel Z: %d\n", accel_x, accel_y, accel_z);
     printf("Mag X: %d Mag Y: %d Mag Z: %d\n", mag_x, mag_y, mag_z);
 
     sleep(1);
