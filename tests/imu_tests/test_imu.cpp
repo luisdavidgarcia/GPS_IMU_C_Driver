@@ -13,14 +13,14 @@ extern "C" {
 #include <linux/i2c-dev.h>
 }
 
-int main_copy(void) {
+int main(void) {
   Imu imu_module; 
   imu_module.Telementary(1000);
 
   return 0;
 }
 
-int main() {
+int main_copy() {
   // Set I2C bus
   int i2c_file;
   i2c_file = open("/dev/i2c-1", O_RDWR);
@@ -154,7 +154,7 @@ int main() {
     printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
     printf("Accel X: %d Accel Y: %d Accel Z: %d\n", accel_x, accel_y, accel_z);
     //printf("Mag X: %d Mag Y: %d Mag Z: %d\n", mag_x, mag_y, mag_z);
-    printf("Mag X: %f Mag Y: %f Mag Z: %f\n", mag_x, mag_y, mag_z);
+    printf("Mag X: %d Mag Y: %d Mag Z: %d\n", mag_x, mag_y, mag_z);
 
     sleep(1);
   }
