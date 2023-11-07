@@ -15,7 +15,7 @@ extern "C" {
 
 int main(void) {
   Imu imu_module; 
-  printf("Hello world!\n");
+  imu_module.Telementary(1000);
 
   return 0;
 }
