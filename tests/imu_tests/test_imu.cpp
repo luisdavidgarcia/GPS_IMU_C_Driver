@@ -39,6 +39,7 @@ int main() {
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
 
+  /*
   // Turn off Low Power
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x00); //set bank
   i2c_smbus_write_byte_data(i2c_file, 0x06, 0x01);
@@ -54,6 +55,7 @@ int main() {
   // Set gyroscope full scale to +/-250dps
   i2c_smbus_write_byte_data(i2c_file, 0x7F, 0x20); //set bank 
   i2c_smbus_write_byte_data(i2c_file, 0x01, 0x01);
+  */
 
   /*
   // set low pass filter for both accel and gyro (separate functions)
@@ -125,12 +127,12 @@ int main() {
     int16_t accel_z = (accel_z_h << 8) | (accel_z_l & 0xFF);
 
     uint8_t mag_x_h, mag_x_l, mag_y_h, mag_y_l, mag_z_h, mag_z_l;
-    mag_x_h = i2c_smbus_read_byte_data(i2c_file, 0x39);
-    mag_x_l = i2c_smbus_read_byte_data(i2c_file, 0x3A);
-    mag_y_h = i2c_smbus_read_byte_data(i2c_file, 0x3B);
-    mag_y_l = i2c_smbus_read_byte_data(i2c_file, 0x3C);
-    mag_z_h = i2c_smbus_read_byte_data(i2c_file, 0x3D);
-    mag_z_l = i2c_smbus_read_byte_data(i2c_file, 0x3E);
+    mag_x_h = i2c_smbus_read_byte_data(i2c_file, 0x3C);
+    mag_x_l = i2c_smbus_read_byte_data(i2c_file, 0x3D);
+    mag_y_h = i2c_smbus_read_byte_data(i2c_file, 0x3E);
+    mag_y_l = i2c_smbus_read_byte_data(i2c_file, 0x3F);
+    mag_z_h = i2c_smbus_read_byte_data(i2c_file, 0x40);
+    mag_z_l = i2c_smbus_read_byte_data(i2c_file, 0x41);
 
     int16_t mag_x = (mag_x_h << 8) | (mag_x_l & 0xFF);
     int16_t mag_y = (mag_y_h << 8) | (mag_y_l & 0xFF);
