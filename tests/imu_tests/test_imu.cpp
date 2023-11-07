@@ -137,8 +137,8 @@ int main() {
     int16_t mag_y = (mag_y_l << 8) | (mag_y_h & 0xFF);
     int16_t mag_z = (mag_z_h << 8) | (mag_z_l & 0xFF);
 
-    printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
-    printf("Accel X: %d Accel Y: %d Accel Z: %d\n", accel_x, accel_y, accel_z);
+    //printf("Gyro X: %d Gyro Y: %d Gyro Z: %d\n", gyro_x, gyro_y, gyro_z);
+    //printf("Accel X: %d Accel Y: %d Accel Z: %d\n", accel_x, accel_y, accel_z);
     printf("Mag X: %d Mag Y: %d Mag Z: %d\n", mag_x, mag_y, mag_z);
 
     sleep(1);
