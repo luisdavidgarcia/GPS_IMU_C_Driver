@@ -17,7 +17,7 @@ Gps::~Gps() { close(i2c_fd); }
 
 // TODO: Integrate SMBUS I2C for Get Available Bytes
 /* returns the number of bytes available to read*/
-uint16_t Gps::getAvailableBytes(){
+uint16_t Gps::getAvailableBytes() {
   i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t msb = i2c_smbus_read_byte(i2c_fd);
   uint8_t lsb = i2c_smbus_read_byte(i2c_fd);
@@ -41,7 +41,7 @@ uint16_t Gps::getAvailableBytes(){
 
 // TODO: Integrate SMBUS I2C for Read
 /* Reads a UBX message and populates the given UbxMessage*/
-Status Gps::readUbxMessage(UbxMessage &msg){
+Status Gps::readUbxMessage(UbxMessage &msg) {
   uint16_t bytes = this->getAvailableBytes();
 
   //if (bytes > MAX_MESSAGE_LENGTH || bytes <= 0)
@@ -98,7 +98,7 @@ Status Gps::readUbxMessage(UbxMessage &msg){
 }
 
 // TODO: Integrate SMBUS I2C for Write
-Status Gps::writeUbxMessage(UbxMessage &msg){
+Status Gps::writeUbxMessage(UbxMessage &msg) {
   computeChecksum(msg);
   i2cBus->beginTransmission(this->i2cAddress);
   if (i2cBus->endTransmission(false) != 0)
@@ -122,7 +122,7 @@ Status Gps::writeUbxMessage(UbxMessage &msg){
   return Status::NoError;
 }
 
-Status Gps::pollUbxMessage(UbxMessage &msg){
+Status Gps::pollUbxMessage(UbxMessage &msg) {
   Status status = Status::NoError;
   msg.length = 0;
   status = this->writeUbxMessage(msg);
@@ -136,7 +136,7 @@ Status Gps::pollUbxMessage(UbxMessage &msg){
   timeoutSeconds: the maximum amount of time to wait for the message to arrive in milliseconds.
   intervalSeconds: the interval in milliseconds between two readings.
 */
-Status Gps::waitForUbxMessage(UbxMessage &msg, uint32_t timeoutMillis, uint32_t intervalMillis){
+Status Gps::waitForUbxMessage(UbxMessage &msg, uint32_t timeoutMillis, uint32_t intervalMillis) {
   int startTime = millis();
   uint8_t desiredClass = msg.msgClass;
   uint8_t desiredId = msg.msgId;
@@ -156,7 +156,7 @@ Status Gps::waitForUbxMessage(UbxMessage &msg, uint32_t timeoutMillis, uint32_t 
 
 /* An acknowledge message (or a Not Acknowledge message) is sent everytime
 a configuration message is sent.*/
-bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId){
+bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
   this->ubxmsg.msgClass = ACK_CLASS;
   this->ubxmsg.msgId = ACK_ACK;
   Status status = this->waitForUbxMessage(this->ubxmsg, 1000, 50);
@@ -174,7 +174,7 @@ bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId){
 }
 
 /*Sets the communication protocol to UBX (only) both for input and output*/
-Status Gps::setCommunicationToUbxOnly(){
+Status Gps::setCommunicationToUbxOnly() {
   this->ubxmsg.msgClass = CFG_CLASS;
   this->ubxmsg.msgId = CFG_PRT;
   this->ubxmsg.length = 20;
@@ -189,7 +189,7 @@ Status Gps::setCommunicationToUbxOnly(){
 /* Send rate is relative to the event a message is registered on.
 For example, if the rate of a navigation message is set to 2,
 the message is sent every second navigation solution */
-Status Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate){
+Status Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate) {
   this->ubxmsg.msgClass = CFG_CLASS;
   this->ubxmsg.msgId = CFG_MSG;
   this->ubxmsg.length = 8;
@@ -211,7 +211,7 @@ navigationRate :
 timeref :
     The time system to which measurements are aligned:
     UTC | GPS | GLONASS | BeiDou | Galileo */
-Status Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis, uint8_t navigationRate, TimeRef timeref){
+Status Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis, uint8_t navigationRate, TimeRef timeref) {
   this->ubxmsg.msgClass = CFG_CLASS;
   this->ubxmsg.msgId = CFG_RATE;
   this->ubxmsg.length = 6;
@@ -228,7 +228,7 @@ polling : if true the pvt message is polled, else waits for the next navigation 
 timeOutMillis : the maximum time to wait for the message
 To reduce the time between pvt messages the frequency of the message can be
 increased with setMessageSendRate and setMeasurementFrequency. */
-Status Gps::updatePVT(bool polling, uint16_t timeOutMillis){
+Status Gps::updatePVT(bool polling, uint16_t timeOutMillis) {
   this->ubxmsg.msgClass = NAV_CLASS;
   this->ubxmsg.msgId = NAV_PVT;
   if (polling){ //send message without payload
@@ -238,7 +238,8 @@ Status Gps::updatePVT(bool polling, uint16_t timeOutMillis){
       return status;
   }
   //read response / wait for the next pvt message
-  Status status = this->waitForUbxMessage(this->ubxmsg, timeOutMillis); //TODO: check status
+  Status status = this->waitForUbxMessage(this->ubxmsg, timeOutMillis); 
+  //TODO: check status
   if (status == Status::NoError){
     this->pvtData.itow = this->extractU4FromUbxMessage(this->ubxmsg, 0);
     this->pvtData.year = this->extractU2FromUbxMessage(this->ubxmsg, 4);
