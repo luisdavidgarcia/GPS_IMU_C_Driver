@@ -1,3 +1,5 @@
+/* CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_SAM-M8Q_Arduino_Library/tree/master */
+
 #ifndef SAM_M8Q
 #define SAM_M8Q
 
