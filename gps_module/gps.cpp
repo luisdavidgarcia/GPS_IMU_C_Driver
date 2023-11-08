@@ -32,7 +32,7 @@ uint16_t Gps::getAvailableBytes() {
 //  uint8_t msb = i2cBus->read();
 //  uint8_t lsb = i2cBus->read();
   if (msb == 0xFF || lsb == 0xFF) {
-    printf("No Bytes were available")
+    printf("No Bytes were available");
     return 0;
   }
   msb &= 0x7F; //check if this is correct
@@ -44,6 +44,7 @@ uint16_t Gps::getAvailableBytes() {
 Status Gps::readUbxMessage(UbxMessage &msg) {
   uint16_t bytes = this->getAvailableBytes();
 
+  /*
   //if (bytes > MAX_MESSAGE_LENGTH || bytes <= 0)
   //  return Status::ErrorReceiving;
   i2cBus->beginTransmission(this->i2cAddress);
@@ -95,6 +96,8 @@ Status Gps::readUbxMessage(UbxMessage &msg) {
   else {
     return Status::ErrorReceiving;
   }
+  */
+  return Status::ErrorReceiving;
 }
 
 // TODO: Integrate SMBUS I2C for Write
