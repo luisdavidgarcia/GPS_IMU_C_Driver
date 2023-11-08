@@ -1,4 +1,4 @@
-#include "gph.h"
+#include "../../gps_module/gps.h"
 #include <stdio.h>
 
 int main(void) {
