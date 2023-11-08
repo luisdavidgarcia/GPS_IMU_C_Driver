@@ -157,10 +157,10 @@ Status Gps::waitForUbxMessage(UbxMessage &msg, uint32_t timeoutMillis, uint32_t 
         if (msg.msgClass == desiredClass && msg.msgId == desiredId)
           return Status::NoError;
       }
-      delay(intervalMillis);
-      currTime = millis();
+      //delay(intervalMillis);
+      //currTime = millis();
   }
-  return Status::OperationTimeOut;
+  return Status::OperationTimeout;
 }
 
 /* An acknowledge message (or a Not Acknowledge message) is sent everytime
@@ -170,7 +170,7 @@ bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
   this->ubxmsg.msgId = ACK_ACK;
   Status status = this->waitForUbxMessage(this->ubxmsg, 1000, 50);
   //see if a message is received
-  if (status == Status::OperationTimeOut)
+  if (status == Status::OperationTimeout)
     return false;
 
   //see if the received message is an acknowledge message
@@ -187,7 +187,7 @@ Status Gps::setCommunicationToUbxOnly() {
   this->ubxmsg.msgClass = CFG_CLASS;
   this->ubxmsg.msgId = CFG_PRT;
   this->ubxmsg.length = 20;
-  resetPayload(this->ubxmsg);
+  ResetPayload(this->ubxmsg);
   this->ubxmsg.payload[4] = 0x84;
   this->ubxmsg.payload[12] = 0x01;
   this->ubxmsg.payload[14] = 0x01;
@@ -202,7 +202,7 @@ Status Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate
   this->ubxmsg.msgClass = CFG_CLASS;
   this->ubxmsg.msgId = CFG_MSG;
   this->ubxmsg.length = 8;
-  resetPayload(this->ubxmsg);
+  ResetPayload(this->ubxmsg);
   this->ubxmsg.payload[0] = msgClass;
   this->ubxmsg.payload[1] = msgId;
   this->ubxmsg.payload[2] = sendRate;
@@ -301,6 +301,8 @@ std::string Gps::getStatusDescription(Status status){
     return "Operation time out : the operation is taking too long to complete";
   else
     return "Unknown error / Status code";
+
+  return "Unknown error / Status code";
 }
 
 uint32_t Gps::extractU4FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
