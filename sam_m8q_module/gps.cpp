@@ -15,21 +15,26 @@ Gps::Gps() {
 
 Gps::~Gps() { close(i2c_fd); }
 
-
 // TODO: Integrate SMBUS I2C for Get Available Bytes
 /* returns the number of bytes available to read*/
 uint16_t Gps::getAvailableBytes(){
+  i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
+  uint8_t msb = i2c_smbus_read_byte(i2c_fd);
+  uint8_t lsb = i2c_smbus_read_byte(i2c_fd);
 
-  i2cBus->beginTransmission(this->i2cAddress);
-  i2cBus->write(AVAILABLE_BYTES_MSB);
-  if (i2cBus->endTransmission(false) != 0)
-    return 0;
 
-  i2cBus->requestFrom(this->i2cAddress, 2);
-  uint8_t msb = i2cBus->read();
-  uint8_t lsb = i2cBus->read();
-  if (msb == 0xFF || lsb == 0xFF)
+  //i2cBus->beginTransmission(this->i2cAddress);
+  //i2cBus->write(AVAILABLE_BYTES_MSB);
+  //if (i2cBus->endTransmission(false) != 0)
+  //  return 0;
+
+// i2cBus->requestFrom(this->i2cAddress, 2);
+//  uint8_t msb = i2cBus->read();
+//  uint8_t lsb = i2cBus->read();
+  if (msb == 0xFF || lsb == 0xFF) {
+    printf("No Bytes were available")
     return 0;
+  }
   msb &= 0x7F; //check if this is correct
   return ((uint16_t) msb << 8 | lsb);
 }
