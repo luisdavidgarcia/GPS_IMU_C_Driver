@@ -1,16 +1,16 @@
 /*
  * CREDIT/CODE MODIFIED FROM:https://github.com/melopero/Melopero_SAM-M8Q_Arduino_Library/tree/master
  */
-#ifndef SAM_M8Q_H_INCLUDED
-#define SAM_M8Q_H_INCLUDED
+#ifndef GPS_H_INCLUDED
+#define GPS_H_INCLUDED
 
 #include "ubx_msg.h"
 #include <fcntl.h>
 #include <unistd.h>
 extern "C" {
-#include <i2c/smbus.h>
-#include <linux/i2c-dev.h>
-#include <linux/i2c.h>
+    #include <i2c/smbus.h>
+    #include <linux/i2c-dev.h>
+    #include <linux/i2c.h> 
 }
 #include <cstdint>
 #include <sys/ioctl.h>
@@ -47,19 +47,18 @@ enum class TimeRef : uint8_t {
     Galileo = 4
 };
 
-class Melopero_SAM_M8Q {
+class Gps {
 
   private:
       UbxMessage ubxmsg;
       PVTData pvtData;
       int i2c_fd;
-      void initI2C();
       uint32_t extractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
       uint16_t extractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
 
   public:
-      Melopero_SAM_M8Q();
-
+      Gps();
+      ~Gps();
       uint16_t getAvailableBytes();
       Status writeUbxMessage(UbxMessage& msg);
       Status readUbxMessage(UbxMessage& msg);
@@ -79,5 +78,5 @@ class Melopero_SAM_M8Q {
       std::string getStatusDescription(Status status);
 };
 
-#endif // SAM_M8Q_H
+#endif // GPS_H
 
