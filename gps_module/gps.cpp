@@ -146,7 +146,8 @@ Status Gps::pollUbxMessage(UbxMessage &msg) {
   intervalSeconds: the interval in milliseconds between two readings.
 */
 Status Gps::waitForUbxMessage(UbxMessage &msg, uint32_t timeoutMillis, uint32_t intervalMillis) {
-  int startTime = millis();
+  //int startTime = millis();
+  int startTime = 0;
   uint8_t desiredClass = msg.msgClass;
   uint8_t desiredId = msg.msgId;
 
@@ -297,7 +298,7 @@ std::string Gps::getStatusDescription(Status status){
     return "Error occurred while sending a ubx message to the device(writing data)";
   else if (status == Status::ErrorReceiving)
     return "Error occurred while receiving a ubx message from the device(reading data)";
-  else if (status == Status::OperationTimeOut)
+  else if (status == Status::OperationTimeout)
     return "Operation time out : the operation is taking too long to complete";
   else
     return "Unknown error / Status code";
