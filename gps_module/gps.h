@@ -4,7 +4,7 @@
 #ifndef GPS_H_INCLUDED
 #define GPS_H_INCLUDED
 
-#include "ubx_msg.h"
+#include "../ubx_lib/ubx_msg.h"
 #include <fcntl.h>
 #include <unistd.h>
 extern "C" {

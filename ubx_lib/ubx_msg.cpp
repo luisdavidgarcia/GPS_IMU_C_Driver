@@ -1,4 +1,4 @@
-#include "UBX_MSG.h" 
+#include "ubx_msg.h" 
 
 /**
  * @brief   Convert a message class (msgClass) to its corresponding string representation.
