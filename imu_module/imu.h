@@ -19,7 +19,8 @@ extern "C" {
 #define BANK_VALUE 0x02
 #define PWR_MGMT_2_VALUE 0x000000
 
-#define SLAVE_ADDRESS 0x69
+#define IMU_I2C_ADDRESS 0x69
+#define IMU_I2C_BUS "/dev/i2c-1"
 
 /** General Registers */
 #define BANK_SEL 0x7F

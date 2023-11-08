@@ -1,76 +1,83 @@
-/* CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_SAM-M8Q_Arduino_Library/tree/master */
+/*
+ * CREDIT/CODE MODIFIED FROM:https://github.com/melopero/Melopero_SAM-M8Q_Arduino_Library/tree/master
+ */
+#ifndef SAM_M8Q_H_INCLUDED
+#define SAM_M8Q_H_INCLUDED
 
-#ifndef SAM_M8Q
-#define SAM_M8Q
-
-#pragma once
-
+#include "ubx_msg.h"
+#include <fcntl.h>
+#include <unistd.h>
+extern "C" {
+#include <i2c/smbus.h>
+#include <linux/i2c-dev.h>
+#include <linux/i2c.h>
+}
 #include <cstdint>
-#include <vector>
-#include <map>
+#include <sys/ioctl.h>
+#include <string>
 
-#define DEFAULT_I2C_ADDRESS 0x42
+#define GPS_I2C_ADDRESS 0x42
+#define GPS_I2C_BUS "/dev/i2c-1"
+
 #define DATA_STREAM_REGISTER 0xFF
-#define DEFAULT_I2C_BUS 1 
 
-#define YEAR_TAG "year"
-#define MONTH_TAG "month"
-#define DAY_TAG "day"
-#define HOUR_TAG "hour"
-#define MINUTE_TAG "minute"
-#define SECOND_TAG "second"
+#define AVAILABLE_BYTES_MSB 0xFD
+#define AVAILABLE_BYTES_LSB 0xFE
 
-#define VALID_TIME_TAG "valid_time"
-#define VALID_DATE_TAG "valid_date"
-#define FULLY_RESOLVED_TAG "fully_resolved"
-#define VALID_MAG_DEC_TAG "valid_magnetic_declination"
+#define DEFAULT_TIMEOUT_MILLS 2000
+#define DEFAULT_UPDATE_MILLS 1000
+#define DEFAULT_SEND_RATE 0x01
+#define DEFAULT_INTERVAL_MILLS 50
+#define DEFAULT_POLLING_STATE false
 
-#define GNSS_FIX_TAG "GNSS_FIX"
-#define FIX_STATUS_FLAGS_TAG "fix_flags"
-#define NUM_SATELLITES_TAG "num_satellites"
 
-#define LATITUDE_TAG "latitude"
-#define LONGITUDE_TAG "longitude"
-#define ELLIPSOID_HEIGHT_TAG "ellipsoid_height"
-#define MSL_HEIGHT_TAG "MSL_height"
-#define HORIZONTAL_ACCURACY_TAG "horizontal_accuracy"
-#define VERTICAL_ACCURACY_TAG "vertical_accuracy"
-
-#define NED_VELOCITY_TAG "NED_velocity"
-#define GROUND_SPEED_TAG "ground_speed"
-#define VEHICLE_HEADING_TAG "vehicle_heading"
-#define MOTION_HEADING_TAG "motion_heading"
-#define SPEED_ACCURACY_TAG "speed_accuracy"
-#define HEADING_ACCURACY_TAG "heading_accuracy"
-
-#define MAGNETIC_DECLINATION_TAG "magnetic_declination"
-#define MAG_DEC_ACCURACY_TAG "mag_deg_acc"
-
-#include <vector>
-#include <map>
-#include "UBX_MSG.h"  // Include the UBX message handling header
-
-class SAM_M8Q {
-  private:
-      int32_t curr_i2c_addr;
-      int32_t curr_i2c_bus;
-      std::map<std::string, int32_t> pvt_data;
-
-  public:
-      // Constructor
-      SAM_M8Q(int32_t i2c_addr = DEFAULT_I2C_ADDRESS, int32_t i2c_bus = 1);
-      // Destructor
-      ~SAM_M8Q() = default;
-      void ubx_only();
-      void set_message_frequency(int32_t msg_class, int32_t msg_id, int32_t freq);
-      void set_measurement_frequency(int32_t measurement_period_ms, int32_t navigation_rate, int32_t timeref);
-      int32_t available_bytes();
-      void write_message(const std::vector<uint8_t>& buffer);
-      std::vector<uint8_t> read_message();
-      std::vector<uint8_t> poll_message(int32_t msg_class, int32_t msg_id);
-      std::vector<uint8_t> wait_for_message(int32_t time_out_s, double interval_s, int32_t msg_cls, int32_t msg_id);
-      bool wait_for_acknowledge(int32_t msg_class, int32_t msg_id, bool verbose);
-      std::map<std::string, int32_t> get_pvt(bool polling, int32_t time_out_s);
+enum class Status : int8_t {
+    NoError = 0,
+    ArgumentError = -2,
+    ErrorSending = -3,
+    ErrorReceiving = -4,
+    OperationTimeout = -5
 };
 
-#endif // SAM_M8Q
+enum class TimeRef : uint8_t {
+    UTC = 0,
+    GPS = 1,
+    GLONASS = 2,
+    BeiDou = 3,
+    Galileo = 4
+};
+
+class Melopero_SAM_M8Q {
+
+  private:
+      UbxMessage ubxmsg;
+      PVTData pvtData;
+      int i2c_fd;
+      void initI2C();
+      uint32_t extractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
+      uint16_t extractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
+
+  public:
+      Melopero_SAM_M8Q();
+
+      uint16_t getAvailableBytes();
+      Status writeUbxMessage(UbxMessage& msg);
+      Status readUbxMessage(UbxMessage& msg);
+      Status pollUbxMessage(UbxMessage& msg);
+      Status waitForUbxMessage(UbxMessage& msg, 
+          uint32_t timeoutMillis = DEFAULT_TIMEOUT_MILLS, 
+          uint32_t intervalMillis = DEFAULT_INTERVAL_MILLS);
+      bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
+      Status setCommunicationToUbxOnly();
+      Status setMessageSendRate(uint8_t msgClass, uint8_t msgId, 
+          uint8_t sendRate = DEFAULT_SEND_RATE);
+      Status setMeasurementFrequency(uint16_t measurementPeriodMillis = 
+          DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, 
+          TimeRef timeref = TimeRef::UTC);
+      Status updatePVT(bool polling = DEFAULT_POLLING_STATE, 
+          uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS);
+      std::string getStatusDescription(Status status);
+};
+
+#endif // SAM_M8Q_H
+

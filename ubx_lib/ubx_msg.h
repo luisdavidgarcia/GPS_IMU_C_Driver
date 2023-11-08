@@ -35,7 +35,10 @@ MGA 0x13 Multiple GNSS Assistance Messages: Assistance data for various GNSS
 LOG 0x21 Logging Messages: Log creation, deletion, info and retrieval
 SEC 0x27 Security Feature Messages
 HNR 0x28 High Rate Navigation Results Messages: High rate time, position, speed, heading
+
+CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 */
+
 
 #define NAV_CLASS 0x01
 #define RXM_CLASS 0x02
