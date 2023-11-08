@@ -97,12 +97,14 @@ Status Gps::readUbxMessage(UbxMessage &msg) {
     return Status::ErrorReceiving;
   }
   */
+  // TEMP
   return Status::ErrorReceiving;
 }
 
 // TODO: Integrate SMBUS I2C for Write
 Status Gps::writeUbxMessage(UbxMessage &msg) {
-  computeChecksum(msg);
+  /*
+  ComputeChecksum(msg);
   i2cBus->beginTransmission(this->i2cAddress);
   if (i2cBus->endTransmission(false) != 0)
     return Status::ErrorSending;
@@ -132,6 +134,10 @@ Status Gps::pollUbxMessage(UbxMessage &msg) {
   if (status != Status::NoError) return status;
   status = this->waitForUbxMessage(msg);
   return status;
+  */
+  // TEMP
+  return Status::ErrorReceiving;
+
 }
 
 // TODO: Get Rid of Old delay and Millis() Arduino calls
@@ -218,7 +224,7 @@ Status Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis, uint8_t na
   this->ubxmsg.msgClass = CFG_CLASS;
   this->ubxmsg.msgId = CFG_RATE;
   this->ubxmsg.length = 6;
-  resetPayload(this->ubxmsg);
+  ResetPayload(this->ubxmsg);
   this->ubxmsg.payload[0] = (uint8_t) (measurementPeriodMillis & 0xFF );
   this->ubxmsg.payload[1] = measurementPeriodMillis >> 8;
   this->ubxmsg.payload[2] = navigationRate;
