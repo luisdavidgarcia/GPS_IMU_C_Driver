@@ -186,7 +186,7 @@ UbxMessage Gps::waitForUbxMessage(UbxMessage& msg, uint32_t timeoutMillis, uint3
     }
 }
 
-bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId, bool verbose=false) {
+bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     bool ack = false;
     UbxMessage msg = waitForUbxMessage(ubx::ACK_CLASS);  
 
@@ -197,13 +197,8 @@ bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId, bool verbose=false
         return ack;
     }
 
-    if (msg[3] == ubx::ACK_ACK && msgClass == msg[6] && msgId == msg[7]) {
+    if (msg[3] == ACK_ACK && msgClass == msg[6] && msgId == msg[7]) {
         ack = true;
-    }
-
-    if (verbose) {
-        printf("A message of class : %s and id : %d was %sacknowledged\n",
-               ubx::msg_class_to_string(msg[6]).c_str(), msg[7], (msg[3] != ubx::ACK_ACK) ? "not " : "");
     }
 
     return ack;

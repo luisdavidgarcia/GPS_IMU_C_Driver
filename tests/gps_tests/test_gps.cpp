@@ -4,7 +4,6 @@
 int main(void) {
     
     Gps gps_module;
-    gps_module.UbxOnly();
 
     return 0;
 }

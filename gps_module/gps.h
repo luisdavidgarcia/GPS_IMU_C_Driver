@@ -95,14 +95,11 @@ class Gps {
       UbxMessage pollUbxMessage(UbxMessage& msg);
       bool setMessageSendRate(uint8_t msgClass, uint8_t msgId, 
           uint8_t sendRate);
-      bool setMeasurementFrequency(uint16_t measurementPeriodMillis = 
-          DEFAULT_UPDATE_MILLS, uint8_t navigationRate, 
-          uint8_t timeref);
-
+      bool setMeasurementFrequency(uint16_t measurementPeriodMillis, 
+        uint8_t navigationRate, uint8_t timeref);
       UbxMessage waitForUbxMessage(UbxMessage& msg, 
-          uint32_t timeoutMillis = DEFAULT_TIMEOUT_MILLS, 
-          uint32_t intervalMillis = DEFAULT_INTERVAL_MILLS);
-      bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId, bool verbose);
+          uint32_t timeoutMillis, uint32_t intervalMillis);
+      bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
 
   public:
       Gps();
