@@ -16,20 +16,6 @@ Gps::Gps() {
 
 Gps::~Gps() { close(i2c_fd); }
 
-void UbxOnly() {
-    // Define the payload data
-    uint8_t payload[] = {
-        0x00, 0x00, 0x00, 0x00, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00
-    };
-
-    // Compose the UBX message
-    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, 20, payload);
-
-    // Assuming you have a function named writeMessage to send the message
-    WriteUbxMessage(message);
-}
-
 // TODO: Integrate SMBUS I2C for Get Available Bytes
 /* returns the number of bytes available to read*/
 uint16_t Gps::GetAvailableBytes() {
@@ -148,6 +134,20 @@ Status Gps::WaitForUbxMessage(UbxMessage &msg, uint32_t timeoutMillis, uint32_t 
       //currTime = millis();
   }
   return Status::OperationTimeout;
+}
+
+void UbxOnly() {
+    // Define the payload data
+    uint8_t payload[] = {
+        0x00, 0x00, 0x00, 0x00, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00
+    };
+
+    // Compose the UBX message
+    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, 20, payload);
+
+    // Assuming you have a function named writeMessage to send the message
+    WriteUbxMessage(message);
 }
 
 /* An acknowledge message (or a Not Acknowledge message) is sent everytime
