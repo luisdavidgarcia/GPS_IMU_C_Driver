@@ -92,9 +92,9 @@ class Gps {
       bool writeUbxMessage(UbxMessage& msg);
 
       uint16_t getAvailableBytes(void);
-      UbxMessage readUbxMessage(UbxMessage& msg);
-      bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
-      UbxMessage waitForUbxMessage(uint32_t timeoutMillis, uint32_t intervalMillis, uint8_t msg_cls, uint8_t msg_id);
+      UbxMessage readUbxMessage();
+      //bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
+      //UbxMessage waitForUbxMessage(uint32_t timeoutMillis, uint32_t intervalMillis, uint8_t msg_cls, uint8_t msg_id);
 
       /*
       UbxMessage pollUbxMessage(uint8_t msg_class, uint8_t msg_id);
