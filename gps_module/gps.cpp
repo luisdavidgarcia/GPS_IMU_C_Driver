@@ -17,7 +17,16 @@ Gps::Gps() {
 
   this->ubxOnly();
 
-  UbxMessage result_msg = this->readUbxMessage();
+  UbxMessage result_msg;
+  uint8_t flag = -1;
+  
+  while (flage == -1) {
+    result_msg = this->readUbxMessage();
+    if (result_msg.sync1 != -1) {
+      flag = 1;
+    }
+  }
+
   /*
   bool result = this->waitForAcknowledge(CFG_CLASS, CFG_PRT);
   if (!result) {
@@ -170,8 +179,10 @@ UbxMessage Gps::readUbxMessage() {
   }
 
   printf("Failed to read message.\n");
+  UbxMessage badMsg;
+  badMsg.sync1 = -1;
 
-  return UbxMessage();  // Return an empty message
+  return badMsg;  // Return an empty message
 }
 
 /*
