@@ -18,10 +18,12 @@ Gps::Gps() {
   this->ubxOnly();
 
   UbxMessage result_msg;
-  result_msg.sync1 = 5;
-  
-  while (result_msg.sync1 != -1) {
+
+  while (1) {
     result_msg = this->readUbxMessage();
+    if (result_msg.sync1 != -1) {
+      break;
+    }
   }
 
   /*
