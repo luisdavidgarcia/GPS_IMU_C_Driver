@@ -114,20 +114,25 @@ uint16_t Gps::getAvailableBytes() {
 */
 
 bool Gps::writeUbxMessage(UbxMessage &msg) {
-  std::vector<uint8_t> buf; 
-  buf.push_back(msg.sync1);
-  buf.push_back(msg.sync2);
-  buf.push_back(msg.msgClass);
-  buf.push_back(msg.msgId);
-  buf.push_back(msg.payloadLength >> 8);
-  buf.push(msg.payload.loadLength & 0xFF);
+  std::vector<uint8_t> tempBuf; 
+  tempBuf.push_back(msg.sync1);
+  tempBuf.push_back(msg.sync2);
+  tempBuf.push_back(msg.msgClass);
+  tempBuf.push_back(msg.msgId);
+  tempBuf.push_back(msg.payloadLength >> 8);
+  tempBuf.push_back(msg.payloadLength & 0xFF);
   for (int i = 0; i < msg.payloadLength; i++) {
-    buf.push_back(msg.payload[i]);
+    tempBuf.push_back(msg.payload[i]);
   }
-  buf.push_back(msg.checksumA);
-  buf.push_back(msg.checksumB);
+  tempBuf.push_back(msg.checksumA);
+  tempBuf.push_back(msg.checksumB);
 
-  if (i2c_smbus_write_block_data(i2c_fd, 0x00, buf.size(), buf) < 0) {
+  uint8_t buf[tempBuf.size()];
+  for (int i = 0; i < tempBuf.size(); i++) {
+    buf[i] = tempBuf[i];
+  }
+
+  if (i2c_smbus_write_block_data(i2c_fd, 0x00, tempBuf.size(), buf) < 0) {
     return false;
   }
 
