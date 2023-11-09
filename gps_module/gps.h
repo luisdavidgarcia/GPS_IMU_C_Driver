@@ -55,14 +55,14 @@ class Gps {
       int i2c_fd;
       uint32_t ExtractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
       uint16_t ExtractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
+      Status WriteUbxMessage(UbxMessage& msg);
+      Status ReadUbxMessage(UbxMessage& msg);
 
   public:
       Gps();
       ~Gps();
       void UbxOnly();
       uint16_t GetAvailableBytes();
-      Status WriteUbxMessage(UbxMessage& msg);
-      Status ReadUbxMessage(UbxMessage& msg);
       Status PollUbxMessage(UbxMessage& msg);
       Status WaitForUbxMessage(UbxMessage& msg, 
           uint32_t timeoutMillis = DEFAULT_TIMEOUT_MILLS, 
