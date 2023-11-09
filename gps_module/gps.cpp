@@ -28,8 +28,8 @@ uint16_t Gps::GetAvailableBytes() {
     printf("No Bytes were available\n");
     return 0;
   }
-  printf("MSB: 0x%x", msb);
-  printf("LSB: 0x%x", lsb);
+  printf("MSB: 0x%x\n", msb);
+  printf("LSB: 0x%x\n", lsb);
   msb &= 0x7F; //check if this is correct
   return ((uint16_t) msb << 8 | lsb);
 }
