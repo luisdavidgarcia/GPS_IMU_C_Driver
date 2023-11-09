@@ -27,6 +27,8 @@ Gps::Gps() {
     }
   }
 
+  printf("hello world\n");
+
   /*
   bool result = this->waitForAcknowledge(CFG_CLASS, CFG_PRT);
   if (!result) {
