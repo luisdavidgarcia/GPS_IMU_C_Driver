@@ -83,6 +83,8 @@ CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 #define MAX_PAYLOAD_LENGTH 256
 
 typedef struct {
+    uint8_t sync1;
+    uint8_t sync2;
     uint8_t msgClass;
     uint8_t msgId;
     uint16_t payloadLength;

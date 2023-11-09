@@ -9,6 +9,8 @@
  * @return  The composed UBX message.  */
 UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLength = 0, const uint8_t* payload = nullptr) {
     UbxMessage message;
+    message.sync1 = SYNC_CHAR_1;
+    message.sync2 = SYNC_CHAR_2;
     message.msgClass = msg_class;
     message.msgId = msg_id;
     message.payloadLength = payloadLength;
