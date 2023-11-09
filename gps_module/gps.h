@@ -17,6 +17,7 @@ extern "C" {
 #include <string>
 #include <chrono>
 #include <thread>
+#include <vector>
 
 #define GPS_I2C_ADDRESS 0x42
 #define GPS_I2C_BUS "/dev/i2c-1"
@@ -32,22 +33,50 @@ extern "C" {
 #define DEFAULT_INTERVAL_MILLS 50
 #define DEFAULT_POLLING_STATE false
 
+typedef struct {
+    // Time Information
+    uint16_t year;               // Year (UTC)
+    uint8_t month;               // Month (UTC)
+    uint8_t day;                 // Day of the month (UTC)
+    uint8_t hour;                // Hour of the day (UTC)
+    uint8_t min;                 // Minute of the hour (UTC)
+    uint8_t sec;                 // Second of the minute (UTC)
+    
+    // Validity Flags
+    uint8_t validTimeFlag;       // Validity flags for time
+    uint8_t validDateFlag;       // Validity flags for time
+    uint8_t fullyResolved;       // Validity flags for time
+    uint8_t validMagFlag;       // Validity flags for time
+    
+    // GNSS
+    uint8_t gnssFix;
+    uint8_t fixStatusFlags;
+    uint8_t numberOfSatellites;
+    
+    // Coordinates
+    int32_t longitude;           // Longitude (degrees * 1e7)
+    int32_t latitude;            // Latitude (degrees * 1e7)
+    int32_t height;              // Height above ellipsoid (millimeters)
+    int32_t heightMSL;                // Height above mean sea level (millimeters)
+    
+    // Accuracy Information
+    uint32_t horizontalAccuracy; // Horizontal accuracy estimate (millimeters)
+    uint32_t verticalAccuracy;   // Vertical accuracy estimate (millimeters)
+    
+    // Velocity and Heading 
+    int32_t velocityNorth; // Velocity in the north direction (millimeters/second)
+    int32_t velocityEast;   // Velocity in the east direction (millimeters/second)
+    int32_t velocityDown;   // Velocity in the down direction (millimeters/second)
+    int32_t groundSpeed;      // Ground speed (millimeters/second)
+    int32_t vehicalHeading;
+    int32_t motionHeading;     // Heading of motion (degrees * 1e5)
+    uint32_t speedAccuracy;      // Speed accuracy estimate (millimeters/second)
+    int32_t motionHeadingAccuracy;         
 
-enum class Status : int8_t {
-    NoError = 0,
-    ArgumentError = -2,
-    ErrorSending = -3,
-    ErrorReceiving = -4,
-    OperationTimeout = -5
-};
-
-enum class TimeRef : uint8_t {
-    UTC = 0,
-    GPS = 1,
-    GLONASS = 2,
-    BeiDou = 3,
-    Galileo = 4
-};
+    // Vehicle Heading and Magnetic Declination
+    int16_t magneticDeclination; // Magnetic declination (degrees * 1e2)
+    uint16_t magnetDeclinationAccuracy; // Declination accuracy (degrees * 1e2)
+} PVTData;
 
 class Gps {
 
@@ -55,30 +84,31 @@ class Gps {
       UbxMessage ubxmsg;
       PVTData pvtData;
       int i2c_fd;
-      uint32_t ExtractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
-      uint16_t ExtractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
-      Status WriteUbxMessage(UbxMessage& msg);
-      Status ReadUbxMessage(UbxMessage& msg);
+      uint32_t extractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
+      uint16_t extractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
+      uint16_t getAvailableBytes();
+
+      void ubxOnly(void);
+
+      bool writeUbxMessage(UbxMessage& msg);
+      UbxMessage readUbxMessage(UbxMessage& msg);
+      UbxMessage pollUbxMessage(UbxMessage& msg);
+      bool setMessageSendRate(uint8_t msgClass, uint8_t msgId, 
+          uint8_t sendRate = DEFAULT_SEND_RATE);
+      bool setMeasurementFrequency(uint16_t measurementPeriodMillis = 
+          DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, 
+          uint8_t timeref = 0);
+
+      UbxMessage waitForUbxMessage(UbxMessage& msg, 
+          uint32_t timeoutMillis = DEFAULT_TIMEOUT_MILLS, 
+          uint32_t intervalMillis = DEFAULT_INTERVAL_MILLS);
+      bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId, bool verbose=false);
 
   public:
       Gps();
       ~Gps();
-      void UbxOnly(void);
-      uint16_t GetAvailableBytes();
-      Status PollUbxMessage(UbxMessage& msg);
-      Status WaitForUbxMessage(UbxMessage& msg, 
-          uint32_t timeoutMillis = DEFAULT_TIMEOUT_MILLS, 
-          uint32_t intervalMillis = DEFAULT_INTERVAL_MILLS);
-      bool WaitForAcknowledge(uint8_t msgClass, uint8_t msgId);
-      Status SetCommunicationToUbxOnly();
-      Status SetMessageSendRate(uint8_t msgClass, uint8_t msgId, 
-          uint8_t sendRate = DEFAULT_SEND_RATE);
-      Status SetMeasurementFrequency(uint16_t measurementPeriodMillis = 
-          DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, 
-          TimeRef timeref = TimeRef::UTC);
-      Status UpdatePVT(bool polling = DEFAULT_POLLING_STATE, 
+      PVTData GetPvt(bool polling = DEFAULT_POLLING_STATE, 
           uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS);
-      std::string GetStatusDescription(Status status);
 };
 
 #endif // GPS_H

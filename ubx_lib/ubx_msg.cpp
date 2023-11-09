@@ -49,8 +49,7 @@ std::string MsgClassToString(uint8_t msgClass) {
     else if (msgClass == MON_CLASS)
         return "Monitoring";
     else if (msgClass == AID_CLASS)
-        return "AssistNow messages";
-    else if (msgClass == TIM_CLASS)
+        return "AssistNow messages"; else if (msgClass == TIM_CLASS)
         return "Timing";
     else if (msgClass == ESF_CLASS)
         return "External Sensor Fusion Messages";

@@ -13,13 +13,88 @@ Gps::Gps() {
   if (ioctl(i2c_fd, I2C_SLAVE, GPS_I2C_ADDRESS) < 0) {
     perror("Failed to acquire I2C GPS address");
   }
+
+  this->ubxOnly();
+
+  bool result = this->waitForAcknowledge(CFG_CLASS, CFG_PRT);
+  if (!result) {
+      printf("Error: Acknowledgment not received for setting communication to UBX only.\n");
+      exit(-1);
+  }
+
+  result = this->setMessageSendRate(NAV_CLASS, NAV_PVT);
+  if (!result) {
+    printf("Error: Failed to set message send rate for NAV_PVT.\n");
+    exit(-1); 
+  }
+
+  result = this->waitForAcknowledge(CFG_CLASS, CFG_MSG);
+  if (!result) {
+    printf("Error: Acknowledgment not received for setting message frequency.\n");
+    exit(-1);
+  }
+
+  result = this->setMeasurementFrequency(500)
+  if (!result) {
+      printf("Error: Failed to set measurement frequency.\n");
+      exit(-1); 
+  }
+
+  result = this->waitForAcknowledge(CFG_CLASS, CFG_RATE);
+  if (!result) {
+      printf("Error: Acknowledgment not received for setting measurement frequency.\n");
+      exit(-1); 
+  }
 }
 
 Gps::~Gps() { close(i2c_fd); }
 
-// TODO: Integrate SMBUS I2C for Get Available Bytes
-/* returns the number of bytes available to read*/
-uint16_t Gps::GetAvailableBytes() {
+void Gps::ubxOnly(void) {
+    uint8_t payload[] = {
+        0x00, 0x00, 0x00, 0x00, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00
+    };
+
+    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, sizeof(payload), payload);
+
+    bool result = this->writeUbxMessage(message);
+    if (!result) {
+      printf("Error: Could not write to GPS.\n");
+      exit(-1);
+    }
+}
+
+bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate = DEFAULT_SEND_RATE) {
+  uint8_t payload[] = {msg_class, msg_id, freq, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+  UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, sizeof(payload), payload);
+
+    bool result = this->writeUbxMessage(message);
+
+    return result;
+}
+
+bool setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, uint8_t timeref = 0) {
+    uint8_t payload[6];
+
+    // Convert measurement_period_ms to little-endian bytes
+    payload[0] = static_cast<uint8_t>(measurementPeriodMillis & 0xFF);
+    payload[1] = static_cast<uint8_t>((measurementPeriodMillis >> 8) & 0xFF);
+    // Convert navigation_rate to little-endian bytes
+    payload[2] = navigationRate;
+    // Convert timeref to little-endian bytes
+    payload[3] = timeref;
+    payload[4] = 0x00;
+    payload[5] = 0x00;
+
+    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_RATE, sizeof(payload), payload);
+
+    bool result = writeUbxMessage(message);
+
+    return result;
+}
+
+uint16_t Gps::getAvailableBytes() {
   i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
@@ -28,230 +103,123 @@ uint16_t Gps::GetAvailableBytes() {
     printf("No Bytes were available\n");
     return 0;
   }
-  printf("MSB: 0x%x\n", msb);
-  printf("LSB: 0x%x\n", lsb);
-  msb &= 0x7F; //check if this is correct
-  return ((uint16_t) msb << 8 | lsb);
+
+  // Combine MSB and LSB to form a 16-bit value
+  return static_cast<uint16_t>(msb << 8) | lsb;
 }
 
-// TODO: Integrate SMBUS I2C for Read
-/* Reads a UBX message and populates the given UbxMessage*/
-Status Gps::ReadUbxMessage(UbxMessage &msg) {
-  uint16_t messageLength = GetAvailableBytes();
-  //for (int i = 0; i < messageLength; i++) {
-  //  uint8_t reg = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-  //  printf("Reg Value: 0x%x\n", reg);
-  //}
-  //if (i2c_smbus_read_block_data(i2c_fd, 0x00, msg.payload) < 0) {
-
-  //}
-
-  // TEMP
-  return Status::ErrorReceiving;
-}
-
-// TODO: Integrate SMBUS I2C for Write
-Status Gps::WriteUbxMessage(UbxMessage &msg) {
+bool Gps::writeUbxMessage(UbxMessage &msg) {
   if (i2c_smbus_write_block_data(i2c_fd, 0x00, msg.length, msg.payload) < 0) {
-    return Status::ErrorSending;
+    return false;
   }
 
-  return Status::NoError;
+  return true;
 }
 
-// TODO: Get Rid of Old delay and Millis() Arduino calls
-/* waits for a given message type (class and id).
-  timeoutSeconds: the maximum amount of time to wait for the message to arrive in milliseconds.
-  intervalSeconds: the interval in milliseconds between two readings.
-*/
-Status Gps::WaitForUbxMessage(UbxMessage &msg, uint32_t timeoutMillis, uint32_t intervalMillis) {
-  //int startTime = millis();
-  int startTime = 0;
-  uint8_t desiredClass = msg.msgClass;
-  uint8_t desiredId = msg.msgId;
+UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
+  uint16_t messageLength = GetAvailableBytes();
+  std::vector<uint8_t> msg;
 
-  int currTime = startTime;
-  while (currTime - startTime < timeoutMillis){
-      Status status = this->ReadUbxMessage(msg);
-      if (status == Status::NoError) {
-        if (msg.msgClass == desiredClass && msg.msgId == desiredId)
-          return Status::NoError;
+  if (messageLength > 0) {
+      for (int i = 0; i < messageLength; i++) {
+          uint8_t byte = i2c_smbus_read_byte_data(file, DATA_STREAM_REGISTER);
+          if (byte == static_cast<uint8_t>(-1)) {
+              perror("Failed to read byte from I2C device");
+              close(file);
+              return UbxMessage();  // Return an empty message on error
+          }
+          msg.push_back(byte);
       }
-      //delay(intervalMillis);
-      //currTime = millis();
+
+      if (msg.size() >= sizeof(UbxMessage)) {
+          UbxMessage ubxMsg;
+          memcpy(&ubxMsg, msg.data(), sizeof(UbxMessage));
+          return ubxMsg;
+      }
   }
-  return Status::OperationTimeout;
+
+  return UbxMessage();  // Return an empty message
 }
 
-void Gps::UbxOnly(void) {
-    // Define the payload data
-    uint8_t payload[] = {
-        0x00, 0x00, 0x00, 0x00, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00
-    };
+UbxMessage Gps::pollUbxMessage(UbxMessage& msg_class, UbxMessage& msg_id) {
+    UbxMessage ubxMsg;
+    ubxMsg.msgClass = msg_class;
+    ubxMsg.msgId = msg_id;
+    ubxMsg.length = 0;
 
-    // Compose the UBX message
-    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, 20, payload);
+    bool result = WriteUbxMessage(ubxMsg);
 
-    // Assuming you have a function named writeMessage to send the message
-    Status status = this->WriteUbxMessage(message);
-    if (status == Status::ErrorSending) {
-      printf("Could not write to GPS.\n");
+    if (!result) {
+        printf("Failed to write poll message to GPS.\n");
+        return UbxMessage();
+    }
+
+    return WaitForUbxMessage(ubxMsg);
+}
+
+UbxMessage Gps::waitForUbxMessage(UbxMessage& msg, uint32_t timeoutMillis, uint32_t intervalMillis) {
+    uint32_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    ).count();
+
+    UbxMessage response;
+
+    while (true) {
+        uint32_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        ).count();
+
+        if (currentTime - startTime >= timeoutMillis) {
+            printf("Timeout while waiting for UBX message.\n");
+            return UbxMessage();  
+        }
+
+        response = readUbxMessage(msg);  
+
+        // Check if the received message matches the expected class and ID
+        if (response.msgClass == msg.msgClass && response.msgId == msg.msgId) {
+            return response;
+        }
+
+        // Sleep for the specified interval before checking again
+        std::this_thread::sleep_for(std::chrono::milliseconds(intervalMillis));
     }
 }
 
-/* An acknowledge message (or a Not Acknowledge message) is sent everytime
-a configuration message is sent.*/
-bool Gps::WaitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
-  this->ubxmsg.msgClass = ACK_CLASS;
-  this->ubxmsg.msgId = ACK_ACK;
-  Status status = this->WaitForUbxMessage(this->ubxmsg, 1000, 50);
-  //see if a message is received
-  if (status == Status::OperationTimeout)
-    return false;
+bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId, bool verbose) {
+    bool ack = false;
+    UbxMessage msg = waitForUbxMessage(ubx::ACK_CLASS);  
 
-  //see if the received message is an acknowledge message
-  if (this->ubxmsg.msgClass == ACK_CLASS && this->ubxmsg.msgId == ACK_ACK)
-    if (this->ubxmsg.length >= 2)
-      if (this->ubxmsg.payload[0] == msgClass && this->ubxmsg.payload[1] == msgId)
-        return true;
+    if (msg.empty()) {
+        if (verbose) {
+            printf("No ACK/NAK Message received\n");
+        }
+        return ack;
+    }
 
-  return false;
-}
+    if (msg[3] == ubx::ACK_ACK && msgClass == msg[6] && msgId == msg[7]) {
+        ack = true;
+    }
 
-/*Sets the communication protocol to UBX (only) both for input and output*/
-Status Gps::SetCommunicationToUbxOnly() {
-  this->ubxmsg.msgClass = CFG_CLASS;
-  this->ubxmsg.msgId = CFG_PRT;
-  this->ubxmsg.length = 20;
-  ResetPayload(this->ubxmsg);
-  this->ubxmsg.payload[4] = 0x84;
-  this->ubxmsg.payload[12] = 0x01;
-  this->ubxmsg.payload[14] = 0x01;
+    if (verbose) {
+        printf("A message of class : %s and id : %d was %sacknowledged\n",
+               ubx::msg_class_to_string(msg[6]).c_str(), msg[7], (msg[3] != ubx::ACK_ACK) ? "not " : "");
+    }
 
-  return this->WriteUbxMessage(this->ubxmsg);
-}
-
-/* Send rate is relative to the event a message is registered on.
-For example, if the rate of a navigation message is set to 2,
-the message is sent every second navigation solution */
-Status Gps::SetMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate) {
-  this->ubxmsg.msgClass = CFG_CLASS;
-  this->ubxmsg.msgId = CFG_MSG;
-  this->ubxmsg.length = 8;
-  ResetPayload(this->ubxmsg);
-  this->ubxmsg.payload[0] = msgClass;
-  this->ubxmsg.payload[1] = msgId;
-  this->ubxmsg.payload[2] = sendRate;
-  return this->WriteUbxMessage(this->ubxmsg);
-}
-
-/*measurementPeriodMillis:
-    elapsed time between GNSS measurements, which defines the rate,
-    e.g. 100ms => 10Hz, Measurement rate should be greater than or
-    equal to 25 ms.
-navigationRate :
-    The ratio between the number of measurements and the number of
-    navigation solutions, e.g. 5 means five measurements for
-    every navigation solution. Maximum value is 127. \n
-timeref :
-    The time system to which measurements are aligned:
-    UTC | GPS | GLONASS | BeiDou | Galileo */
-Status Gps::SetMeasurementFrequency(uint16_t measurementPeriodMillis, uint8_t navigationRate, TimeRef timeref) {
-  this->ubxmsg.msgClass = CFG_CLASS;
-  this->ubxmsg.msgId = CFG_RATE;
-  this->ubxmsg.length = 6;
-  ResetPayload(this->ubxmsg);
-  this->ubxmsg.payload[0] = (uint8_t) (measurementPeriodMillis & 0xFF );
-  this->ubxmsg.payload[1] = measurementPeriodMillis >> 8;
-  this->ubxmsg.payload[2] = navigationRate;
-  this->ubxmsg.payload[4] = (uint8_t) timeref;
-  return this->WriteUbxMessage(this->ubxmsg);
-}
-
-/*Updates the pvt data contained in the struct pvtData.
-polling : if true the pvt message is polled, else waits for the next navigation solution
-timeOutMillis : the maximum time to wait for the message
-To reduce the time between pvt messages the frequency of the message can be
-increased with setMessageSendRate and setMeasurementFrequency. */
-Status Gps::UpdatePVT(bool polling, uint16_t timeOutMillis) {
-  this->ubxmsg.msgClass = NAV_CLASS;
-  this->ubxmsg.msgId = NAV_PVT;
-  if (polling){ //send message without payload
-    this->ubxmsg.length = 0;
-    Status status = this->WriteUbxMessage(this->ubxmsg);
-    if (status != Status::NoError)
-      return status;
-  }
-  //read response / wait for the next pvt message
-  Status status = this->WaitForUbxMessage(this->ubxmsg, timeOutMillis); 
-  //TODO: check status
-  if (status == Status::NoError){
-    this->pvtData.itow = this->ExtractU4FromUbxMessage(this->ubxmsg, 0);
-    this->pvtData.year = this->ExtractU2FromUbxMessage(this->ubxmsg, 4);
-    this->pvtData.month = this->ubxmsg.payload[6];
-    this->pvtData.day = this->ubxmsg.payload[7];
-    this->pvtData.hour = this->ubxmsg.payload[8];
-    this->pvtData.min = this->ubxmsg.payload[9];
-    this->pvtData.sec = this->ubxmsg.payload[10];
-    this->pvtData.validTimeFlag = this->ubxmsg.payload[11];
-    this->pvtData.timeAccuracy = this->ExtractU4FromUbxMessage(this->ubxmsg, 12); //nanoseconds
-    this->pvtData.nano = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 16); //nanoseconds
-    this->pvtData.fixType = this->ubxmsg.payload[20];
-    this->pvtData.fixStatusFlags = this->ubxmsg.payload[21];
-    this->pvtData.additionalFlags = this->ubxmsg.payload[22];
-    this->pvtData.numberOfSatellites = this->ubxmsg.payload[23];
-    this->pvtData.longitude = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 24); //degrees
-    this->pvtData.latitude = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 28); //degrees
-    this->pvtData.height = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 32); //mm
-    this->pvtData.hMSL = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 36); //mm
-    this->pvtData.horizontalAccuracy = this->ExtractU4FromUbxMessage(this->ubxmsg, 40);
-    this->pvtData.verticalAccuracy = this->ExtractU4FromUbxMessage(this->ubxmsg, 44);
-    this->pvtData.velocityNorth = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 48);//mm/s
-    this->pvtData.velocityEast = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 52); //mm/s
-    this->pvtData.velocityDown = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 56); //mm/s
-    this->pvtData.groundSpeed = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 60); //mm/s
-    this->pvtData.headingOfMotion = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 64); //degrees
-    this->pvtData.speedAccuracy = this->ExtractU4FromUbxMessage(this->ubxmsg, 68); //mm/s
-    this->pvtData.headingAccuracy = this->ExtractU4FromUbxMessage(this->ubxmsg, 72); //mm/s
-    this->pvtData.positionDOP = this->ExtractU2FromUbxMessage(this->ubxmsg, 76);
-    this->pvtData.reserved = this->ubxmsg.payload[78];
-    this->pvtData.headingOfVehicle = (int32_t) this->ExtractU4FromUbxMessage(this->ubxmsg, 84);
-    this->pvtData.magneticDeclination = (int16_t) this->ExtractU2FromUbxMessage(this->ubxmsg, 88);
-    this->pvtData.declinationAccuracy = this->ExtractU2FromUbxMessage(this->ubxmsg, 90);
-  }
-
-  return status;
+    return ack;
 }
 
 
-std::string Gps::GetStatusDescription(Status status){
-  if (status == Status::NoError)
-    return "No Errors";
-  else if (status == Status::ArgumentError)
-    return "Argument Error";
-  else if (status == Status::ErrorSending)
-    return "Error occurred while sending a ubx message to the device(writing data)";
-  else if (status == Status::ErrorReceiving)
-    return "Error occurred while receiving a ubx message from the device(reading data)";
-  else if (status == Status::OperationTimeout)
-    return "Operation time out : the operation is taking too long to complete";
-  else
-    return "Unknown error / Status code";
-
-  return "Unknown error / Status code";
-}
-
-uint32_t Gps::ExtractU4FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
+uint32_t Gps::extractU4FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
   if (startIndex + 3 >= msg.length)
     return 0;
 
-  uint32_t value = (uint32_t) this->ExtractU2FromUbxMessage(msg, startIndex);
-  value |= ((uint32_t) this->ExtractU2FromUbxMessage(msg, startIndex + 2)) << 16;
+  uint32_t value = (uint32_t) this->extractU2FromUbxMessage(msg, startIndex);
+  value |= ((uint32_t) this->extractU2FromUbxMessage(msg, startIndex + 2)) << 16;
   return value;
 }
 
-uint16_t Gps::ExtractU2FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
+uint16_t Gps::extractU2FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
   if (startIndex + 1 >= msg.length)
     return 0;
 

@@ -90,41 +90,6 @@ typedef struct {
     uint8_t checksumB;
 } UbxMessage;
 
-typedef struct {
-    uint32_t itow;
-    uint16_t year;
-    uint8_t month;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t min;
-    uint8_t sec;
-    uint8_t validTimeFlag;
-    uint32_t timeAccuracy;
-    int32_t nano;
-    uint8_t fixType;
-    uint8_t fixStatusFlags;
-    uint8_t additionalFlags;
-    uint8_t numberOfSatellites;
-    int32_t longitude;
-    int32_t latitude;
-    int32_t height;
-    int32_t hMSL;
-    uint32_t horizontalAccuracy;
-    uint32_t verticalAccuracy;
-    int32_t velocityNorth;
-    int32_t velocityEast;
-    int32_t velocityDown;
-    int32_t groundSpeed;
-    int32_t headingOfMotion;
-    uint32_t speedAccuracy;
-    int32_t headingAccuracy;
-    uint16_t positionDOP;
-    uint8_t reserved;
-    int32_t headingOfVehicle;
-    int16_t magneticDeclination;
-    uint16_t declinationAccuracy;
-} PVTData;
-
 UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t length, const uint8_t* payload);
 void ComputeChecksum(UbxMessage &msg);
 void ResetPayload(UbxMessage &msg);
