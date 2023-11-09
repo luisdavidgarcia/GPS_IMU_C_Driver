@@ -118,7 +118,7 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
 
 UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
   uint16_t messageLength = getAvailableBytes();
-  std::vector<uint8_t> msg;
+  std::vector<uint8_t> message;
 
   if (messageLength > 0) {
       for (int i = 0; i < messageLength; i++) {
@@ -128,12 +128,12 @@ UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
               close(file);
               return UbxMessage();  // Return an empty message on error
           }
-          msg.push_back(byte);
+          message.push_back(byte);
       }
 
-      if (msg.size() >= sizeof(UbxMessage)) {
+      if (message.size() >= sizeof(UbxMessage)) {
           UbxMessage ubxMsg;
-          memcpy(&ubxMsg, msg.data(), sizeof(UbxMessage));
+          memcpy(&ubxMsg, message.data(), sizeof(UbxMessage));
           return ubxMsg;
       }
   }
@@ -147,14 +147,14 @@ UbxMessage Gps::pollUbxMessage(UbxMessage& msg_class, UbxMessage& msg_id) {
     ubxMsg.msgId = msg_id;
     ubxMsg.length = 0;
 
-    bool result = WriteUbxMessage(ubxMsg);
+    bool result = writeUbxMessage(ubxMsg);
 
     if (!result) {
         printf("Failed to write poll message to GPS.\n");
         return UbxMessage();
     }
 
-    return WaitForUbxMessage(ubxMsg);
+    return waitForUbxMessage(ubxMsg);
 }
 
 UbxMessage Gps::waitForUbxMessage(UbxMessage& msg, uint32_t timeoutMillis, uint32_t intervalMillis) {
@@ -190,14 +190,11 @@ bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     bool ack = false;
     UbxMessage msg = waitForUbxMessage(ACK_CLASS);  
 
-    if (msg.empty()) {
-        if (verbose) {
-            printf("No ACK/NAK Message received\n");
-        }
+    if (msg == nullptr) {
         return ack;
     }
 
-    if (msg[3] == ACK_ACK && msgClass == msg[6] && msgId == msg[7]) {
+    if (msg.payload[3] == ACK_ACK && msgClass == msg.payload[6] && msgId == msg.msgId) {
         ack = true;
     }
 
