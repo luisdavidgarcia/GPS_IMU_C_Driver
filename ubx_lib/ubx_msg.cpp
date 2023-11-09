@@ -1,6 +1,35 @@
 #include "ubx_msg.h" 
 
 /**
+ * @brief   Compose a UBX message with the given message class, message ID, optional length, and payload.
+ * @param   msg_class   The message class of the UBX message.
+ * @param   msg_id      The message ID of the UBX message.
+ * @param   length      The length of the payload (default is 0).
+ * @param   payload     The payload data (default is nullptr).
+ * @return  The composed UBX message.
+ */
+UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t length = 0, const uint8_t* payload = nullptr) {
+    UbxMessage message;
+    message.msgClass = msg_class;
+    message.msgId = msg_id;
+    message.length = length;
+
+    if (payload != nullptr) {
+        for (int i = 0; i < length; i++) {
+            message.payload[i] = payload[i];
+        }
+    } else {
+        for (int i = 0; i < MAX_MESSAGE_LENGTH; i++) {
+            message.payload[i] = 0x00;
+        }
+    }
+
+    ComputeChecksum(message);
+
+    return message;
+}
+
+/**
  * @brief   Convert a message class (msgClass) to its corresponding string representation.
  * @param   msgClass    The message class to convert.
  * @return  The string representation of the message class.

@@ -53,29 +53,30 @@ class Gps {
       UbxMessage ubxmsg;
       PVTData pvtData;
       int i2c_fd;
-      uint32_t extractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
-      uint16_t extractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
+      uint32_t ExtractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
+      uint16_t ExtractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
 
   public:
       Gps();
       ~Gps();
-      uint16_t getAvailableBytes();
-      Status writeUbxMessage(UbxMessage& msg);
-      Status readUbxMessage(UbxMessage& msg);
-      Status pollUbxMessage(UbxMessage& msg);
-      Status waitForUbxMessage(UbxMessage& msg, 
+      void UbxOnly();
+      uint16_t GetAvailableBytes();
+      Status WriteUbxMessage(UbxMessage& msg);
+      Status ReadUbxMessage(UbxMessage& msg);
+      Status PollUbxMessage(UbxMessage& msg);
+      Status WaitForUbxMessage(UbxMessage& msg, 
           uint32_t timeoutMillis = DEFAULT_TIMEOUT_MILLS, 
           uint32_t intervalMillis = DEFAULT_INTERVAL_MILLS);
-      bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
-      Status setCommunicationToUbxOnly();
-      Status setMessageSendRate(uint8_t msgClass, uint8_t msgId, 
+      bool WaitForAcknowledge(uint8_t msgClass, uint8_t msgId);
+      Status SetCommunicationToUbxOnly();
+      Status SetMessageSendRate(uint8_t msgClass, uint8_t msgId, 
           uint8_t sendRate = DEFAULT_SEND_RATE);
-      Status setMeasurementFrequency(uint16_t measurementPeriodMillis = 
+      Status SetMeasurementFrequency(uint16_t measurementPeriodMillis = 
           DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, 
           TimeRef timeref = TimeRef::UTC);
-      Status updatePVT(bool polling = DEFAULT_POLLING_STATE, 
+      Status UpdatePVT(bool polling = DEFAULT_POLLING_STATE, 
           uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS);
-      std::string getStatusDescription(Status status);
+      std::string GetStatusDescription(Status status);
 };
 
 #endif // GPS_H

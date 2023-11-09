@@ -125,7 +125,7 @@ typedef struct {
     uint16_t declinationAccuracy;
 } PVTData;
 
-
+UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t length = 0, const uint8_t* payload = nullptr);
 void ComputeChecksum(UbxMessage &msg);
 void ResetPayload(UbxMessage &msg);
 std::string MsgClassToString(uint8_t msgClass);
