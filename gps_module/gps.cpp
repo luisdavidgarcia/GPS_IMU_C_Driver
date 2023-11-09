@@ -21,13 +21,12 @@ Gps::Gps() {
   uint8_t flag = -1;
   
   while (flag == -1) {
+    printf("hello world\n");
     result_msg = this->readUbxMessage();
     if (result_msg.sync1 != -1) {
       flag = 1;
     }
   }
-
-  printf("hello world\n");
 
   /*
   bool result = this->waitForAcknowledge(CFG_CLASS, CFG_PRT);
