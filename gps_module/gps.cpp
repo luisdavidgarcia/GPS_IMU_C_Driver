@@ -122,7 +122,7 @@ UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
 
   if (messageLength > 0) {
       for (int i = 0; i < messageLength; i++) {
-          uint8_t byte = i2c_smbus_read_byte_data(file, DATA_STREAM_REGISTER);
+          uint8_t byte = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
           if (byte == static_cast<uint8_t>(-1)) {
               perror("Failed to read byte from I2C device");
               close(file);
@@ -141,7 +141,7 @@ UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
   return UbxMessage();  // Return an empty message
 }
 
-UbxMessage Gps::pollUbxMessage(UbxMessage& msg_class, UbxMessage& msg_id) {
+UbxMessage Gps::pollUbxMessage(uint8_t msg_class, uint8_t msg_id) {
     UbxMessage ubxMsg;
     ubxMsg.msgClass = msg_class;
     ubxMsg.msgId = msg_id;
@@ -157,7 +157,7 @@ UbxMessage Gps::pollUbxMessage(UbxMessage& msg_class, UbxMessage& msg_id) {
     return waitForUbxMessage(ubxMsg);
 }
 
-UbxMessage Gps::waitForUbxMessage(UbxMessage& msg, uint32_t timeoutMillis, uint32_t intervalMillis) {
+UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMillis=1, uint8_t msg_cls=CFG_CLASS, uint8_t msg_id=CFG_PRT) {
     uint32_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()
     ).count();
@@ -188,9 +188,9 @@ UbxMessage Gps::waitForUbxMessage(UbxMessage& msg, uint32_t timeoutMillis, uint3
 
 bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     bool ack = false;
-    UbxMessage msg = waitForUbxMessage(ACK_CLASS);  
+    UbxMessage msg = waitForUbxMessage(msgClass=ACK_ACK);  
 
-    if (msg == nullptr) {
+    if (msg.length == 0) {
         return ack;
     }
 

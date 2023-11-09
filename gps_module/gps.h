@@ -93,13 +93,13 @@ class Gps {
 
       bool writeUbxMessage(UbxMessage& msg);
       UbxMessage readUbxMessage(UbxMessage& msg);
-      UbxMessage pollUbxMessage(UbxMessage& msg, UbxMessage& msg_id);
+      UbxMessage pollUbxMessage(uint8_t msg_class, uint8_t msg_id);
       bool setMessageSendRate(uint8_t msgClass, uint8_t msgId, 
           uint8_t sendRate);
       bool setMeasurementFrequency(uint16_t measurementPeriodMillis, 
         uint8_t navigationRate, uint8_t timeref);
-      UbxMessage waitForUbxMessage(UbxMessage& msg, 
-          uint32_t timeoutMillis, uint32_t intervalMillis);
+      UbxMessage waitForUbxMessage( 
+          uint32_t timeoutMillis, uint32_t intervalMillis, uint8_t msg_cls, uint8_t msg_id);
       bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
 
   public:
