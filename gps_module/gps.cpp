@@ -74,7 +74,7 @@ bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate =
     return result;
 }
 
-bool setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, uint8_t timeref = 0) {
+bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, uint8_t timeref = 0) {
     uint8_t payload[6];
 
     // Convert measurement_period_ms to little-endian bytes
