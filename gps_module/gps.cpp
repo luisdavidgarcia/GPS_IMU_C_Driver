@@ -22,7 +22,7 @@ uint16_t Gps::getAvailableBytes() {
   i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t msb = i2c_smbus_read_byte(i2c_fd);
   uint8_t lsb = i2c_smbus_read_byte(i2c_fd);
-  usleep(100000)
+  usleep(100000);
 
 
   //i2cBus->beginTransmission(this->i2cAddress);
