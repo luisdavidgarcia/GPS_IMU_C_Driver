@@ -61,7 +61,7 @@ class Gps {
   public:
       Gps();
       ~Gps();
-      void UbxOnly();
+      void UbxOnly(void);
       uint16_t GetAvailableBytes();
       Status PollUbxMessage(UbxMessage& msg);
       Status WaitForUbxMessage(UbxMessage& msg, 

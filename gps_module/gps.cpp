@@ -136,7 +136,7 @@ Status Gps::WaitForUbxMessage(UbxMessage &msg, uint32_t timeoutMillis, uint32_t 
   return Status::OperationTimeout;
 }
 
-void UbxOnly() {
+void Gps::UbxOnly(void) {
     // Define the payload data
     uint8_t payload[] = {
         0x00, 0x00, 0x00, 0x00, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -147,7 +147,7 @@ void UbxOnly() {
     UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, 20, payload);
 
     // Assuming you have a function named writeMessage to send the message
-    WriteUbxMessage(message);
+    Status status = this->WriteUbxMessage(message);
 }
 
 /* An acknowledge message (or a Not Acknowledge message) is sent everytime
