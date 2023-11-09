@@ -2,8 +2,9 @@
 #include <stdio.h>
 
 int main(void) {
-    
-    Gps gps_module;
 
-    return 0;
+  Gps gps_module;
+  PVTData gps_modulet.GetPvt();
+
+  return 0;
 }
