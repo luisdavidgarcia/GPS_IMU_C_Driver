@@ -17,13 +17,13 @@ Gps::Gps() {
 
   this->ubxOnly();
 
-  /*
   bool result = this->waitForAcknowledge(CFG_CLASS, CFG_PRT);
   if (!result) {
       printf("Error: Acknowledgment not received for setting communication to UBX only.\n");
       exit(-1);
   }
 
+  /*
   result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
   if (!result) {
     printf("Error: Failed to set message send rate for NAV_PVT.\n");
@@ -97,6 +97,7 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
 
     return result;
 }
+*/
 
 uint16_t Gps::getAvailableBytes() {
   i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
@@ -111,7 +112,6 @@ uint16_t Gps::getAvailableBytes() {
   // Combine MSB and LSB to form a 16-bit value
   return static_cast<uint16_t>(msb << 8) | lsb;
 }
-*/
 
 bool Gps::writeUbxMessage(UbxMessage &msg) {
   std::vector<uint8_t> tempBuf; 
@@ -139,7 +139,6 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   return true;
 }
 
-/*
 UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
   uint16_t messageLength = getAvailableBytes();
   std::vector<uint8_t> message;
@@ -164,6 +163,7 @@ UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
   return UbxMessage();  // Return an empty message
 }
 
+/*
 UbxMessage Gps::pollUbxMessage(uint8_t msg_class, uint8_t msg_id) {
     UbxMessage ubxMsg;
     ubxMsg.msgClass = msg_class;
@@ -179,6 +179,7 @@ UbxMessage Gps::pollUbxMessage(uint8_t msg_class, uint8_t msg_id) {
 
     return this->waitForUbxMessage(1, 1, CFG_CLASS, CFG_PRT);
 }
+*/
 
 UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMillis=1, uint8_t msg_cls=CFG_CLASS, uint8_t msg_id=CFG_PRT) {
     uint32_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -200,7 +201,7 @@ UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMil
         response = readUbxMessage(msg);  
 
         // Check if the received message matches the expected class and ID
-        if (response.msgClass == msg.msgClass && response.msgId == msg.msgId) {
+        if (response.sync1 == msg.msgClass && response.sync2 == msg.msgId) {
             return response;
         }
 
@@ -211,7 +212,7 @@ UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMil
 
 bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     bool ack = false;
-    UbxMessage msg = waitForUbxMessage(msgClass=ACK_ACK);  
+    UbxMessage msg = waitForUbxMessage(msgClass=ACK_ACK, msgId);  
 
     if (msg.payloadLength == 0) {
         return ack;
@@ -224,6 +225,7 @@ bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     return ack;
 }
 
+/*
 PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE, 
     uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS) {
   return this->pvtData;
