@@ -4,7 +4,7 @@
 int main(void) {
 
   Gps gps_module;
-  PVTData gps_modulet.GetPvt();
+  PVTData data = gps_module.GetPvt();
 
   return 0;
 }
