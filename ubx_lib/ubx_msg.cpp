@@ -6,8 +6,7 @@
  * @param   msg_id      The message ID of the UBX message.
  * @param   length      The length of the payload (default is 0).
  * @param   payload     The payload data (default is nullptr).
- * @return  The composed UBX message.
- */
+ * @return  The composed UBX message.  */
 UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t length = 0, const uint8_t* payload = nullptr) {
     UbxMessage message;
     message.msgClass = msg_class;

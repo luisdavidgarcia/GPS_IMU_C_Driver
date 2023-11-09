@@ -147,7 +147,7 @@ void UbxOnly() {
     UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, 20, payload);
 
     // Assuming you have a function named writeMessage to send the message
-    WriteUbxMessage(message);
+    this->WriteUbxMessage(message);
 }
 
 /* An acknowledge message (or a Not Acknowledge message) is sent everytime
