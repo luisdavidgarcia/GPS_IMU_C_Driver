@@ -1,6 +1,7 @@
 #include "gps.h"
 #include <unistd.h>
 #include <stdio.h>
+#include <vector>
 
 Gps::Gps() {
   // Initiliaze I2C
@@ -113,7 +114,20 @@ uint16_t Gps::getAvailableBytes() {
 */
 
 bool Gps::writeUbxMessage(UbxMessage &msg) {
-  if (i2c_smbus_write_block_data(i2c_fd, 0x00, msg.payloadLength, msg.payload) < 0) {
+  std::vector<uint8_t> buf; 
+  buf.push_back(msg.sync1);
+  buf.push_back(msg.sync2);
+  buf.push_back(msg.msgClass);
+  buf.push_back(msg.msgId);
+  buf.push_back(msg.payloadLength >> 8);
+  buf.push(msg.payload.loadLength & 0xFF);
+  for (int i = 0; i < msg.payloadLength; i++) {
+    buf.push_back(msg.payload[i]);
+  }
+  buf.push_back(msg.checksumA);
+  buf.push_back(msg.checksumB);
+
+  if (i2c_smbus_write_block_data(i2c_fd, 0x00, buf.size(), buf) < 0) {
     return false;
   }
 
