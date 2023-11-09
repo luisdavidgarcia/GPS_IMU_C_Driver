@@ -28,6 +28,8 @@ uint16_t Gps::GetAvailableBytes() {
     printf("No Bytes were available\n");
     return 0;
   }
+  printf("MSB: 0x%x", msb);
+  printf("LSB: 0x%x", lsb);
   msb &= 0x7F; //check if this is correct
   return ((uint16_t) msb << 8 | lsb);
 }
@@ -36,10 +38,10 @@ uint16_t Gps::GetAvailableBytes() {
 /* Reads a UBX message and populates the given UbxMessage*/
 Status Gps::ReadUbxMessage(UbxMessage &msg) {
   uint16_t messageLength = GetAvailableBytes();
-  for (int i = 0; i < messageLength; i++) {
-    uint8_t reg = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-    printf("Reg Value: 0x%x\n", reg);
-  }
+  //for (int i = 0; i < messageLength; i++) {
+  //  uint8_t reg = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+  //  printf("Reg Value: 0x%x\n", reg);
+  //}
   //if (i2c_smbus_read_block_data(i2c_fd, 0x00, msg.payload) < 0) {
 
   //}
