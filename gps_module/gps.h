@@ -18,6 +18,7 @@ extern "C" {
 #include <chrono>
 #include <thread>
 #include <vector>
+#include <cstring>
 
 #define GPS_I2C_ADDRESS 0x42
 #define GPS_I2C_BUS "/dev/i2c-1"
@@ -92,7 +93,7 @@ class Gps {
 
       bool writeUbxMessage(UbxMessage& msg);
       UbxMessage readUbxMessage(UbxMessage& msg);
-      UbxMessage pollUbxMessage(UbxMessage& msg);
+      UbxMessage pollUbxMessage(UbxMessage& msg, UbxMessage& msg_id);
       bool setMessageSendRate(uint8_t msgClass, uint8_t msgId, 
           uint8_t sendRate);
       bool setMeasurementFrequency(uint16_t measurementPeriodMillis, 

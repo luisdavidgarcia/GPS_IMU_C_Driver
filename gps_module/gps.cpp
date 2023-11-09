@@ -28,13 +28,13 @@ Gps::Gps() {
     exit(-1); 
   }
 
-  result = this->waitForAcknowledge(CFG_CLASS, CFG_MSG, false);
+  result = this->waitForAcknowledge(CFG_CLASS, CFG_MSG);
   if (!result) {
     printf("Error: Acknowledgment not received for setting message frequency.\n");
     exit(-1);
   }
 
-  result = this->setMeasurementFrequency(500);
+  result = this->setMeasurementFrequency(500, 1, 0);
   if (!result) {
       printf("Error: Failed to set measurement frequency.\n");
       exit(-1); 
@@ -117,7 +117,7 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
 }
 
 UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
-  uint16_t messageLength = GetAvailableBytes();
+  uint16_t messageLength = getAvailableBytes();
   std::vector<uint8_t> msg;
 
   if (messageLength > 0) {
@@ -188,7 +188,7 @@ UbxMessage Gps::waitForUbxMessage(UbxMessage& msg, uint32_t timeoutMillis, uint3
 
 bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     bool ack = false;
-    UbxMessage msg = waitForUbxMessage(ubx::ACK_CLASS);  
+    UbxMessage msg = waitForUbxMessage(ACK_CLASS);  
 
     if (msg.empty()) {
         if (verbose) {
