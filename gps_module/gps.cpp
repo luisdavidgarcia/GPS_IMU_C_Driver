@@ -20,7 +20,7 @@ Gps::Gps() {
   UbxMessage result_msg;
   uint8_t flag = -1;
   
-  while (flage == -1) {
+  while (flag == -1) {
     result_msg = this->readUbxMessage();
     if (result_msg.sync1 != -1) {
       flag = 1;
