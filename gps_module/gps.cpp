@@ -16,6 +16,7 @@ Gps::Gps() {
 
   this->ubxOnly();
 
+  /*
   bool result = this->waitForAcknowledge(CFG_CLASS, CFG_PRT);
   if (!result) {
       printf("Error: Acknowledgment not received for setting communication to UBX only.\n");
@@ -45,6 +46,7 @@ Gps::Gps() {
       printf("Error: Acknowledgment not received for setting measurement frequency.\n");
       exit(-1); 
   }
+  */
 }
 
 Gps::~Gps() { close(i2c_fd); }
