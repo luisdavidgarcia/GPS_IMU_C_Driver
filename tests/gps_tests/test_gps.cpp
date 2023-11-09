@@ -3,7 +3,8 @@
 
 int main(void) {
     
-    printf("Hello World!\n");
+    Gps gps_module;
+    uint16_t num_bytes = gps_module.getAvailableBytes();
 
     return EXIT_SUCCESS;
 }
