@@ -79,18 +79,19 @@ CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 #define TIME_ONLY_FIX 5
 
 //******* DEBUG/HELPING CONSTANTS ********
-#define MAX_MESSAGE_LENGTH 256
+#define MAX_MESSAGE_LENGTH 264
+#define MAX_PAYLOAD_LENGTH 256
 
 typedef struct {
     uint8_t msgClass;
     uint8_t msgId;
-    uint16_t length;
+    uint16_t payloadLength;
     uint8_t payload[MAX_MESSAGE_LENGTH];
     uint8_t checksumA;
     uint8_t checksumB;
 } UbxMessage;
 
-UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t length, const uint8_t* payload);
+UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLength, const uint8_t* payload);
 void ComputeChecksum(UbxMessage &msg);
 void ResetPayload(UbxMessage &msg);
 std::string MsgClassToString(uint8_t msgClass);

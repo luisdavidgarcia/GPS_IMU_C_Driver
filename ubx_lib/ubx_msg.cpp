@@ -7,23 +7,24 @@
  * @param   length      The length of the payload (default is 0).
  * @param   payload     The payload data (default is nullptr).
  * @return  The composed UBX message.  */
-UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t length = 0, const uint8_t* payload = nullptr) {
+UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLength = 0, const uint8_t* payload = nullptr) {
     UbxMessage message;
     message.msgClass = msg_class;
     message.msgId = msg_id;
-    message.length = length;
+    message.payloadLength = payloadLength;
 
     if (payload != nullptr) {
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < payloadLength; i++) {
             message.payload[i] = payload[i];
         }
     } else {
-        for (int i = 0; i < MAX_MESSAGE_LENGTH; i++) {
+        for (int i = 0; i < MAX_PAYLOAD_LENGTH; i++) {
             message.payload[i] = 0x00;
         }
     }
 
     ComputeChecksum(message);
+    message.payload[length]
 
     return message;
 }

@@ -109,7 +109,7 @@ uint16_t Gps::getAvailableBytes() {
 }
 
 bool Gps::writeUbxMessage(UbxMessage &msg) {
-  if (i2c_smbus_write_block_data(i2c_fd, 0x00, msg.length, msg.payload) < 0) {
+  if (i2c_smbus_write_block_data(i2c_fd, 0x00, msg.payloadLength, msg.payload) < 0) {
     return false;
   }
 
@@ -120,7 +120,7 @@ UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
   uint16_t messageLength = getAvailableBytes();
   std::vector<uint8_t> message;
 
-  if (messageLength > 0) {
+  if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
       for (int i = 0; i < messageLength; i++) {
           uint8_t byte = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
           if (byte == static_cast<uint8_t>(-1)) {
@@ -144,7 +144,7 @@ UbxMessage Gps::pollUbxMessage(uint8_t msg_class, uint8_t msg_id) {
     UbxMessage ubxMsg;
     ubxMsg.msgClass = msg_class;
     ubxMsg.msgId = msg_id;
-    ubxMsg.length = 0;
+    ubxMsg.payloadLength = 0;
 
     bool result = writeUbxMessage(ubxMsg);
 
@@ -189,7 +189,7 @@ bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     bool ack = false;
     UbxMessage msg = waitForUbxMessage(msgClass=ACK_ACK);  
 
-    if (msg.length == 0) {
+    if (msg.payloadLength == 0) {
         return ack;
     }
 
@@ -206,7 +206,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 }
 
 uint32_t Gps::extractU4FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
-  if (startIndex + 3 >= msg.length)
+  if (startIndex + 3 >= msg.payloadLength)
     return 0;
 
   uint32_t value = (uint32_t) this->extractU2FromUbxMessage(msg, startIndex);
@@ -215,7 +215,7 @@ uint32_t Gps::extractU4FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
 }
 
 uint16_t Gps::extractU2FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
-  if (startIndex + 1 >= msg.length)
+  if (startIndex + 1 >= msg.payloadLength)
     return 0;
 
   uint16_t value = (uint16_t) msg.payload[startIndex];
