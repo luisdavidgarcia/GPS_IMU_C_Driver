@@ -106,7 +106,7 @@ Status Gps::ReadUbxMessage(UbxMessage &msg) {
 // TODO: Integrate SMBUS I2C for Write
 Status Gps::WriteUbxMessage(UbxMessage &msg) {
   if (i2c_smbus_write_block_data(i2c_fd, 0x00, msg.length, msg.payload) < 0) {
-    return Status::ErrorReceiving;
+    return Status::ErrorSending;
   }
 
   return Status::NoError;
@@ -148,6 +148,9 @@ void Gps::UbxOnly(void) {
 
     // Assuming you have a function named writeMessage to send the message
     Status status = this->WriteUbxMessage(message);
+    if (status == Status::ErrorSending) {
+      printf("Could not write to GPS.\n");
+    }
 }
 
 /* An acknowledge message (or a Not Acknowledge message) is sent everytime
