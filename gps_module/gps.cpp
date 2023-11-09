@@ -28,7 +28,7 @@ Gps::Gps() {
     exit(-1); 
   }
 
-  result = this->waitForAcknowledge(CFG_CLASS, CFG_MSG);
+  result = this->waitForAcknowledge(CFG_CLASS, CFG_MSG, false);
   if (!result) {
     printf("Error: Acknowledgment not received for setting message frequency.\n");
     exit(-1);
@@ -186,7 +186,7 @@ UbxMessage Gps::waitForUbxMessage(UbxMessage& msg, uint32_t timeoutMillis, uint3
     }
 }
 
-bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId, bool verbose) {
+bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId, bool verbose=false) {
     bool ack = false;
     UbxMessage msg = waitForUbxMessage(ubx::ACK_CLASS);  
 
