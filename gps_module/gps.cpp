@@ -22,7 +22,7 @@ Gps::Gps() {
       exit(-1);
   }
 
-  result = this->setMessageSendRate(NAV_CLASS, NAV_PVT);
+  result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
   if (!result) {
     printf("Error: Failed to set message send rate for NAV_PVT.\n");
     exit(-1); 
@@ -125,7 +125,6 @@ UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
           uint8_t byte = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
           if (byte == static_cast<uint8_t>(-1)) {
               perror("Failed to read byte from I2C device");
-              close(file);
               return UbxMessage();  // Return an empty message on error
           }
           message.push_back(byte);
@@ -154,7 +153,7 @@ UbxMessage Gps::pollUbxMessage(uint8_t msg_class, uint8_t msg_id) {
         return UbxMessage();
     }
 
-    return waitForUbxMessage(ubxMsg);
+    return waitForUbxMessage();
 }
 
 UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMillis=1, uint8_t msg_cls=CFG_CLASS, uint8_t msg_id=CFG_PRT) {
@@ -162,7 +161,7 @@ UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMil
         std::chrono::system_clock::now().time_since_epoch()
     ).count();
 
-    UbxMessage response;
+    UbxMessage response, msg;
 
     while (true) {
         uint32_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
