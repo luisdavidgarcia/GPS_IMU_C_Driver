@@ -200,6 +200,10 @@ bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     return ack;
 }
 
+PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE, 
+    uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS) {
+  return this->pvtData;
+}
 
 uint32_t Gps::extractU4FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
   if (startIndex + 3 >= msg.length)
@@ -218,4 +222,5 @@ uint16_t Gps::extractU2FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
   value |= ((uint16_t) msg.payload[startIndex + 1]) << 8;
   return value;
 }
+
 

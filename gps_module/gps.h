@@ -105,8 +105,7 @@ class Gps {
   public:
       Gps();
       ~Gps();
-      PVTData GetPvt(bool polling = DEFAULT_POLLING_STATE, 
-          uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS);
+      PVTData GetPvt(bool polling, uint16_t timeOutMillis);
 };
 
 #endif // GPS_H
