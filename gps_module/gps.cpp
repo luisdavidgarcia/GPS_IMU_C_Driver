@@ -1,5 +1,6 @@
 #include "gps.h"
 #include <unistd.h>
+#include <stdio.h>
 
 Gps::Gps() {
   // Initiliaze I2C
@@ -20,19 +21,9 @@ Gps::~Gps() { close(i2c_fd); }
 /* returns the number of bytes available to read*/
 uint16_t Gps::GetAvailableBytes() {
   i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
-  uint8_t msb = i2c_smbus_read_byte(i2c_fd);
-  uint8_t lsb = i2c_smbus_read_byte(i2c_fd);
-  usleep(100000);
+  uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
+  uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
-
-  //i2cBus->beginTransmission(this->i2cAddress);
-  //i2cBus->write(AVAILABLE_BYTES_MSB);
-  //if (i2cBus->endTransmission(false) != 0)
-  //  return 0;
-
-// i2cBus->requestFrom(this->i2cAddress, 2);
-//  uint8_t msb = i2cBus->read();
-//  uint8_t lsb = i2cBus->read();
   if (msb == 0xFF || lsb == 0xFF) {
     printf("No Bytes were available\n");
     return 0;
@@ -44,61 +35,15 @@ uint16_t Gps::GetAvailableBytes() {
 // TODO: Integrate SMBUS I2C for Read
 /* Reads a UBX message and populates the given UbxMessage*/
 Status Gps::ReadUbxMessage(UbxMessage &msg) {
-  uint16_t bytes = this->GetAvailableBytes();
-
-  /*
-  //if (bytes > MAX_MESSAGE_LENGTH || bytes <= 0)
-  //  return Status::ErrorReceiving;
-  i2cBus->beginTransmission(this->i2cAddress);
-  i2cBus->write(DATA_STREAM_REGISTER);
-  if (i2cBus->endTransmission(false) != 0)
-    return Status::ErrorReceiving;
-
-  if (bytes > 32)
-    i2cBus->requestFrom(this->i2cAddress, 32, 0);
-  else
-    i2cBus->requestFrom(this->i2cAddress, (uint8_t) bytes);
-  //Arduino's i2c buffer has 32 byte limit. We have to read 32 bytes at a time
-  uint8_t bufferSize = 0;
-
-  if (i2cBus->available()){
-
-    uint8_t syncChA = i2cBus->read(); // sync char a
-    uint8_t syncChB = i2cBus->read(); // sync char b
-
-    if (!(syncChA == SYNC_CHAR_1 && syncChB == SYNC_CHAR_2))
-      return Status::ErrorReceiving;
-
-    msg.msgClass = i2cBus->read();
-    msg.msgId = i2cBus->read();
-    uint8_t lsb_length = i2cBus->read();
-    uint8_t msb_length = i2cBus->read();
-    msg.length = msb_length << 8 | lsb_length;
-
-    bufferSize += 6;
-    for (uint16_t i = 0; i < msg.length; i++){
-      msg.payload[i] = i2cBus->read();
-      bufferSize ++;
-      if (bufferSize >= 32){
-        bytes -= bufferSize;
-        bufferSize = 0;
-
-        if (bytes > 32)
-          i2cBus->requestFrom(this->i2cAddress, 32, 0);
-        else
-          i2cBus->requestFrom(this->i2cAddress, (uint8_t) bytes);
-      }
-    }
-
-    msg.checksumA = i2cBus->read();
-    msg.checksumB = i2cBus->read();
-
-    return Status::NoError;
+  uint16_t messageLength = GetAvailableBytes();
+  for (int i = 0; i < messageLength; i++) {
+    uint8_t reg = i2c_smbus_read_byte_data(i2c_fd);
+    printf("Reg Value: 0x%x\n", reg);
   }
-  else {
-    return Status::ErrorReceiving;
-  }
-  */
+  //if (i2c_smbus_read_block_data(i2c_fd, 0x00, msg.payload) < 0) {
+
+  //}
+
   // TEMP
   return Status::ErrorReceiving;
 }

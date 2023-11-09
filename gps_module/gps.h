@@ -15,6 +15,8 @@ extern "C" {
 #include <cstdint>
 #include <sys/ioctl.h>
 #include <string>
+#include <chrono>
+#include <thread>
 
 #define GPS_I2C_ADDRESS 0x42
 #define GPS_I2C_BUS "/dev/i2c-1"
