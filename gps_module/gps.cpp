@@ -18,14 +18,10 @@ Gps::Gps() {
   this->ubxOnly();
 
   UbxMessage result_msg;
-  uint8_t flag = -1;
+  result_msg.sync1 = 5;
   
-  while (flag == -1) {
-    printf("hello world\n");
+  while (result_msg.sync1 != -1) {
     result_msg = this->readUbxMessage();
-    if (result_msg.sync1 != -1) {
-      flag = 1;
-    }
   }
 
   /*
