@@ -153,7 +153,7 @@ UbxMessage Gps::pollUbxMessage(uint8_t msg_class, uint8_t msg_id) {
         return UbxMessage();
     }
 
-    return waitForUbxMessage();
+    return this->waitForUbxMessage(1, 1, CFG_CLASS, CFG_PRT);
 }
 
 UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMillis=1, uint8_t msg_cls=CFG_CLASS, uint8_t msg_id=CFG_PRT) {
