@@ -21,7 +21,7 @@ Gps::Gps() {
 
   while (1) {
     result_msg = this->readUbxMessage();
-    if (result_msg.sync1 != -1) {
+    if (result_msg.sync1 != 255) {
       break;
     }
   }
@@ -181,7 +181,7 @@ UbxMessage Gps::readUbxMessage() {
 
   printf("Failed to read message.\n");
   UbxMessage badMsg;
-  badMsg.sync1 = -1;
+  badMsg.sync1 = 255;
 
   return badMsg;  // Return an empty message
 }
