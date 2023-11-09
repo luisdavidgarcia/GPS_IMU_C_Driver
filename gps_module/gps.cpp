@@ -37,7 +37,7 @@ uint16_t Gps::GetAvailableBytes() {
 Status Gps::ReadUbxMessage(UbxMessage &msg) {
   uint16_t messageLength = GetAvailableBytes();
   for (int i = 0; i < messageLength; i++) {
-    uint8_t reg = i2c_smbus_read_byte_data(i2c_fd);
+    uint8_t reg = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
     printf("Reg Value: 0x%x\n", reg);
   }
   //if (i2c_smbus_read_block_data(i2c_fd, 0x00, msg.payload) < 0) {
