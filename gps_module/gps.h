@@ -91,18 +91,18 @@ class Gps {
       void ubxOnly(void);
       bool writeUbxMessage(UbxMessage& msg);
 
-      /*
-      uint16_t getAvailableBytes();
+      uint16_t getAvailableBytes(void);
       UbxMessage readUbxMessage(UbxMessage& msg);
+      bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
+      UbxMessage waitForUbxMessage(uint32_t timeoutMillis, uint32_t intervalMillis, uint8_t msg_cls, uint8_t msg_id);
+
+      /*
       UbxMessage pollUbxMessage(uint8_t msg_class, uint8_t msg_id);
       bool setMessageSendRate(uint8_t msgClass, uint8_t msgId, 
           uint8_t sendRate);
       bool setMeasurementFrequency(uint16_t measurementPeriodMillis, 
         uint8_t navigationRate, uint8_t timeref);
-      UbxMessage waitForUbxMessage( 
-          uint32_t timeoutMillis, uint32_t intervalMillis, uint8_t msg_cls, uint8_t msg_id);
-      bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
-      */
+        */
 
   public:
       Gps();
