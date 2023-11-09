@@ -64,6 +64,7 @@ void Gps::ubxOnly(void) {
     }
 }
 
+/*
 bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate = DEFAULT_SEND_RATE) {
   uint8_t payload[] = {msgClass, msgId, sendRate, 0x00, 0x00, 0x00, 0x00, 0x00};
 
@@ -107,6 +108,7 @@ uint16_t Gps::getAvailableBytes() {
   // Combine MSB and LSB to form a 16-bit value
   return static_cast<uint16_t>(msb << 8) | lsb;
 }
+*/
 
 bool Gps::writeUbxMessage(UbxMessage &msg) {
   if (i2c_smbus_write_block_data(i2c_fd, 0x00, msg.payloadLength, msg.payload) < 0) {
@@ -116,6 +118,7 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   return true;
 }
 
+/*
 UbxMessage Gps::readUbxMessage(UbxMessage &msg) {
   uint16_t messageLength = getAvailableBytes();
   std::vector<uint8_t> message;
@@ -223,4 +226,4 @@ uint16_t Gps::extractU2FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
   return value;
 }
 
-
+*/

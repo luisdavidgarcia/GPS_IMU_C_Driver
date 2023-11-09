@@ -87,11 +87,12 @@ class Gps {
       int i2c_fd;
       uint32_t extractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
       uint16_t extractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
-      uint16_t getAvailableBytes();
 
       void ubxOnly(void);
-
       bool writeUbxMessage(UbxMessage& msg);
+
+      /*
+      uint16_t getAvailableBytes();
       UbxMessage readUbxMessage(UbxMessage& msg);
       UbxMessage pollUbxMessage(uint8_t msg_class, uint8_t msg_id);
       bool setMessageSendRate(uint8_t msgClass, uint8_t msgId, 
@@ -101,11 +102,12 @@ class Gps {
       UbxMessage waitForUbxMessage( 
           uint32_t timeoutMillis, uint32_t intervalMillis, uint8_t msg_cls, uint8_t msg_id);
       bool waitForAcknowledge(uint8_t msgClass, uint8_t msgId);
+      */
 
   public:
       Gps();
       ~Gps();
-      PVTData GetPvt(bool polling, uint16_t timeOutMillis);
+      //PVTData GetPvt(bool polling, uint16_t timeOutMillis);
 };
 
 #endif // GPS_H

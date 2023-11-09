@@ -1,10 +1,10 @@
 #include "ubx_msg.h" 
 
 /**
- * @brief   Compose a UBX message with the given message class, message ID, optional length, and payload.
+ * @brief   Compose a UBX message with the given message class, message ID, optional payloadLength, and payload.
  * @param   msg_class   The message class of the UBX message.
  * @param   msg_id      The message ID of the UBX message.
- * @param   length      The length of the payload (default is 0).
+ * @param   payloadLength      The payloadLength of the payload (default is 0).
  * @param   payload     The payload data (default is nullptr).
  * @return  The composed UBX message.  */
 UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLength = 0, const uint8_t* payload = nullptr) {
@@ -24,7 +24,6 @@ UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLen
     }
 
     ComputeChecksum(message);
-    message.payload[length]
 
     return message;
 }
@@ -99,13 +98,13 @@ void ComputeChecksum(UbxMessage &msg) {
     msg.checksumA += msg.msgId;
     msg.checksumB += msg.checksumA;
 
-    msg.checksumA += msg.length % (1 << 8);
+    msg.checksumA += msg.payloadLength % (1 << 8);
     msg.checksumB += msg.checksumA;
 
-    msg.checksumA += msg.length >> 8;
+    msg.checksumA += msg.payloadLength >> 8;
     msg.checksumB += msg.checksumA;
 
-    for (int i = 0; i < msg.length; i++) {
+    for (int i = 0; i < msg.payloadLength; i++) {
         msg.checksumA += msg.payload[i];
         msg.checksumB += msg.checksumA;
     }
@@ -116,7 +115,7 @@ void ComputeChecksum(UbxMessage &msg) {
  * @param   msg The UbxMessage struct for which to reset the payload.
  */
 void ResetPayload(UbxMessage &msg) {
-    for (int i = 0; i < msg.length; i++)
+    for (int i = 0; i < msg.payloadLength; i++)
         msg.payload[i] = 0;
 }
 
@@ -128,9 +127,9 @@ void ResetPayload(UbxMessage &msg) {
 std::string UbxMessageToString(UbxMessage &msg) {
     std::string result = "Class : " + std::to_string(msg.msgClass) + "\n";
     result += "ID : " + std::to_string(msg.msgId) + "\n";
-    result += "Length : " + std::to_string(msg.length) + "\n";
+    result += "Length : " + std::to_string(msg.payloadLength) + "\n";
     result += "Payload : ";
-    for (int i = 0; i < msg.length; i++) {
+    for (int i = 0; i < msg.payloadLength; i++) {
         result += std::to_string(msg.payload[i]) + " ";
     }
     result += "\n";
