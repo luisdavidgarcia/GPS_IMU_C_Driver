@@ -34,7 +34,7 @@ Gps::Gps() {
     exit(-1);
   }
 
-  result = this->setMeasurementFrequency(500)
+  result = this->setMeasurementFrequency(500);
   if (!result) {
       printf("Error: Failed to set measurement frequency.\n");
       exit(-1); 
@@ -65,7 +65,7 @@ void Gps::ubxOnly(void) {
 }
 
 bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate = DEFAULT_SEND_RATE) {
-  uint8_t payload[] = {msg_class, msg_id, freq, 0x00, 0x00, 0x00, 0x00, 0x00};
+  uint8_t payload[] = {msgClass, msgId, sendRate, 0x00, 0x00, 0x00, 0x00, 0x00};
 
   UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, sizeof(payload), payload);
 
