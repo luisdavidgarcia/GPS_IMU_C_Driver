@@ -15,6 +15,8 @@ Gps::Gps() {
     perror("Failed to acquire I2C GPS address");
   }
 
+  usleep(100000);
+
   this->ubxOnly();
 
   UbxMessage result_msg;
