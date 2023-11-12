@@ -142,7 +142,7 @@ UbxMessage Gps::readUbxMessage() {
       return ubxMsg;
   }
 
-  printf("Failed to read message.\n");
+  //printf("Failed to read message.\n");
   UbxMessage badMsg;
   badMsg.sync1 = 255;
 
