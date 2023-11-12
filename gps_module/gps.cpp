@@ -255,13 +255,13 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
     uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS) {
 
   if (polling) {
-    UbxMessage messasge = ComposeMessage(NAV_CLASS, NAV_PVT);
+    UbxMessage message = ComposeMessage(NAV_CLASS, NAV_PVT, 0, nullptr);
     this->writeUbxMessage(message);
   }
 
   UbxMessage message = this->readUbxMessage();
   
-     if (message.Sync1 != 255) {
+     if (message.sync1 != 255) {
         pvtData.year = u2_to_int(&message.payload[0]);
         pvtData.month = message.payload[2];
         pvtData.day = message.payload[3];
