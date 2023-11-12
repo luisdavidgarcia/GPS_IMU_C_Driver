@@ -25,6 +25,7 @@ Gps::Gps() {
   // Set measure freq 50 and 1 
   // // wait for Ack CFG class and CFG Rate 
 
+  /*
   UbxMessage result_msg;
 
   while (1) {
@@ -33,8 +34,7 @@ Gps::Gps() {
       break;
     }
   }
-
-  printf("Hi\n");
+  */
 
   /*
   bool result = this->waitForAcknowledge(CFG_CLASS, CFG_PRT);
@@ -44,18 +44,19 @@ Gps::Gps() {
   }
   */
 
-  /*
   result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
   if (!result) {
     printf("Error: Failed to set message send rate for NAV_PVT.\n");
     exit(-1); 
   }
 
+  /*
   result = this->waitForAcknowledge(CFG_CLASS, CFG_MSG);
   if (!result) {
     printf("Error: Acknowledgment not received for setting message frequency.\n");
     exit(-1);
   }
+  */
 
   result = this->setMeasurementFrequency(500, 1, 0);
   if (!result) {
@@ -63,6 +64,9 @@ Gps::Gps() {
       exit(-1); 
   }
 
+  print("Near the end\n");
+
+  /*
   result = this->waitForAcknowledge(CFG_CLASS, CFG_RATE);
   if (!result) {
       printf("Error: Acknowledgment not received for setting measurement frequency.\n");
@@ -88,11 +92,10 @@ void Gps::ubxOnly(void) {
     }
 }
 
-/*
 bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate = DEFAULT_SEND_RATE) {
-  uint8_t payload[] = {msgClass, msgId, sendRate, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t payload[] = {sendRate, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-  UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, sizeof(payload), payload);
+    UbxMessage message = ComposeMessage(msgClass, msgId, sizeof(payload), payload);
 
     bool result = this->writeUbxMessage(message);
 
@@ -105,11 +108,11 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
     // Convert measurement_period_ms to little-endian bytes
     payload[0] = static_cast<uint8_t>(measurementPeriodMillis & 0xFF);
     payload[1] = static_cast<uint8_t>((measurementPeriodMillis >> 8) & 0xFF);
-    // Convert navigation_rate to little-endian bytes
+    // Convert navigation_rate to little-endian bytes will always be 1
     payload[2] = navigationRate;
-    // Convert timeref to little-endian bytes
-    payload[3] = timeref;
-    payload[4] = 0x00;
+    payload[3] = 0x00;
+    // Convert timeref to little-endian bytes will always be 0 for now
+    payload[4] = timeref;
     payload[5] = 0x00;
 
     UbxMessage message = ComposeMessage(CFG_CLASS, CFG_RATE, sizeof(payload), payload);
@@ -118,9 +121,7 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
 
     return result;
 }
-*/
 
-// TODO: Fix get available bytes
 uint16_t Gps::getAvailableBytes() {
   //i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
@@ -161,7 +162,6 @@ UbxMessage Gps::readUbxMessage() {
   std::vector<uint8_t> message;
 
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
-    printf("In here MSG Length: 0x%x\n", messageLength);
       for (int i = 0; i < messageLength; i++) {
           int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
           if (byte_data == -1) {
@@ -253,7 +253,7 @@ bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     return ack;
 }
 */
-/*
+
 PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE, 
     uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS) {
   return this->pvtData;
@@ -277,4 +277,3 @@ uint16_t Gps::extractU2FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
   return value;
 }
 
-*/
