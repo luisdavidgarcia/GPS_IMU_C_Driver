@@ -85,8 +85,18 @@ class Gps {
       UbxMessage ubxmsg;
       PVTData pvtData;
       int i2c_fd;
-      uint32_t extractU4FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
-      uint16_t extractU2FromUbxMessage(UbxMessage& msg, uint16_t startIndex);
+
+      // Function to extract an integer from a little-endian byte array
+    int16_t i2_to_int(const uint8_t *little_endian_bytes);
+
+    // Function to extract an unsigned integer from a little-endian byte array
+    uint16_t u2_to_int(const uint8_t *little_endian_bytes);
+
+    // Function to extract a signed 32-bit integer from a little-endian byte array
+    int32_t i4_to_int(const uint8_t *little_endian_bytes);
+
+    // Function to extract an unsigned 32-bit integer from a little-endian byte array
+    uint32_t u4_to_int(const uint8_t *little_endian_bytes);
 
       void ubxOnly(void);
       bool writeUbxMessage(UbxMessage& msg);
