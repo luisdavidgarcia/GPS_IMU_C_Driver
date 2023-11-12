@@ -63,9 +63,6 @@ Gps::Gps() {
       printf("Error: Failed to set measurement frequency.\n");
       exit(-1); 
   }
-
-  printf("Near the end\n");
-
   /*
   result = this->waitForAcknowledge(CFG_CLASS, CFG_RATE);
   if (!result) {
