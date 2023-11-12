@@ -4,7 +4,6 @@
 #include <vector>
 
 Gps::Gps() {
-  // Initiliaze I2C
   const char *deviceName = GPS_I2C_BUS;
   i2c_fd = open(deviceName, O_RDWR);
   if (i2c_fd < 0) {
@@ -19,57 +18,17 @@ Gps::Gps() {
 
   this->ubxOnly();
 
-  // Call Wait for Ack CFG class and CFG PRT
-  // Set message freq nav class and nav pvt
-  // Wait for Ack CFG claass and CFG MSG
-  // Set measure freq 50 and 1 
-  // // wait for Ack CFG class and CFG Rate 
-
-  /*
-  UbxMessage result_msg;
-
-  while (1) {
-    result_msg = this->readUbxMessage();
-    if (result_msg.sync1 != 255) {
-      break;
-    }
-  }
-  */
-
-  /*
-  bool result = this->waitForAcknowledge(CFG_CLASS, CFG_PRT);
-  if (!result) {
-      printf("Error: Acknowledgment not received for setting communication to UBX only.\n");
-      exit(-1);
-  }
-  */
-
   bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
   if (!result) {
     printf("Error: Failed to set message send rate for NAV_PVT.\n");
     exit(-1); 
   }
 
-  /*
-  result = this->waitForAcknowledge(CFG_CLASS, CFG_MSG);
-  if (!result) {
-    printf("Error: Acknowledgment not received for setting message frequency.\n");
-    exit(-1);
-  }
-  */
-
   result = this->setMeasurementFrequency(500, 1, 0);
   if (!result) {
       printf("Error: Failed to set measurement frequency.\n");
       exit(-1); 
   }
-  /*
-  result = this->waitForAcknowledge(CFG_CLASS, CFG_RATE);
-  if (!result) {
-      printf("Error: Acknowledgment not received for setting measurement frequency.\n");
-      exit(-1); 
-  }
-  */
 }
 
 Gps::~Gps() { close(i2c_fd); }
@@ -161,12 +120,13 @@ UbxMessage Gps::readUbxMessage() {
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
       for (int i = 0; i < messageLength; i++) {
           int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+          printf("Byte data: 0x%x ", static_cast<uint8_t>(byte_data)); // Cast to uint8_t
           printf("Byte data: 0x%x ", byte_data);
-          if (byte_data == -1) {
+          if (byte_data < 0) {
               perror("Failed to read byte from I2C device");
               return UbxMessage();  // Return an empty message on error
           }
-          message.push_back(byte_data);
+          message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
       }
 
       UbxMessage ubxMsg;
@@ -188,69 +148,6 @@ UbxMessage Gps::readUbxMessage() {
 
   return badMsg;  // Return an empty message
 }
-
-/*
-UbxMessage Gps::pollUbxMessage(uint8_t msg_class, uint8_t msg_id) {
-    UbxMessage ubxMsg;
-    ubxMsg.msgClass = msg_class;
-    ubxMsg.msgId = msg_id;
-    ubxMsg.payloadLength = 0;
-
-    bool result = writeUbxMessage(ubxMsg);
-
-    if (!result) {
-        printf("Failed to write poll message to GPS.\n");
-        return UbxMessage();
-    }
-
-    return this->waitForUbxMessage(1, 1, CFG_CLASS, CFG_PRT);
-}
-*/
-/*
-UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMillis=1, uint8_t msg_cls=CFG_CLASS) {
-    uint32_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()
-    ).count();
-
-    UbxMessage response, msg;
-
-    while (true) {
-        uint32_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        ).count();
-
-        if (currentTime - startTime >= timeoutMillis) {
-            printf("Timeout while waiting for UBX message.\n");
-            return UbxMessage();  
-        }
-
-        response = readUbxMessage(msg);  
-
-        // Check if the received message matches the expected class and ID
-        if (response.sync1 == msg.msgClass && response.sync2 == msg.msgId) {
-            return response;
-        }
-
-        // Sleep for the specified interval before checking again
-        std::this_thread::sleep_for(std::chrono::milliseconds(intervalMillis));
-    }
-}
-
-bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
-    bool ack = false;
-    UbxMessage msg = waitForUbxMessage(msgClass=ACK_ACK);  
-
-    if (msg.Sync1 == 255) {
-        return ack;
-    }
-
-    if (msg.payload[3] == ACK_ACK && msgClass == msg.payload[6] && msgId == msg.msgId) {
-        ack = true;
-    }
-
-    return ack;
-}
-*/
 
 PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE, 
     uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS) {
