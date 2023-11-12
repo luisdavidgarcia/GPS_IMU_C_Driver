@@ -127,7 +127,7 @@ uint16_t Gps::getAvailableBytes() {
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
   printf("MSB: 0x%x LSB: 0x%x\n", msb, lsb);
-  if (msb == 0xFF || lsb == 0xFF) {
+  if (msb == 0x00 || lsb == 0x00) {
     printf("No Bytes were available\n");
     return 0;
   }
