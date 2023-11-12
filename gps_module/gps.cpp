@@ -44,7 +44,7 @@ Gps::Gps() {
   }
   */
 
-  result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
+  bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
   if (!result) {
     printf("Error: Failed to set message send rate for NAV_PVT.\n");
     exit(-1); 
@@ -64,7 +64,7 @@ Gps::Gps() {
       exit(-1); 
   }
 
-  print("Near the end\n");
+  printf("Near the end\n");
 
   /*
   result = this->waitForAcknowledge(CFG_CLASS, CFG_RATE);
