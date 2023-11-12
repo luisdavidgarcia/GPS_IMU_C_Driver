@@ -19,6 +19,12 @@ Gps::Gps() {
 
   this->ubxOnly();
 
+  // Call Wait for Ack CFG class and CFG PRT
+  // Set message freq nav class and nav pvt
+  // Wait for Ack CFG claass and CFG MSG
+  // Set measure freq 50 and 1 
+  // // wait for Ack CFG class and CFG Rate 
+
   UbxMessage result_msg;
 
   while (1) {
@@ -116,7 +122,7 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
 
 // TODO: Fix get available bytes
 uint16_t Gps::getAvailableBytes() {
-  i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
+  //i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
@@ -207,7 +213,7 @@ UbxMessage Gps::pollUbxMessage(uint8_t msg_class, uint8_t msg_id) {
 }
 */
 /*
-UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMillis=1, uint8_t msg_cls=CFG_CLASS, uint8_t msg_id=CFG_PRT) {
+UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMillis=1, uint8_t msg_cls=CFG_CLASS) {
     uint32_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()
     ).count();
@@ -238,9 +244,9 @@ UbxMessage Gps::waitForUbxMessage(uint32_t timeoutMillis=1, uint32_t intervalMil
 
 bool Gps::waitForAcknowledge(uint8_t msgClass, uint8_t msgId) {
     bool ack = false;
-    UbxMessage msg = waitForUbxMessage(msgClass=ACK_ACK, msgId);  
+    UbxMessage msg = waitForUbxMessage(msgClass=ACK_ACK);  
 
-    if (msg.payloadLength == 0) {
+    if (msg.Sync1 == 255) {
         return ack;
     }
 
