@@ -15,7 +15,7 @@ Gps::Gps() {
     perror("Failed to acquire I2C GPS address");
   }
 
-  usleep(100000);
+  sleep(1);
 
   this->ubxOnly();
 
@@ -126,8 +126,6 @@ uint16_t Gps::getAvailableBytes() {
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
-  printf("MSB: 0x%x LSB: 0x%x\n", msb, lsb);
-
   // Combine MSB and LSB to form a 16-bit value
   return static_cast<uint16_t>(msb << 8) | lsb;
 }
@@ -163,6 +161,7 @@ UbxMessage Gps::readUbxMessage() {
   std::vector<uint8_t> message;
 
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
+    printf("In here MSG Length: 0x%x\n", messageLength);
       for (int i = 0; i < messageLength; i++) {
           uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
           if (byte_data == static_cast<uint8_t>(-1)) {
