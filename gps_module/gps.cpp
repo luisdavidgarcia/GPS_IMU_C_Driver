@@ -24,7 +24,7 @@ Gps::Gps() {
     exit(-1); 
   }
 
-  result = this->setMeasurementFrequency(500, 1, 0);
+  result = this->setMeasurementFrequency(50, 1, 0);
   if (!result) {
       printf("Error: Failed to set measurement frequency.\n");
       exit(-1); 
@@ -43,7 +43,6 @@ void Gps::ubxOnly(void) {
 
     bool result = this->writeUbxMessage(message);
     if (!result) {
-      printf("Error: Could not write to GPS.\n");
       exit(-1);
     }
 }
@@ -107,6 +106,7 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   }
 
   if (i2c_smbus_write_block_data(i2c_fd, 0x00, tempBuf.size(), buf) < 0) {
+    perror("Failed to write to I2C device");
     return false;
   }
 
@@ -120,7 +120,6 @@ UbxMessage Gps::readUbxMessage() {
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
       for (int i = 0; i < messageLength; i++) {
           int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-          printf("Byte data: 0x%x ", static_cast<uint8_t>(byte_data)); // Cast to uint8_t
           printf("Byte data: 0x%x ", byte_data);
           if (byte_data < 0) {
               perror("Failed to read byte from I2C device");
