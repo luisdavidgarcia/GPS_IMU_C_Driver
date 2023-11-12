@@ -262,7 +262,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
   UbxMessage message = this->readUbxMessage();
   
-     if (message.sync1 != 255) {
+     if (message.sync1 != 255 message.payload < 100) {
         pvtData.year = u2_to_int(&message.payload[0]);
         pvtData.month = message.payload[2];
         pvtData.day = message.payload[3];
@@ -321,6 +321,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
 // Function to extract an integer from a little-endian byte array
 int16_t Gps::i2_to_int(const uint8_t *little_endian_bytes) {
+  printf("little_endian_bytes: 0x%x \n", *little_endian_bytes);
     return (int16_t)(((uint16_t)little_endian_bytes[1] << 8) | (uint16_t)little_endian_bytes[0]);
 }
 
