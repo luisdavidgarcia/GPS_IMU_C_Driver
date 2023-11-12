@@ -260,84 +260,81 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
   }
 
   UbxMessage message = this->readUbxMessage();
-
-  if (message.Sync1 != 255) {
-        pvtData.year = u2_to_int(&message.payload[0]); // Update the start index to 0
+  
+     if (message.Sync1 != 255) {
+        pvtData.year = u2_to_int(&message.payload[0]);
         pvtData.month = message.payload[2];
         pvtData.day = message.payload[3];
         pvtData.hour = message.payload[4];
-        pvtData.minute = message.payload[5];
-        pvtData.second = message.payload[6];
+        pvtData.min = message.payload[5];
+        pvtData.sec = message.payload[6];
 
         uint8_t valid_flag = message.payload[7];
 
         // Extract and clarify flags
-        pvtData.valid_date = (valid_flag & 0x01) == 0x01 ? true : false;
-        pvtData.valid_time = (valid_flag & 0x02) == 0x02 ? true : false;
-        pvtData.fully_resolved = (valid_flag & 0x04) == 0x04 ? true : false;
-        pvtData.valid_mag_dec = (valid_flag & 0x08) == 0x08 ? true : false;
+        pvtData.validDateFlag = (valid_flag & 0x01) == 0x01 ? 1 : 0;
+        pvtData.validTimeFlag = (valid_flag & 0x02) == 0x02 ? 1 : 0;
+        pvtData.fullyResolved = (valid_flag & 0x04) == 0x04 ? 1 : 0;
+        pvtData.validMagFlag = (valid_flag & 0x08) == 0x08 ? 1 : 0;
 
         // Extract GNSS fix and related data
-        pvtData.gnss_fix = message.payload[20];
-        memcpy(&pvtData.fix_status_flags, &message.payload[21], 2);
-        pvtData.num_satellites = message.payload[23];
+        pvtData.gnssFix = message.payload[20];
+        memcpy(&pvtData.fixStatusFlags, &message.payload[21], 2);
+        pvtData.numberOfSatellites = message.payload[23];
 
         // Extract longitude and latitude in degrees
         pvtData.longitude = i4_to_int(&message.payload[24]) * 1e-07;
         pvtData.latitude = i4_to_int(&message.payload[28]) * 1e-07;
 
         // Extract height data
-        pvtData.ellipsoid_height = i4_to_int(&message.payload[32]);
-        pvtData.msl_height = i4_to_int(&message.payload[36]);
+        pvtData.height = i4_to_int(&message.payload[32]);
+        pvtData.heightMSL = i4_to_int(&message.payload[36]);
 
         // Extract horizontal and vertical accuracy in millimeters
-        pvtData.horizontal_accuracy = u4_to_int(&message.payload[40]);
-        pvtData.vertical_accuracy = u4_to_int(&message.payload[44]);
+        pvtData.horizontalAccuracy = u4_to_int(&message.payload[40]);
+        pvtData.verticalAccuracy = u4_to_int(&message.payload[44]);
 
         // Extract North East Down velocity in mm/s
-        int32_t n_vel = i4_to_int(&message.payload[48]);
-        int32_t e_vel = i4_to_int(&message.payload[52]);
-        int32_t d_vel = i4_to_int(&message.payload[56]);
-        pvtData.ned_velocity[0] = n_vel;
-        pvtData.ned_velocity[1] = e_vel;
-        pvtData.ned_velocity[2] = d_vel;
+        pvtData.velocityNorth = i4_to_int(&message.payload[48]);
+        pvtData.velocityEast = i4_to_int(&message.payload[52]);
+        pvtData.velocityDown = i4_to_int(&message.payload[56]);
 
         // Extract ground speed in mm/s and motion heading in degrees
-        pvtData.ground_speed = i4_to_int(&message.payload[60]);
-        pvtData.motion_heading = i4_to_int(&message.payload[64]) * 1e-05;
+        pvtData.groundSpeed = i4_to_int(&message.payload[60]);
+        pvtData.motionHeading = i4_to_int(&message.payload[64]) * 1e-05;
 
         // Extract speed accuracy in mm/s and heading accuracy in degrees
-        pvtData.speed_accuracy = u4_to_int(&message.payload[68]);
-        pvtData.heading_accuracy = u4_to_int(&message.payload[72]) * 1e-05;
+        pvtData.speedAccuracy = u4_to_int(&message.payload[68]);
+        pvtData.motionHeadingAccuracy = u4_to_int(&message.payload[72]) * 1e-05;
 
         // Extract vehicle heading in degrees
-        pvtData.vehicle_heading = i4_to_int(&message.payload[84]) * 1e-05;
+        pvtData.vehicalHeading = i4_to_int(&message.payload[84]) * 1e-05;
 
         // Extract magnetic declination and accuracy in degrees
-        pvtData.magnetic_declination = i2_to_int(&message.payload[88]) * 1e-02;
-        pvtData.mag_dec_accuracy = u2_to_int(&message.payload[90]) * 1e-02;
+        pvtData.magneticDeclination = i2_to_int(&message.payload[88]) * 1e-02;
+        pvtData.magnetDeclinationAccuracy = u2_to_int(&message.payload[90]) * 1e-02;
     }
-
-  
 
   return this->pvtData;
 }
 
-uint32_t Gps::extractU4FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
-  if (startIndex + 3 >= msg.payloadLength)
-    return 0;
-
-  uint32_t value = (uint32_t) this->extractU2FromUbxMessage(msg, startIndex);
-  value |= ((uint32_t) this->extractU2FromUbxMessage(msg, startIndex + 2)) << 16;
-  return value;
+// Function to extract an integer from a little-endian byte array
+int16_t Gps::i2_to_int(const uint8_t *little_endian_bytes) {
+    return (int16_t)(((uint16_t)little_endian_bytes[1] << 8) | (uint16_t)little_endian_bytes[0]);
 }
 
-uint16_t Gps::extractU2FromUbxMessage(UbxMessage &msg, uint16_t startIndex){
-  if (startIndex + 1 >= msg.payloadLength)
-    return 0;
+// Function to extract an unsigned integer from a little-endian byte array
+uint16_t Gps::u2_to_int(const uint8_t *little_endian_bytes) {
+    return (uint16_t)(((uint16_t)little_endian_bytes[1] << 8) | (uint16_t)little_endian_bytes[0]);
+}
 
-  uint16_t value = (uint16_t) msg.payload[startIndex];
-  value |= ((uint16_t) msg.payload[startIndex + 1]) << 8;
-  return value;
+// Function to extract a signed 32-bit integer from a little-endian byte array
+int32_t Gps::i4_to_int(const uint8_t *little_endian_bytes) {
+    return (int32_t)(((uint32_t)little_endian_bytes[3] << 24) | ((uint32_t)little_endian_bytes[2] << 16) | ((uint32_t)little_endian_bytes[1] << 8) | (uint32_t)little_endian_bytes[0]);
+}
+
+// Function to extract an unsigned 32-bit integer from a little-endian byte array
+uint32_t Gps::u4_to_int(const uint8_t *little_endian_bytes) {
+    return (uint32_t)(((uint32_t)little_endian_bytes[3] << 24) | ((uint32_t)little_endian_bytes[2] << 16) | ((uint32_t)little_endian_bytes[1] << 8) | (uint32_t)little_endian_bytes[0]);
 }
 
