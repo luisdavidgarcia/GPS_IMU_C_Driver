@@ -161,6 +161,7 @@ UbxMessage Gps::readUbxMessage() {
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
       for (int i = 0; i < messageLength; i++) {
           int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+          printf("Byte data: 0x%x", byte_data);
           if (byte_data == -1) {
               perror("Failed to read byte from I2C device");
               return UbxMessage();  // Return an empty message on error
