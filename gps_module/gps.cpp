@@ -122,75 +122,75 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
 }
 
 UbxMessage Gps::readUbxMessage() {
-  uint16_t messageLength = getAvailableBytes();
-  std::vector<uint8_t> message;
+  // uint16_t messageLength = getAvailableBytes();
+  // std::vector<uint8_t> message;
 
-  if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
-      uint8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-      uint8_t sync2_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+  // if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
+  //     uint8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+  //     uint8_t sync2_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
 
-      printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_to_compare, (uint8_t) sync2_to_compare);
+  //     printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_to_compare, (uint8_t) sync2_to_compare);
 
-    if (sync1_to_compare == SYNC_CHAR_1 && sync2_to_compare == SYNC_CHAR_2) {
-        for (int i = 0; i < messageLength; i++) {
-            uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-            //printf("Byte Read: 0x%x ", byte_data);
-            if (byte_data < -1) {
-                perror("Failed to read byte from I2C device");
-                UbxMessage badMsg;
-                badMsg.sync1 = 255;
-                return badMsg;  // Return an empty message on error
-            }
-            message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
-        }
+  //   if (sync1_to_compare == SYNC_CHAR_1 && sync2_to_compare == SYNC_CHAR_2) {
+  //       for (int i = 0; i < messageLength; i++) {
+  //           uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+  //           //printf("Byte Read: 0x%x ", byte_data);
+  //           if (byte_data < -1) {
+  //               perror("Failed to read byte from I2C device");
+  //               UbxMessage badMsg;
+  //               badMsg.sync1 = 255;
+  //               return badMsg;  // Return an empty message on error
+  //           }
+  //           message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
+  //       }
 
-        printf("Message Size: %lu\n", message.size());
-        // for (size_t i = 0; i < message.size(); ++i) {
-        //     printf("i: %d |", i);
-        //     printf("0x%02X", message[i]); // %02X formats the number in hexadecimal, 2 digits with leading zeros
-        //     // if (i < message.size() - 1) {
-        //     //     printf(", "); // Separate elements with a comma
-        //     // }
-        // }
-        printf("\n-----------------------"); // New line after printing all elements
+  //       printf("Message Size: %lu\n", message.size());
+  //       // for (size_t i = 0; i < message.size(); ++i) {
+  //       //     printf("i: %d |", i);
+  //       //     printf("0x%02X", message[i]); // %02X formats the number in hexadecimal, 2 digits with leading zeros
+  //       //     // if (i < message.size() - 1) {
+  //       //     //     printf(", "); // Separate elements with a comma
+  //       //     // }
+  //       // }
+  //       printf("\n-----------------------"); // New line after printing all elements
 
-        UbxMessage ubxMsg;
-        ubxMsg.sync1 = message[0];
-        ubxMsg.sync2 = message[1];
-        ubxMsg.msgClass = message[2];
-        ubxMsg.msgId = message[3];
-        ubxMsg.payloadLength = (message[4] << 8 | message[5]);
-        memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
-        ubxMsg.checksumA = message[messageLength - 2];
-        ubxMsg.checksumB = message[messageLength - 1];
+  //       UbxMessage ubxMsg;
+  //       ubxMsg.sync1 = message[0];
+  //       ubxMsg.sync2 = message[1];
+  //       ubxMsg.msgClass = message[2];
+  //       ubxMsg.msgId = message[3];
+  //       ubxMsg.payloadLength = (message[4] << 8 | message[5]);
+  //       memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
+  //       ubxMsg.checksumA = message[messageLength - 2];
+  //       ubxMsg.checksumB = message[messageLength - 1];
 
-        return ubxMsg;
-    }
+  //       return ubxMsg;
+  //   }
 
-      // for (int i = 0; i < messageLength; i++) {
-      //     int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-      //     printf("Byte data: 0x%x ", byte_data);
-      //     if (byte_data < 0) {
-      //         perror("Failed to read byte from I2C device");
-      //         UbxMessage badMsg;
-      //         badMsg.sync1 = 255;
-      //         return badMsg;  // Return an empty message on error
-      //     }
-      //     message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
-      // }
+  //     // for (int i = 0; i < messageLength; i++) {
+  //     //     int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+  //     //     printf("Byte data: 0x%x ", byte_data);
+  //     //     if (byte_data < 0) {
+  //     //         perror("Failed to read byte from I2C device");
+  //     //         UbxMessage badMsg;
+  //     //         badMsg.sync1 = 255;
+  //     //         return badMsg;  // Return an empty message on error
+  //     //     }
+  //     //     message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
+  //     // }
 
-      // UbxMessage ubxMsg;
-      // ubxMsg.sync1 = message[0];
-      // ubxMsg.sync2 = message[1];
-      // ubxMsg.msgClass = message[2];
-      // ubxMsg.msgId = message[3];
-      // ubxMsg.payloadLength = (message[4] << 8 | message[5]);
-      // memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
-      // ubxMsg.checksumA = message[messageLength - 2];
-      // ubxMsg.checksumB = message[messageLength - 1];
+  //     // UbxMessage ubxMsg;
+  //     // ubxMsg.sync1 = message[0];
+  //     // ubxMsg.sync2 = message[1];
+  //     // ubxMsg.msgClass = message[2];
+  //     // ubxMsg.msgId = message[3];
+  //     // ubxMsg.payloadLength = (message[4] << 8 | message[5]);
+  //     // memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
+  //     // ubxMsg.checksumA = message[messageLength - 2];
+  //     // ubxMsg.checksumB = message[messageLength - 1];
 
-      // return ubxMsg;
-  }
+  //     // return ubxMsg;
+  // }
 
   UbxMessage badMsg;
   badMsg.sync1 = 255;
