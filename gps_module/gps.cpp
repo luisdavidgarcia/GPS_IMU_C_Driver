@@ -123,7 +123,7 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
 
 UbxMessage Gps::readUbxMessage() {
   uint16_t messageLength = getAvailableBytes();
-  // std::vector<uint8_t> message;
+  std::vector<uint8_t> message;
 
   // if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
   //     uint8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
