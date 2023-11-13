@@ -195,6 +195,8 @@ UbxMessage Gps::readUbxMessage() {
   UbxMessage badMsg;
   badMsg.sync1 = 255;
 
+  printf("Made it in remove\n");
+
   return badMsg;  // Return an empty message
 }
 
