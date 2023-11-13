@@ -105,9 +105,12 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
     buf[i] = tempBuf[i];
   }
 
-  if (i2c_smbus_write_block_data(i2c_fd, 0x00, tempBuf.size(), buf) < 0) {
-    perror("Failed to write to I2C device");
-    return false;
+  for (int i = 0; i < tempBuf.size(); i++) {
+    int8_t reg = i2c_smbus_write_byte(i2c_fd, buf[i]);
+    if (reg < 0) {
+      perror("Failed to write to I2C device");
+      return false;
+    }
   }
 
   return true;
