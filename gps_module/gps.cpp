@@ -153,7 +153,6 @@ UbxMessage Gps::readUbxMessage() {
             }
         }
         printf("\n-----------------------"); // New line after printing all elements
-    }
 
         UbxMessage ubxMsg;
         ubxMsg.sync1 = message[0];
