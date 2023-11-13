@@ -134,7 +134,7 @@ UbxMessage Gps::readUbxMessage() {
     if (sync1_to_compare == SYNC_CHAR_1 && sync2_to_compare == SYNC_CHAR_2) {
         for (int i = 0; i < messageLength; i++) {
             uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-            printf("0x%x ", byte_data);
+            printf("Byte data: 0x%x ", byte_data);
             if (byte_data < -1) {
                 perror("Failed to read byte from I2C device");
                 UbxMessage badMsg;
