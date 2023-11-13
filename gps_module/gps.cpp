@@ -184,8 +184,8 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
   UbxMessage message = this->readUbxMessage();
   
      if (message.sync1 != 255 && message.payloadLength < 100) {
-        pvtData.year = u2_to_int(&message.payload[0]);
-        pvtData.month = message.payload[2];
+        pvtData.year = u2_to_int(&message.payload[4]);
+        pvtData.month = message.payload[6];
         pvtData.day = message.payload[3];
         pvtData.hour = message.payload[4];
         pvtData.min = message.payload[5];

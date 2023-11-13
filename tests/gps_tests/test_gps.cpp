@@ -6,7 +6,9 @@ int main(void) {
   Gps gps_module;
   while(1) {
     PVTData data = gps_module.GetPvt(true, 1);
-    printf("Year: %d\n", data.year);
+    if (data.year == 2023) {
+      printf("Year: %d\n", data.year);
+    }
     sleep(1);
   }
 
