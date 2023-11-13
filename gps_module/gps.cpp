@@ -100,11 +100,12 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   tempBuf.push_back(msg.checksumA);
   tempBuf.push_back(msg.checksumB);
 
-  uint8_t buf[tempBuf.size()];
+  uint8_t buf[tempBuf.size() + 1];
   for (int i = 0; i < tempBuf.size(); i++) {
     buf[i] = tempBuf[i];
   }
 
+  buf[tempBuf.size()] = '\0';
   printf("Buf: %s\n", buf);
   for (int i = 0; i < tempBuf.size(); i++) {
     int8_t reg = i2c_smbus_write_byte_data(i2c_fd, 0xFF, buf[i]);
