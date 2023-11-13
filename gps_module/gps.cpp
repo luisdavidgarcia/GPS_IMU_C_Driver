@@ -125,11 +125,11 @@ UbxMessage Gps::readUbxMessage() {
   uint16_t messageLength = getAvailableBytes();
   std::vector<uint8_t> message;
 
-  // if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
-  //     uint8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-  //     uint8_t sync2_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+  if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
+      uint8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+      uint8_t sync2_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
 
-  //     printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_to_compare, (uint8_t) sync2_to_compare);
+      printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_to_compare, (uint8_t) sync2_to_compare);
 
   //   if (sync1_to_compare == SYNC_CHAR_1 && sync2_to_compare == SYNC_CHAR_2) {
   //       for (int i = 0; i < messageLength; i++) {
@@ -190,7 +190,7 @@ UbxMessage Gps::readUbxMessage() {
   //     // ubxMsg.checksumB = message[messageLength - 1];
 
   //     // return ubxMsg;
-  // }
+  }
 
   UbxMessage badMsg;
   badMsg.sync1 = 255;
