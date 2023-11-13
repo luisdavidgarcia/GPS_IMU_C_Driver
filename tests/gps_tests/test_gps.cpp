@@ -15,6 +15,8 @@ int main(void) {
       printf(
           "Sec: %d\n", data.sec);  // TODO: Convert to seconds with decimal
       printf("\n---------------------\n");
+    } else {
+      printf("No data\n"); 
     }
     sleep(1);
   }
