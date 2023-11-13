@@ -123,7 +123,9 @@ UbxMessage Gps::readUbxMessage() {
           printf("Byte data: 0x%x ", byte_data);
           if (byte_data < 0) {
               perror("Failed to read byte from I2C device");
-              return UbxMessage();  // Return an empty message on error
+              UbxMessage badMsg;
+              badMsg.sync1 = 255;
+              return badMsg;  // Return an empty message on error
           }
           message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
       }
@@ -141,7 +143,6 @@ UbxMessage Gps::readUbxMessage() {
       return ubxMsg;
   }
 
-  //printf("Failed to read message.\n");
   UbxMessage badMsg;
   badMsg.sync1 = 255;
 
@@ -217,7 +218,6 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
 // Function to extract an integer from a little-endian byte array
 int16_t Gps::i2_to_int(const uint8_t *little_endian_bytes) {
-  printf("little_endian_bytes: 0x%x \n", *little_endian_bytes);
     return (int16_t)(((uint16_t)little_endian_bytes[1] << 8) | (uint16_t)little_endian_bytes[0]);
 }
 
