@@ -236,7 +236,8 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
       return this->pvtData;
     }
 
-  return this->pvtData.year = 33920;
+  pvtData.year = 33920;
+  return this->pvtData;
 }
 
 // Function to extract an integer from a little-endian byte array
