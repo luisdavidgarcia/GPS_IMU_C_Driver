@@ -100,13 +100,11 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   tempBuf.push_back(msg.checksumA);
   tempBuf.push_back(msg.checksumB);
 
-  uint8_t buf[tempBuf.size() + 1];
+  uint8_t buf[tempBuf.size()];
   for (int i = 0; i < tempBuf.size(); i++) {
     buf[i] = tempBuf[i];
   }
 
-  buf[tempBuf.size()] = '\0';
-  printf("Buf: %s\n", buf);
   for (int i = 0; i < tempBuf.size(); i++) {
     int8_t reg = i2c_smbus_write_byte_data(i2c_fd, 0xFF, buf[i]);
     if (reg < 0) {
@@ -128,8 +126,8 @@ UbxMessage Gps::readUbxMessage() {
   std::vector<uint8_t> message;
 
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
-      int8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-      int8_t sync2_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+      uint8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+      uint8_t sync2_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
 
       printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_to_compare, (uint8_t) sync2_to_compare);
 
