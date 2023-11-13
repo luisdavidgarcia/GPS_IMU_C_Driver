@@ -232,9 +232,11 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
         // Extract magnetic declination and accuracy in degrees
         pvtData.magneticDeclination = i2_to_int(&message.payload[88]) * 1e-02;
         pvtData.magnetDeclinationAccuracy = u2_to_int(&message.payload[90]) * 1e-02;
+
+      return this->pvtData;
     }
 
-  return this->pvtData;
+  return this->pvtData.year = -1;
 }
 
 // Function to extract an integer from a little-endian byte array
