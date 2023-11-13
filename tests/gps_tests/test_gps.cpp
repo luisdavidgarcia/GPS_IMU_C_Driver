@@ -14,6 +14,7 @@ int main(void) {
       printf("Min: %d\n", data.min);
       printf(
           "Sec: %d\n", data.sec);  // TODO: Convert to seconds with decimal
+      printf("\n---------------------\n");
     }
     sleep(1);
   }
