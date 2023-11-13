@@ -184,16 +184,14 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
   UbxMessage message = this->readUbxMessage();
   
      if (message.sync1 != 255 && message.payloadLength < 100) {
-        // printf("Payload 4: 0x%x \n", message.payload[4]);
-        // printf("Payload 5: 0x%x \n", message.payload[5]);
         pvtData.year = u2_to_int(&message.payload[4]);
         pvtData.month = message.payload[6];
-        pvtData.day = message.payload[3];
-        pvtData.hour = message.payload[4];
-        pvtData.min = message.payload[5];
-        pvtData.sec = message.payload[6];
+        pvtData.day = message.payload[7];
+        pvtData.hour = message.payload[8];
+        pvtData.min = message.payload[9];
+        pvtData.sec = message.payload[10];
 
-        uint8_t valid_flag = message.payload[7];
+        uint8_t valid_flag = message.payload[11];
 
         // Extract and clarify flags
         pvtData.validDateFlag = (valid_flag & 0x01) == 0x01 ? 1 : 0;
