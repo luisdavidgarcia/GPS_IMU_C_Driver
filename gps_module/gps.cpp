@@ -131,18 +131,19 @@ UbxMessage Gps::readUbxMessage() {
 
       printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_to_compare, (uint8_t) sync2_to_compare);
 
-  //   if (sync1_to_compare == SYNC_CHAR_1 && sync2_to_compare == SYNC_CHAR_2) {
-  //       for (int i = 0; i < messageLength; i++) {
-  //           uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-  //           //printf("Byte Read: 0x%x ", byte_data);
-  //           if (byte_data < -1) {
-  //               perror("Failed to read byte from I2C device");
-  //               UbxMessage badMsg;
-  //               badMsg.sync1 = 255;
-  //               return badMsg;  // Return an empty message on error
-  //           }
-  //           message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
-  //       }
+    if (sync1_to_compare == SYNC_CHAR_1 && sync2_to_compare == SYNC_CHAR_2) {
+        for (int i = 0; i < messageLength; i++) {
+            uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+            //printf("Byte Read: 0x%x ", byte_data);
+            if (byte_data < -1) {
+                perror("Failed to read byte from I2C device");
+                UbxMessage badMsg;
+                badMsg.sync1 = 255;
+                return badMsg;  // Return an empty message on error
+            }
+            message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
+        }
+    }
 
   //       printf("Message Size: %lu\n", message.size());
   //       // for (size_t i = 0; i < message.size(); ++i) {
