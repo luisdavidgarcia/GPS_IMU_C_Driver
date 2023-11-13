@@ -126,12 +126,12 @@ UbxMessage Gps::readUbxMessage() {
   std::vector<uint8_t> message;
 
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
-      uint8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-      uint8_t sync2_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+    uint8_t sync1_read = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+    uint8_t sync2_read = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
 
-      printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_to_compare, (uint8_t) sync2_to_compare);
+    printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_read, (uint8_t) sync2_read);
 
-    if (sync1_to_compare == SYNC_CHAR_1 && sync2_to_compare == SYNC_CHAR_2) {
+    if (sync1_to_compare == SYNC_CHAR_1 && sync2_read == SYNC_CHAR_2) {
         for (int i = 0; i < messageLength; i++) {
             uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
             //printf("Byte Read: 0x%x ", byte_data);
@@ -155,12 +155,12 @@ UbxMessage Gps::readUbxMessage() {
         printf("\n-----------------------"); // New line after printing all elements
 
         UbxMessage ubxMsg;
-        ubxMsg.sync1 = message[0];
-        ubxMsg.sync2 = message[1];
-        ubxMsg.msgClass = message[2];
-        ubxMsg.msgId = message[3];
-        ubxMsg.payloadLength = (message[4] << 8 | message[5]);
-        memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
+        ubxMsg.sync1 = sync1_read;
+        ubxMsg.sync2 = sync2_read;
+        ubxMsg.msgClass = message[0];
+        ubxMsg.msgId = message[1];
+        ubxMsg.payloadLength = (message[3] << 8 | message[2]);
+        memcpy(&ubxMsg.payload, &message[4], ubxMsg.payloadLength);
         ubxMsg.checksumA = message[messageLength - 2];
         ubxMsg.checksumB = message[messageLength - 1];
 
