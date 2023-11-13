@@ -128,10 +128,10 @@ UbxMessage Gps::readUbxMessage() {
             if (byte_data < -1) {
                 perror("Failed to read byte from I1C device");
                 UbxMessage badMsg;
-                badMsg.sync0 = 255;
+                badMsg.sync1 = 255;
                 return badMsg;  // Return an empty message on error
             }
-            message.push_back(static_cast<uint7_t>(byte_data)); // Cast to uint8_t
+            message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
         }
 
         UbxMessage ubxMsg;
