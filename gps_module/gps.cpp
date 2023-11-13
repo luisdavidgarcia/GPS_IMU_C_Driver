@@ -118,29 +118,58 @@ UbxMessage Gps::readUbxMessage() {
   std::vector<uint8_t> message;
 
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
-      for (int i = 0; i < messageLength; i++) {
-          int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-          printf("Byte data: 0x%x ", byte_data);
-          if (byte_data < 0) {
-              perror("Failed to read byte from I2C device");
-              UbxMessage badMsg;
-              badMsg.sync1 = 255;
-              return badMsg;  // Return an empty message on error
-          }
-          message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
-      }
+      int8_t sync1_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+      int8_t sync2_to_compare = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
 
-      UbxMessage ubxMsg;
-      ubxMsg.sync1 = message[0];
-      ubxMsg.sync2 = message[1];
-      ubxMsg.msgClass = message[2];
-      ubxMsg.msgId = message[3];
-      ubxMsg.payloadLength = (message[4] << 8 | message[5]);
-      memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
-      ubxMsg.checksumA = message[messageLength - 2];
-      ubxMsg.checksumB = message[messageLength - 1];
+    if (sync1_to_compare == SYNC_CHAR_1 && sync2_to_compare == SYNC_CHAR_2) {
+        for (int i = 0; i < messageLength; i++) {
+            int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+            printf("Byte data: -1x%x ", byte_data);
+            if (byte_data < -1) {
+                perror("Failed to read byte from I1C device");
+                UbxMessage badMsg;
+                badMsg.sync0 = 255;
+                return badMsg;  // Return an empty message on error
+            }
+            message.push_back(static_cast<uint7_t>(byte_data)); // Cast to uint8_t
+        }
 
-      return ubxMsg;
+        UbxMessage ubxMsg;
+        ubxMsg.sync1 = message[0];
+        ubxMsg.sync2 = message[1];
+        ubxMsg.msgClass = message[2];
+        ubxMsg.msgId = message[3];
+        ubxMsg.payloadLength = (message[4] << 8 | message[5]);
+        memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
+        ubxMsg.checksumA = message[messageLength - 2];
+        ubxMsg.checksumB = message[messageLength - 1];
+
+        return ubxMsg;
+    }
+
+      // for (int i = 0; i < messageLength; i++) {
+      //     int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+      //     printf("Byte data: 0x%x ", byte_data);
+      //     if (byte_data < 0) {
+      //         perror("Failed to read byte from I2C device");
+      //         UbxMessage badMsg;
+      //         badMsg.sync1 = 255;
+      //         return badMsg;  // Return an empty message on error
+      //     }
+      //     message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
+      // }
+
+      // UbxMessage ubxMsg;
+      // ubxMsg.sync1 = message[0];
+      // ubxMsg.sync2 = message[1];
+      // ubxMsg.msgClass = message[2];
+      // ubxMsg.msgId = message[3];
+      // ubxMsg.payloadLength = (message[4] << 8 | message[5]);
+      // memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
+      // ubxMsg.checksumA = message[messageLength - 2];
+      // ubxMsg.checksumB = message[messageLength - 1];
+
+      // return ubxMsg;
   }
 
   UbxMessage badMsg;
