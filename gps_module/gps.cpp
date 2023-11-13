@@ -131,7 +131,7 @@ UbxMessage Gps::readUbxMessage() {
 
     printf("Sync1: 0x%x Sync2: 0x%x\n", (uint8_t) sync1_read, (uint8_t) sync2_read);
 
-    if (sync1_to_compare == SYNC_CHAR_1 && sync2_read == SYNC_CHAR_2) {
+    if (sync1_read == SYNC_CHAR_1 && sync2_read == SYNC_CHAR_2) {
         for (int i = 0; i < messageLength; i++) {
             uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
             //printf("Byte Read: 0x%x ", byte_data);
