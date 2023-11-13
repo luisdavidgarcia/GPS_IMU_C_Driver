@@ -155,42 +155,18 @@ UbxMessage Gps::readUbxMessage() {
         printf("\n-----------------------"); // New line after printing all elements
     }
 
-  //       UbxMessage ubxMsg;
-  //       ubxMsg.sync1 = message[0];
-  //       ubxMsg.sync2 = message[1];
-  //       ubxMsg.msgClass = message[2];
-  //       ubxMsg.msgId = message[3];
-  //       ubxMsg.payloadLength = (message[4] << 8 | message[5]);
-  //       memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
-  //       ubxMsg.checksumA = message[messageLength - 2];
-  //       ubxMsg.checksumB = message[messageLength - 1];
+        UbxMessage ubxMsg;
+        ubxMsg.sync1 = message[0];
+        ubxMsg.sync2 = message[1];
+        ubxMsg.msgClass = message[2];
+        ubxMsg.msgId = message[3];
+        ubxMsg.payloadLength = (message[4] << 8 | message[5]);
+        memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
+        ubxMsg.checksumA = message[messageLength - 2];
+        ubxMsg.checksumB = message[messageLength - 1];
 
-  //       return ubxMsg;
-  //   }
-
-  //     // for (int i = 0; i < messageLength; i++) {
-  //     //     int8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
-  //     //     printf("Byte data: 0x%x ", byte_data);
-  //     //     if (byte_data < 0) {
-  //     //         perror("Failed to read byte from I2C device");
-  //     //         UbxMessage badMsg;
-  //     //         badMsg.sync1 = 255;
-  //     //         return badMsg;  // Return an empty message on error
-  //     //     }
-  //     //     message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
-  //     // }
-
-  //     // UbxMessage ubxMsg;
-  //     // ubxMsg.sync1 = message[0];
-  //     // ubxMsg.sync2 = message[1];
-  //     // ubxMsg.msgClass = message[2];
-  //     // ubxMsg.msgId = message[3];
-  //     // ubxMsg.payloadLength = (message[4] << 8 | message[5]);
-  //     // memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
-  //     // ubxMsg.checksumA = message[messageLength - 2];
-  //     // ubxMsg.checksumB = message[messageLength - 1];
-
-  //     // return ubxMsg;
+        return ubxMsg;
+    }
   }
 
   UbxMessage badMsg;
