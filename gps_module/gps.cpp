@@ -161,8 +161,8 @@ UbxMessage Gps::readUbxMessage() {
         ubxMsg.msgId = message[1];
         ubxMsg.payloadLength = (message[3] << 8 | message[2]);
         memcpy(&ubxMsg.payload, &message[4], ubxMsg.payloadLength);
-        ubxMsg.checksumA = message[messageLength - 2];
-        ubxMsg.checksumB = message[messageLength - 1];
+        ubxMsg.checksumA = message[message.size() - 2];
+        ubxMsg.checksumB = message[message.size() - 1];
 
         return ubxMsg;
     }
