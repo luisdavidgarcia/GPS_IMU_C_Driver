@@ -148,9 +148,9 @@ UbxMessage Gps::readUbxMessage() {
         for (size_t i = 0; i < message.size(); ++i) {
             printf("i: %d |", i);
             printf("0x%02X", message[i]); // %02X formats the number in hexadecimal, 2 digits with leading zeros
-            if (i < message.size() - 1) {
-                printf(", "); // Separate elements with a comma
-            }
+            // if (i < message.size() - 1) {
+            //     printf(", "); // Separate elements with a comma
+            // }
         }
         printf("\n-----------------------"); // New line after printing all elements
 
