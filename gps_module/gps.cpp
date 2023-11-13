@@ -152,7 +152,6 @@ UbxMessage Gps::readUbxMessage() {
                 printf(", "); // Separate elements with a comma
             }
         }
-        printf("\n-----------------------"); // New line after printing all elements
 
         UbxMessage ubxMsg;
         ubxMsg.sync1 = sync1_read;
@@ -170,8 +169,6 @@ UbxMessage Gps::readUbxMessage() {
 
   UbxMessage badMsg;
   badMsg.sync1 = 255;
-
-  printf("Made it in remove\n");
 
   return badMsg;  // Return an empty message
 }
