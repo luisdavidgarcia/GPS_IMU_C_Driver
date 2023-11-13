@@ -105,6 +105,7 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
     buf[i] = tempBuf[i];
   }
 
+  printf("Buf: %s\n", buf);
   for (int i = 0; i < tempBuf.size(); i++) {
     int8_t reg = i2c_smbus_write_byte_data(i2c_fd, 0xFF, buf[i]);
     if (reg < 0) {
