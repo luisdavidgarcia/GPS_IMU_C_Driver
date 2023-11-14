@@ -94,8 +94,9 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   tempBuf.push_back(msg.sync2);
   tempBuf.push_back(msg.msgClass);
   tempBuf.push_back(msg.msgId);
-  tempBuf.push_back(msg.payloadLength >> 8);
   tempBuf.push_back(msg.payloadLength & 0xFF);
+  tempBuf.push_back(msg.payloadLength >> 8);
+  //tempBuf.push_back(msg.payloadLength & 0xFF);
   for (int i = 0; i < msg.payloadLength; i++) {
     tempBuf.push_back(msg.payload[i]);
   }
