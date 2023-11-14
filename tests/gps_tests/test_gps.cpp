@@ -1,9 +1,13 @@
 #include "../../gps_module/gps.h"
 #include <stdio.h>
+#include <unistd.h> 
 
 int main(void) {
 
-if (data.year == 2023) {
+  Gps gps_module;
+  while(1) {
+    PVTData data = gps_module.GetPvt(true, 1);
+    if (data.year == 2023) {
       printf("Year: %d\n", data.year);
       printf("Month: %d\n", data.month);
       printf("Day: %d\n", data.day);  
@@ -37,6 +41,8 @@ if (data.year == 2023) {
     } else {
       printf("No data\n"); 
     }
+    sleep(1);
+  }
 
   return 0;
 }
