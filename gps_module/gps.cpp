@@ -22,11 +22,11 @@ Gps::Gps() {
     exit(-1); 
   }
 
-  // result = this->setMeasurementFrequency(500, 1, 0);
-  // if (!result) {
-  //     printf("Error: Failed to set measurement frequency.\n");
-  //     exit(-1); 
-  // }
+  result = this->setMeasurementFrequency(500, 1, 0);
+  if (!result) {
+      printf("Error: Failed to set measurement frequency.\n");
+      exit(-1); 
+  }
 }
 
 Gps::~Gps() { close(i2c_fd); }
