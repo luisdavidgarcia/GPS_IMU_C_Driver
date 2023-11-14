@@ -86,8 +86,9 @@ uint16_t Gps::getAvailableBytes() {
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
+  uint16_t availableBytes = (msb << 8) | lsb;
   // Combine MSB and LSB to form a 16-bit value
-  return static_cast<uint16_t>(msb << 8) | lsb;
+  return availableBytes;
 }
 
 bool Gps::writeUbxMessage(UbxMessage &msg) {
