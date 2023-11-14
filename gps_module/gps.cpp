@@ -184,6 +184,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
     this->writeUbxMessage(message);
   }
 
+  sleep(1);
   UbxMessage message = this->readUbxMessage();
   
      if (message.sync1 != 255) {
