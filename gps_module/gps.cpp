@@ -127,6 +127,7 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
 
 UbxMessage Gps::readUbxMessage() {
   uint16_t messageLength = getAvailableBytes();
+  printf("Message Length: %d\n", messageLength);
   std::vector<uint8_t> message;
 
   if (messageLength > 0 && messageLength < MAX_MESSAGE_LENGTH) {
