@@ -4,7 +4,7 @@ import time
 import sys
 
 # import pdb; pdb.set_trace()
-# dev = mp.SAM_M8Q()
+dev = mp.SAM_M8Q()
 # dev.ubx_only()
 # #dev.wait_for_acknowledge(ubx.CFG_CLASS, ubx.CFG_PRT)
 # dev.set_message_frequency(ubx.NAV_CLASS, ubx.NAV_PVT, 1)
