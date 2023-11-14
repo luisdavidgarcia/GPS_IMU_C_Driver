@@ -132,7 +132,7 @@ UbxMessage Gps::readUbxMessage() {
   printf("Message Length: %d\n", messageLength);
   std::vector<uint8_t> message;
 
-  if (messageLength > 2) {
+  if (messageLength > 2 && messageLength < MAX_MESSAGE_LENGTH) {
         for (int i = 0; i < messageLength; i++) {
             uint8_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
             if (byte_data < -1) {
