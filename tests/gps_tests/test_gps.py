@@ -6,11 +6,11 @@ import sys
 # import pdb; pdb.set_trace()
 dev = mp.SAM_M8Q()
 dev.ubx_only()
-dev.wait_for_acknowledge(ubx.CFG_CLASS, ubx.CFG_PRT)
+#dev.wait_for_acknowledge(ubx.CFG_CLASS, ubx.CFG_PRT)
 dev.set_message_frequency(ubx.NAV_CLASS, ubx.NAV_PVT, 1)
-dev.wait_for_acknowledge(ubx.CFG_CLASS, ubx.CFG_MSG)
+#dev.wait_for_acknowledge(ubx.CFG_CLASS, ubx.CFG_MSG)
 dev.set_measurement_frequency(500, 1)
-dev.wait_for_acknowledge(ubx.CFG_CLASS, ubx.CFG_RATE)
+#dev.wait_for_acknowledge(ubx.CFG_CLASS, ubx.CFG_RATE)
 
 # One Measurement every 5 seconds for 300 times
 # means 5 * 300 seconds = 1500 seconds = 25 minutes
