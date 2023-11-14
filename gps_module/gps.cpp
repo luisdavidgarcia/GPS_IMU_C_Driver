@@ -48,9 +48,9 @@ void Gps::ubxOnly(void) {
 }
 
 bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate = DEFAULT_SEND_RATE) {
-    uint8_t payload[] = {sendRate, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t payload[] = {msgClass, msgId, sendRate, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-    UbxMessage message = ComposeMessage(msgClass, msgId, sizeof(payload), payload);
+    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_MSG, 8, payload);
 
     bool result = this->writeUbxMessage(message);
 
@@ -70,7 +70,11 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
     payload[4] = timeref;
     payload[5] = 0x00;
 
-    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_RATE, sizeof(payload), payload);
+  for (int i = 0; i < 6; i++) { 
+    printf("payload[%d]: 0x%02X\n", i, payload[i]);
+  }
+
+    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_RATE, 6, payload);
 
     bool result = writeUbxMessage(message);
 
