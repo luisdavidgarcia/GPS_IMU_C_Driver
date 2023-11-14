@@ -1,6 +1,5 @@
 #include "../../gps_module/gps.h"
 #include <stdio.h>
-#include <unistd.h> 
 
 int main(void) {
 
@@ -14,6 +13,7 @@ int main(void) {
       printf("Hour: %d\n", data.hour);
       printf("Min: %d\n", data.min);
       printf("Sec: %d\n", data.sec);
+      /*
       printf("Valid Time Flag: %d\n", data.validTimeFlag);
       printf("Valid Date Flag: %d\n", data.validDateFlag);
       printf("Fully Resolved Flag: %d\n", data.fullyResolved);
@@ -37,6 +37,7 @@ int main(void) {
       printf("Motion Heading Accuracy: %d\n", data.motionHeadingAccuracy);
       printf("Magnetic Declination: %d\n", data.magneticDeclination);
       printf("Magnetic Declination Accuracy: %u\n", data.magnetDeclinationAccuracy);
+      */
       printf("\n---------------------\n");
     } else {
       printf("No data\n"); 
