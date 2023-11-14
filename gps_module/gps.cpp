@@ -16,17 +16,17 @@ Gps::Gps() {
 
   this->ubxOnly();
 
-  bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
-  if (!result) {
-    printf("Error: Failed to set message send rate for NAV_PVT.\n");
-    exit(-1); 
-  }
+  // bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
+  // if (!result) {
+  //   printf("Error: Failed to set message send rate for NAV_PVT.\n");
+  //   exit(-1); 
+  // }
 
-  result = this->setMeasurementFrequency(500, 1, 0);
-  if (!result) {
-      printf("Error: Failed to set measurement frequency.\n");
-      exit(-1); 
-  }
+  // result = this->setMeasurementFrequency(500, 1, 0);
+  // if (!result) {
+  //     printf("Error: Failed to set measurement frequency.\n");
+  //     exit(-1); 
+  // }
 }
 
 Gps::~Gps() { close(i2c_fd); }
