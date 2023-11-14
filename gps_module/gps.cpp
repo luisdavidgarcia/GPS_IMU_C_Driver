@@ -14,8 +14,6 @@ Gps::Gps() {
     perror("Failed to acquire I2C GPS address");
   }
 
-  sleep(1);
-
   this->ubxOnly();
 
   bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
@@ -83,7 +81,6 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
 
 uint16_t Gps::getAvailableBytes() {
   //i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
-  sleep(1);
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
