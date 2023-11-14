@@ -83,6 +83,7 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
 
 uint16_t Gps::getAvailableBytes() {
   //i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
+  sleep(2);
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
@@ -184,7 +185,6 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
     this->writeUbxMessage(message);
   }
 
-  sleep(1);
   UbxMessage message = this->readUbxMessage();
   
      if (message.sync1 != 255) {
