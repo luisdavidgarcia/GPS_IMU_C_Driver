@@ -182,7 +182,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
     UbxMessage message = ComposeMessage(NAV_CLASS, NAV_PVT, 0, nullptr);
     this->writeUbxMessage(message);
   }
-
+  // Works here
   UbxMessage message = this->readUbxMessage();
   
      if (message.sync1 != 255) {
