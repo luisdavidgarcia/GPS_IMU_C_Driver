@@ -14,7 +14,7 @@ Gps::Gps() {
     perror("Failed to acquire I2C GPS address");
   }
 
-  this->ubxOnly();
+  // this->ubxOnly();
 
   // bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
   // if (!result) {
