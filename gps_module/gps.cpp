@@ -37,7 +37,7 @@ void Gps::ubxOnly(void) {
         0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00
     };
 
-    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, sizeof(payload), payload);
+    UbxMessage message = ComposeMessage(CFG_CLASS, CFG_PRT, 20, payload);
 
     bool result = this->writeUbxMessage(message);
     if (!result) {
@@ -80,7 +80,6 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
 }
 
 uint16_t Gps::getAvailableBytes() {
-  //i2c_smbus_write_byte(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
