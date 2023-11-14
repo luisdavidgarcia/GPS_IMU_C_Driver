@@ -14,13 +14,13 @@ Gps::Gps() {
     perror("Failed to acquire I2C GPS address");
   }
 
-  // this->ubxOnly();
+  this->ubxOnly();
 
-  // bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
-  // if (!result) {
-  //   printf("Error: Failed to set message send rate for NAV_PVT.\n");
-  //   exit(-1); 
-  // }
+  bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
+  if (!result) {
+    printf("Error: Failed to set message send rate for NAV_PVT.\n");
+    exit(-1); 
+  }
 
   // result = this->setMeasurementFrequency(500, 1, 0);
   // if (!result) {
@@ -109,7 +109,7 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   }
 
   for (int i = 0; i < tempBuf.size(); i++) {
-    int8_t reg = i2c_smbus_write_byte_data(i2c_fd, 0xFF, buf[i]);
+    int8_t reg = i2c_smbus_write_byte_data(i2c_fd, 0x01, buf[i]);
     if (reg < 0) {
       perror("Failed to write to I2C device");
       return false;
