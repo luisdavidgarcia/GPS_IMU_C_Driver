@@ -142,15 +142,13 @@ UbxMessage Gps::readUbxMessage() {
         }
 
         if (message[0] == SYNC_CHAR_1 && message[1] == SYNC_CHAR_2) {
-          printf("Message Size: %lu\n", message.size());
-          for (size_t i = 0; i < message.size(); ++i) {
-              printf("i: %d |", i);
-              printf("0x%02X", message[i]); // %02X formats the number in hexadecimal, 2 digits with leading zeros
-              if (i < message.size() - 1) {
-                  printf(", "); // Separate elements with a comma
-              }
-          }
-          printf("\n");
+          // printf("Message Size: %lu\n", message.size());
+          // for (size_t i = 0; i < message.size(); ++i) {
+          //     if (i < message.size() - 1) {
+          //         printf(", "); // Separate elements with a comma
+          //     }
+          // }
+          //printf("\n");
 
           UbxMessage ubxMsg;
           ubxMsg.sync1 = message[0];
