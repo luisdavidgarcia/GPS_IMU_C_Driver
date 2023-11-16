@@ -96,7 +96,6 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   tempBuf.push_back(msg.msgId);
   tempBuf.push_back(msg.payloadLength & 0xFF);
   tempBuf.push_back(msg.payloadLength >> 8);
-  //tempBuf.push_back(msg.payloadLength & 0xFF);
   for (int i = 0; i < msg.payloadLength; i++) {
     tempBuf.push_back(msg.payload[i]);
   }
@@ -109,16 +108,11 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   }
 
   for (int i = 0; i < tempBuf.size(); i++) {
-    // int8_t reg = i2c_smbus_write_byte_data(i2c_fd, 0x42, buf[i]);
     if (write(i2c_fd, buf, sizeof(buf)) != sizeof(buf)) {
       perror("Failed to write to I2C device");
       close(i2c_fd);
       return 1;
     }
-    // if (reg < 0) {
-    //   perror("Failed to write to I2C device");
-    //   return false;
-    // }
   }
 
   return true;
@@ -126,7 +120,6 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
 
 UbxMessage Gps::readUbxMessage() {
   uint16_t messageLength = getAvailableBytes();
-  printf("Message Length: %d\n", messageLength);
   std::vector<uint8_t> message;
 
   if (messageLength > 2 && messageLength < MAX_MESSAGE_LENGTH) {
@@ -142,14 +135,6 @@ UbxMessage Gps::readUbxMessage() {
         }
 
         if (message[0] == SYNC_CHAR_1 && message[1] == SYNC_CHAR_2) {
-          // printf("Message Size: %lu\n", message.size());
-          // for (size_t i = 0; i < message.size(); ++i) {
-          //     if (i < message.size() - 1) {
-          //         printf(", "); // Separate elements with a comma
-          //     }
-          // }
-          //printf("\n");
-
           UbxMessage ubxMsg;
           ubxMsg.sync1 = message[0];
           ubxMsg.sync2 = message[1];
