@@ -3,7 +3,12 @@
 #include <stdio.h>
 #include <vector>
 
-Gps::Gps() {
+/**
+ * @brief   Constructor for the Gps class.
+ *
+ * Initializes the GPS module communication, sets message send rates, and measurement frequencies.
+ */
+Gps::Gps(void) {
   const char *deviceName = GPS_I2C_BUS;
   i2c_fd = open(deviceName, O_RDWR);
   if (i2c_fd < 0) {
@@ -19,18 +24,28 @@ Gps::Gps() {
   bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
   if (!result) {
     printf("Error: Failed to set message send rate for NAV_PVT.\n");
-    exit(-1); 
+    exit(-1);
   }
 
   result = this->setMeasurementFrequency(500, 1, 0);
   if (!result) {
       printf("Error: Failed to set measurement frequency.\n");
-      exit(-1); 
+      exit(-1);
   }
 }
 
-Gps::~Gps() { close(i2c_fd); }
+/**
+ * @brief   Destructor for the Gps class.
+ *
+ * Closes the communication with the GPS module.
+ */
+Gps::~Gps(void) { close(i2c_fd); }
 
+/**
+ * @brief   Configure the GPS module to use UBX protocol exclusively.
+ *
+ * Sends a UBX configuration message to the GPS module to use UBX protocol only.
+ */
 void Gps::ubxOnly(void) {
     uint8_t payload[] = {
         0x00, 0x00, 0x00, 0x00, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -45,6 +60,14 @@ void Gps::ubxOnly(void) {
     }
 }
 
+/**
+ * @brief   Set the message send rate for a specific UBX message.
+ *
+ * @param   msgClass    The message class of the UBX message.
+ * @param   msgId       The message ID of the UBX message.
+ * @param   sendRate    The desired message send rate (default is DEFAULT_SEND_RATE).
+ * @return  true if the message send rate was successfully set, false otherwise.
+ */
 bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate = DEFAULT_SEND_RATE) {
     uint8_t payload[] = {msgClass, msgId, sendRate, 0x00, 0x00, 0x00, 0x00, 0x00};
 
@@ -55,22 +78,23 @@ bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate =
     return result;
 }
 
+/**
+ * @brief   Set the measurement frequency of the GPS module.
+ *
+ * @param   measurementPeriodMillis The measurement period in milliseconds (default is DEFAULT_UPDATE_MILLS).
+ * @param   navigationRate          The navigation rate (default is 1).
+ * @param   timeref                 The time reference (default is 0).
+ * @return  true if the measurement frequency was successfully set, false otherwise.
+ */
 bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, uint8_t timeref = 0) {
     uint8_t payload[6];
 
-    // Convert measurement_period_ms to little-endian bytes
     payload[0] = static_cast<uint8_t>(measurementPeriodMillis & 0xFF);
     payload[1] = static_cast<uint8_t>((measurementPeriodMillis >> 8) & 0xFF);
-    // Convert navigation_rate to little-endian bytes will always be 1
     payload[2] = navigationRate;
     payload[3] = 0x00;
-    // Convert timeref to little-endian bytes will always be 0 for now
     payload[4] = timeref;
     payload[5] = 0x00;
-
-  for (int i = 0; i < 6; i++) { 
-    printf("payload[%d]: 0x%02X\n", i, payload[i]);
-  }
 
     UbxMessage message = ComposeMessage(CFG_CLASS, CFG_RATE, 6, payload);
 
@@ -79,17 +103,27 @@ bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPD
     return result;
 }
 
+/**
+ * @brief   Retrieve the number of available bytes for reading from the GPS module.
+ *
+ * @return  The number of available bytes.
+ */
 uint16_t Gps::getAvailableBytes() {
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
   uint16_t availableBytes = (msb << 8) | lsb;
-  // Combine MSB and LSB to form a 16-bit value
   return availableBytes;
 }
 
+/**
+ * @brief   Write a UBX message to the GPS module.
+ *
+ * @param   msg The UBX message to be written.
+ * @return  true if the message was successfully written, false otherwise.
+ */
 bool Gps::writeUbxMessage(UbxMessage &msg) {
-  std::vector<uint8_t> tempBuf; 
+  std::vector<uint8_t> tempBuf;
   tempBuf.push_back(msg.sync1);
   tempBuf.push_back(msg.sync2);
   tempBuf.push_back(msg.msgClass);
@@ -118,7 +152,12 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   return true;
 }
 
-UbxMessage Gps::readUbxMessage() {
+/**
+ * @brief   Read a UBX message from the GPS module.
+ *
+ * @return  The read UBX message.
+ */
+UbxMessage Gps::readUbxMessage(void) {
   uint16_t messageLength = getAvailableBytes();
   std::vector<uint8_t> message;
 
@@ -128,10 +167,10 @@ UbxMessage Gps::readUbxMessage() {
             if (byte_data < -1) {
                 perror("Failed to read byte from I2C device");
                 UbxMessage badMsg;
-                badMsg.sync1 = 255;
-                return badMsg;  // Return an empty message on error
+                badMsg.sync1 = INVALID_SYNC_FLAG;
+                return badMsg;
             }
-            message.push_back(static_cast<uint8_t>(byte_data)); // Cast to uint8_t
+            message.push_back(static_cast<uint8_t>(byte_data));
         }
 
         if (message[0] == SYNC_CHAR_1 && message[1] == SYNC_CHAR_2) {
@@ -150,21 +189,28 @@ UbxMessage Gps::readUbxMessage() {
     }
 
   UbxMessage badMsg;
-  badMsg.sync1 = 255;
+  badMsg.sync1 = INVALID_SYNC_FLAG;
 
-  return badMsg;  // Return an empty message
+  return badMsg;
 }
 
-PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE, 
+/**
+ * @brief   Retrieve Position-Velocity-Time (PVT) data from the GPS module.
+ *
+ * @param   polling         Whether to poll the GPS module for new data (default is DEFAULT_POLLING_STATE).
+ * @param   timeOutMillis   The timeout in milliseconds for data retrieval (default is DEFAULT_UPDATE_MILLS).
+ * @return  The PVTData structure containing GPS-related information.
+ */
+PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
     uint16_t timeOutMillis = DEFAULT_UPDATE_MILLS) {
 
   if (polling) {
     UbxMessage message = ComposeMessage(NAV_CLASS, NAV_PVT, 0, nullptr);
     this->writeUbxMessage(message);
   }
-  // Works here
+
   UbxMessage message = this->readUbxMessage();
-  
+
      if (message.sync1 != 255) {
         pvtData.year = u2_to_int(&message.payload[4]);
         pvtData.month = message.payload[6];
@@ -221,27 +267,55 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
       return this->pvtData;
     }
 
-  pvtData.year = 33920;
+  pvtData.year = INVALID_YEAR_FLAG;
   return this->pvtData;
 }
 
-// Function to extract an integer from a little-endian byte array
+/**
+ * @brief   Convert a little-endian byte array to a signed 16-bit integer.
+ *
+ * @param   little_endian_bytes The input byte array.
+ * @return  The converted signed 16-bit integer.
+ */
 int16_t Gps::i2_to_int(const uint8_t *little_endian_bytes) {
-    return (int16_t)(((uint16_t)little_endian_bytes[1] << 8) | (uint16_t)little_endian_bytes[0]);
+    return (int16_t)(((uint16_t)little_endian_bytes[1] << 8) |
+		(uint16_t)little_endian_bytes[0]);
 }
 
-// Function to extract an unsigned integer from a little-endian byte array
+/**
+ * @brief   Convert a little-endian byte array to an unsigned 16-bit integer.
+ *
+ * @param   little_endian_bytes The input byte array.
+ * @return  The converted unsigned 16-bit integer.
+ */
 uint16_t Gps::u2_to_int(const uint8_t *little_endian_bytes) {
-    return (uint16_t)(((uint16_t)little_endian_bytes[1] << 8) | (uint16_t)little_endian_bytes[0]);
+    return (uint16_t)(((uint16_t)little_endian_bytes[1] << 8) |
+		(uint16_t)little_endian_bytes[0]);
 }
 
-// Function to extract a signed 32-bit integer from a little-endian byte array
+/**
+ * @brief   Convert a little-endian byte array to a signed 32-bit integer.
+ *
+ * @param   little_endian_bytes The input byte array.
+ * @return  The converted signed 32-bit integer.
+ */
 int32_t Gps::i4_to_int(const uint8_t *little_endian_bytes) {
-    return (int32_t)(((uint32_t)little_endian_bytes[3] << 24) | ((uint32_t)little_endian_bytes[2] << 16) | ((uint32_t)little_endian_bytes[1] << 8) | (uint32_t)little_endian_bytes[0]);
+    return (int32_t)(((uint32_t)little_endian_bytes[3] << 24) |
+		((uint32_t)little_endian_bytes[2] << 16) |
+		((uint32_t)little_endian_bytes[1] << 8) |
+		(uint32_t)little_endian_bytes[0]);
 }
 
-// Function to extract an unsigned 32-bit integer from a little-endian byte array
+/**
+ * @brief   Convert a little-endian byte array to an unsigned 32-bit integer.
+ *
+ * @param   little_endian_bytes The input byte array.
+ * @return  The converted unsigned 32-bit integer.
+ */
 uint32_t Gps::u4_to_int(const uint8_t *little_endian_bytes) {
-    return (uint32_t)(((uint32_t)little_endian_bytes[3] << 24) | ((uint32_t)little_endian_bytes[2] << 16) | ((uint32_t)little_endian_bytes[1] << 8) | (uint32_t)little_endian_bytes[0]);
+    return (uint32_t)(((uint32_t)little_endian_bytes[3] << 24) |
+		((uint32_t)little_endian_bytes[2] << 16) |
+		((uint32_t)little_endian_bytes[1] << 8) |
+		(uint32_t)little_endian_bytes[0]);
 }
 
