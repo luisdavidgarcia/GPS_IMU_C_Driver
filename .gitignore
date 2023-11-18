@@ -3,3 +3,5 @@ venv
 tests/Melopero_SAM-M8Q/
 matplotplusplus/
 tests/Melopero_SAM-M8Q
+test_gps
+test_imu
