@@ -5,3 +5,5 @@ matplotplusplus/
 tests/Melopero_SAM-M8Q
 test_gps
 test_imu
+.DS_Store
+.pre-commit-config.yaml
