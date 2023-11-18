@@ -1,11 +1,4 @@
-#ifndef UBX_MSG_H
-#define UBX_MSG_H
-
-#include <stdint.h>
-#include <string>
-
 /*
-
 UBX MESSAGE STRUCTURE:
     each part of the message consist of 1 byte, the length of the payload
     (only the payload) is an unsigned 16 bit integer (little endian)
@@ -39,7 +32,13 @@ HNR 0x28 High Rate Navigation Results Messages: High rate time, position, speed,
 CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 */
 
+#ifndef UBX_MSG_H
+#define UBX_MSG_H
 
+#include <stdint.h>
+#include <string>
+
+//********* MESSAGE CLASS SECTION **********
 #define NAV_CLASS 0x01
 #define RXM_CLASS 0x02
 #define INF_CLASS 0x04
@@ -55,6 +54,7 @@ CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 #define SEC_CLASS 0x27
 #define HNR_CLASS 0x28
 
+//********* SYNC CHAR SECTION **********
 #define SYNC_CHAR_1 0xB5
 #define SYNC_CHAR_2 0x62
 
@@ -79,8 +79,8 @@ CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 #define TIME_ONLY_FIX 5
 
 //******* DEBUG/HELPING CONSTANTS ********
-#define MAX_MESSAGE_LENGTH 1008 
-#define MAX_PAYLOAD_LENGTH 1000 
+#define MAX_MESSAGE_LENGTH 1008
+#define MAX_PAYLOAD_LENGTH 1000
 
 typedef struct {
     uint8_t sync1;

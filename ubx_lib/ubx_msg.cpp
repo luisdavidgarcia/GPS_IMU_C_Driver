@@ -1,4 +1,4 @@
-#include "ubx_msg.h" 
+#include "ubx_msg.h"
 
 /**
  * @brief   Compose a UBX message with the given message class, message ID, optional payloadLength, and payload.
@@ -6,7 +6,8 @@
  * @param   msg_id      The message ID of the UBX message.
  * @param   payloadLength      The payloadLength of the payload (default is 0).
  * @param   payload     The payload data (default is nullptr).
- * @return  The composed UBX message.  */
+ * @return  The composed UBX message.
+ */
 UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLength = 0, const uint8_t* payload = nullptr) {
     UbxMessage message;
     message.sync1 = SYNC_CHAR_1;
