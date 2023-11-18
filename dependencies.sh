@@ -31,10 +31,9 @@ mkdir build
 cd build
 
 # Configure and build Matplot++
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-O2"
-sudo cmake --build . --parallel 2 --config Release
+cmake .. -DCMAKE_CXX_FLAGS="-O2" -DMATPLOTPP_BUILD_EXAMPLES=OFF -DMATPLOTPP_BUILD_TESTS=OFF
+sudo cmake --build .
 sudo cmake --install .
 
 # Install Matplot++ system-wide
 sudo make install
-
