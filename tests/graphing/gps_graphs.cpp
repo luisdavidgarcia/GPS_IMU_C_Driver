@@ -69,16 +69,16 @@ int main() {
         speedAccuracy.push_back(data.speedAccuracy);
         motHeadAccuracy.push_back(data.motionHeadingAccuracy);
 
-        // Redrawing the plots
-        location_altitude_plot->set_x_data(time_axis);
-        location_altitude_plot->set_y_data(longitude);
+        // Reshowing the plots
+        location_altitude_plot->x_data(time_axis);
+        location_altitude_plot->y_data(longitude);
         plot(time_axis, latitude, "g-"); 
         plot(time_axis, height, "b-");   
         plot(time_axis, heightMSL, "c-"); 
-        draw(); // Redraw the first plot
+        show(); // Reshow the first plot
 
-        accuracy_velocity_plot->set_x_data(time_axis);
-        accuracy_velocity_plot->set_y_data(horizAccuracy);
+        accuracy_velocity_plot->x_data(time_axis);
+        accuracy_velocity_plot->y_data(horizAccuracy);
         plot(time_axis, vertAccuracy, "g-");        
         plot(time_axis, velNorth, "b-");              
         plot(time_axis, velEast, "c-");             
@@ -88,7 +88,7 @@ int main() {
         plot(time_axis, motHeading, "r--");         
         plot(time_axis, speedAccuracy, "g--");
         plot(time_axis, motHeadAccuracy, "b--");    
-        draw(); // Redraw the second plot
+        show(); // Reshow the second plot
 
         // Sleep for 2 seconds
         std::this_thread::sleep_for(std::chrono::seconds(2));

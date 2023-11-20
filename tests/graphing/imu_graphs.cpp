@@ -71,7 +71,7 @@ int main() {
         accel_plot_x->set_y_data(accelX);
         accel_plot_y->set_y_data(accelY);
         accel_plot_z->set_y_data(accelZ);
-        draw(); 
+        show(); 
 
         // Update gyroscope data
         gryoX.push_back(gryoData[X_AXIS]);
@@ -81,7 +81,7 @@ int main() {
         gryo_plot_x->set_y_data(gryoX);
         gryo_plot_y->set_y_data(gryoY);
         gryo_plot_z->set_y_data(gryoZ);
-        draw(); 
+        show(); 
 
         // Update magnetometer data
         magX.push_back(magData[X_AXIS]);
@@ -91,7 +91,7 @@ int main() {
         mag_plot_x->set_y_data(magX);
         mag_plot_y->set_y_data(magY);
         mag_plot_z->set_y_data(magZ);
-        draw(); 
+        show(); 
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
