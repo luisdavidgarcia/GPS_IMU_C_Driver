@@ -45,53 +45,54 @@ int main() {
 
     while (true) {
         PVTData data = gps_module.GetPvt(true, 1);
+        if (data.year != INVALID_YEAR_FLAG) {
+            // Updating the time axis
+            auto now = std::chrono::steady_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
+            time_axis.push_back(duration);
 
-        // Updating the time axis
-        auto now = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
-        time_axis.push_back(duration);
+            // Update data for first graph
+            longitude.push_back(data.longitude);
+            latitude.push_back(data.latitude);
+            height.push_back(data.height);
+            heightMSL.push_back(data.heightMSL);
 
-        // Update data for first graph
-        longitude.push_back(data.longitude);
-        latitude.push_back(data.latitude);
-        height.push_back(data.height);
-        heightMSL.push_back(data.heightMSL);
+            // Update data for second graph
+            horizAccuracy.push_back(data.horizontalAccuracy);
+            vertAccuracy.push_back(data.verticalAccuracy);
+            velNorth.push_back(data.velocityNorth);
+            velEast.push_back(data.velocityEast);
+            velDown.push_back(data.velocityDown);
+            groundSpeed.push_back(data.groundSpeed);
+            vehHeading.push_back(data.vehicalHeading);
+            motHeading.push_back(data.motionHeading);
+            speedAccuracy.push_back(data.speedAccuracy);
+            motHeadAccuracy.push_back(data.motionHeadingAccuracy);
 
-        // Update data for second graph
-        horizAccuracy.push_back(data.horizontalAccuracy);
-        vertAccuracy.push_back(data.verticalAccuracy);
-        velNorth.push_back(data.velocityNorth);
-        velEast.push_back(data.velocityEast);
-        velDown.push_back(data.velocityDown);
-        groundSpeed.push_back(data.groundSpeed);
-        vehHeading.push_back(data.vehicalHeading);
-        motHeading.push_back(data.motionHeading);
-        speedAccuracy.push_back(data.speedAccuracy);
-        motHeadAccuracy.push_back(data.motionHeadingAccuracy);
+            // Reshowing the plots
+            location_altitude_plot->x_data(time_axis);
+            location_altitude_plot->y_data(longitude);
+            plot(time_axis, latitude, "g-"); 
+            plot(time_axis, height, "b-");   
+            plot(time_axis, heightMSL, "c-"); 
+            show(); 
 
-        // Reshowing the plots
-        location_altitude_plot->x_data(time_axis);
-        location_altitude_plot->y_data(longitude);
-        plot(time_axis, latitude, "g-"); 
-        plot(time_axis, height, "b-");   
-        plot(time_axis, heightMSL, "c-"); 
-        show(); // Reshow the first plot
+            accuracy_velocity_plot->x_data(time_axis);
+            accuracy_velocity_plot->y_data(horizAccuracy);
+            plot(time_axis, vertAccuracy, "g-");        
+            plot(time_axis, velNorth, "b-");              
+            plot(time_axis, velEast, "c-");             
+            plot(time_axis, velDown, "m-");             
+            plot(time_axis, groundSpeed, "y-");           
+            plot(time_axis, vehHeading, "k-");            
+            plot(time_axis, motHeading, "r--");         
+            plot(time_axis, speedAccuracy, "g--");
+            plot(time_axis, motHeadAccuracy, "b--");    
+            show(); // Reshow the second plot
 
-        accuracy_velocity_plot->x_data(time_axis);
-        accuracy_velocity_plot->y_data(horizAccuracy);
-        plot(time_axis, vertAccuracy, "g-");        
-        plot(time_axis, velNorth, "b-");              
-        plot(time_axis, velEast, "c-");             
-        plot(time_axis, velDown, "m-");             
-        plot(time_axis, groundSpeed, "y-");           
-        plot(time_axis, vehHeading, "k-");            
-        plot(time_axis, motHeading, "r--");         
-        plot(time_axis, speedAccuracy, "g--");
-        plot(time_axis, motHeadAccuracy, "b--");    
-        show(); // Reshow the second plot
-
-        // Sleep for 2 seconds
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+            // Sleep for 2 seconds
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+        }
     }
 
     return 0;

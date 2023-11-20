@@ -96,7 +96,6 @@ private:
 	int16_t magnetometer[3];
 	int16_t gyroscope[3];
 	void begin(void);
-	void readSensorData(void);
 
 public:
 	Imu();
@@ -105,6 +104,7 @@ public:
 	void printMag(void);
 	void printGyro(void);
 	void Telementary(int delay);
+	void readSensorData(void);
 
     const int16_t* getAccelerometerData() const {
         return accelerometer;
