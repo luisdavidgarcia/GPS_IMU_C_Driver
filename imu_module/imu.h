@@ -105,6 +105,18 @@ public:
 	void printMag(void);
 	void printGyro(void);
 	void Telementary(int delay);
+
+    const int16_t* getAccelerometerData() const {
+        return accelerometer;
+    }
+
+    const int16_t* getMagnetometerData() const {
+        return magnetometer;
+    }
+
+    const int16_t* getGyroscopeData() const {
+        return gyroscope;
+    }
 };
 
 #endif // IMU_H
