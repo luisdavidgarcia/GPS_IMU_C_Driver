@@ -57,7 +57,7 @@ int main() {
     while (true) {
         const int16_t* accelData = imu.getAccelerometerData();
         const int16_t* magData = imu.getMagnetometerData();
-        const int16_t* gyroData = imu.getGyroscopeData();
+        const int16_t* gryoData = imu.getGyroscopeData();
 
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
@@ -67,30 +67,30 @@ int main() {
         accelX.push_back(accelData[X_AXIS]);
         accelY.push_back(accelData[Y_AXIS]);
         accelZ.push_back(accelData[Z_AXIS]);
-        accel_plot_x->set_x_data(time_axis);
-        accel_plot_x->set_y_data(accelX);
-        accel_plot_y->set_y_data(accelY);
-        accel_plot_z->set_y_data(accelZ);
+        accel_plot_x->x_data(time_axis);
+        accel_plot_x->y_data(accelX);
+        accel_plot_y->y_data(accelY);
+        accel_plot_z->y_data(accelZ);
         show(); 
 
         // Update gyroscope data
         gryoX.push_back(gryoData[X_AXIS]);
         gryoY.push_back(gryoData[Y_AXIS]);
         gryoZ.push_back(gryoData[Z_AXIS]);
-        gryo_plot_x->set_x_data(time_axis);
-        gryo_plot_x->set_y_data(gryoX);
-        gryo_plot_y->set_y_data(gryoY);
-        gryo_plot_z->set_y_data(gryoZ);
+        gryo_plot_x->x_data(time_axis);
+        gryo_plot_x->y_data(gryoX);
+        gryo_plot_y->y_data(gryoY);
+        gryo_plot_z->y_data(gryoZ);
         show(); 
 
         // Update magnetometer data
         magX.push_back(magData[X_AXIS]);
         magY.push_back(magData[Y_AXIS]);
         magZ.push_back(magData[Z_AXIS]);
-        mag_plot_x->set_x_data(time_axis);
-        mag_plot_x->set_y_data(magX);
-        mag_plot_y->set_y_data(magY);
-        mag_plot_z->set_y_data(magZ);
+        mag_plot_x->x_data(time_axis);
+        mag_plot_x->y_data(magX);
+        mag_plot_y->y_data(magY);
+        mag_plot_z->y_data(magZ);
         show(); 
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
