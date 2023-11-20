@@ -33,10 +33,10 @@ int main() {
     // Gyroscope Plot
     figure();
     title("Gyroscope Data");
-    auto gryo_plot_x = plot(time_axis, gryoX, "r-"); // X-axis in red
+    auto gyro_plot_x = plot(time_axis, gyroX, "r-"); // X-axis in red
     hold(on);
-    auto gryo_plot_y = plot(time_axis, gryoY, "g-"); // Y-axis in green
-    auto gryo_plot_z = plot(time_axis, gryoZ, "b-"); // Z-axis in blue
+    auto gyro_plot_y = plot(time_axis, gyroY, "g-"); // Y-axis in green
+    auto gyro_plot_z = plot(time_axis, gyroZ, "b-"); // Z-axis in blue
     hold(off);
     xlabel("Time (s)");
     ylabel("Gyroscope (radians/s)");
@@ -57,7 +57,7 @@ int main() {
     while (true) {
         const int16_t* accelData = imu.getAccelerometerData();
         const int16_t* magData = imu.getMagnetometerData();
-        const int16_t* gryoData = imu.getGyroscopeData();
+        const int16_t* gyroData = imu.getGyroscopeData();
 
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
@@ -74,13 +74,13 @@ int main() {
         show(); 
 
         // Update gyroscope data
-        gryoX.push_back(gryoData[X_AXIS]);
-        gryoY.push_back(gryoData[Y_AXIS]);
-        gryoZ.push_back(gryoData[Z_AXIS]);
-        gryo_plot_x->x_data(time_axis);
-        gryo_plot_x->y_data(gryoX);
-        gryo_plot_y->y_data(gryoY);
-        gryo_plot_z->y_data(gryoZ);
+        gyroX.push_back(gyroData[X_AXIS]);
+        gyroY.push_back(gyroData[Y_AXIS]);
+        gyroZ.push_back(gyroData[Z_AXIS]);
+        gyro_plot_x->x_data(time_axis);
+        gyro_plot_x->y_data(gyroX);
+        gyro_plot_y->y_data(gyroY);
+        gyro_plot_z->y_data(gyroZ);
         show(); 
 
         // Update magnetometer data
