@@ -20,7 +20,7 @@ int main() {
 
     // Create a figure and set up subplots
     auto f = figure(true); // true for keeping the figure window open
-    f->layout(3, 1); // 3 rows, 1 column
+//f->layout(3, 1); // 3 rows, 1 column
 
     // Accelerometer subplot
     subplot(3, 1, 0);
