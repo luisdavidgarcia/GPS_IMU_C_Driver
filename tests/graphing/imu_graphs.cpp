@@ -50,7 +50,7 @@ int main() {
 
         // Plot Accelerometer Data
         //plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
-        plt::clf(); // Clear the current figure
+        //plt::clf(); // Clear the current figure
 
         plt::named_plot("Accel X", time, accel_x);
         plt::named_plot("Accel Y", time, accel_y);
