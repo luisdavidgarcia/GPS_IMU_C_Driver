@@ -1,6 +1,6 @@
 FLAGS=-li2c -ggdb
 
-all: gps_test
+all: imu_test gps_test
 
 imu_test:
 	g++ imu_module/imu.cpp tests/imu_tests/test_imu.cpp -o test_imu $(FLAGS)

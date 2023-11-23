@@ -106,17 +106,17 @@ public:
 	void Telementary(int delay);
 	void readSensorData(void);
 
-    const int16_t* getAccelerometerData() const {
-        return accelerometer;
-    }
+    // const int16_t* getAccelerometerData() const {
+    //     return accelerometer;
+    // }
 
-    const int16_t* getMagnetometerData() const {
-        return magnetometer;
-    }
+    // const int16_t* getMagnetometerData() const {
+    //     return magnetometer;
+    // }
 
-    const int16_t* getGyroscopeData() const {
-        return gyroscope;
-    }
+    // const int16_t* getGyroscopeData() const {
+    //     return gyroscope;
+    // }
 };
 
 #endif // IMU_H
