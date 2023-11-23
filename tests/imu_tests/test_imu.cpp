@@ -7,6 +7,8 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
+#include <chrono>
+#include <thread>
 
 extern "C" {
 #include <i2c/smbus.h>
