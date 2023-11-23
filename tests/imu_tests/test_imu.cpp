@@ -1,5 +1,5 @@
 #include "../../imu_module/imu.h"
-#include <fcntl.h> 
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -14,8 +14,12 @@ extern "C" {
 }
 
 int main(void) {
-  Imu imu_module; 
+  Imu imu_module;
   imu_module.Telementary(1000);
+  imu_readSensorData();
+  const int16_t *accel_data = imu_module.getAccelerometerData();
+  const int16_t *gyro_data = imu_module.getGyroscopeData();
+  const int16_t *mag_data = imu_module.getMagnetometerData();
 
   return 0;
 }
