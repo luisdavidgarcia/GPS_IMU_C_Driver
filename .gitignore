@@ -6,3 +6,4 @@ test_gps
 test_imu
 .DS_Store
 .pre-commit-config.yaml
+build/
