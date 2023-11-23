@@ -58,6 +58,7 @@ int main() {
 
         elapsedTime += updateInterval;
 
+        // TODO: Try to generate subplots
         // Plot Accelerometer Data
         plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
 
