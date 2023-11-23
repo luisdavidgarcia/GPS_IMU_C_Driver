@@ -185,4 +185,5 @@ void Imu::Telementary(int delay) {
 		// printMag();
 		//std::this_thread::sleep_for(std::chrono::milliseconds(delay));
 	}
+	close(i2c_fd);
 }
