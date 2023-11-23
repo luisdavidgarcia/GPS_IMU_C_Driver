@@ -49,10 +49,10 @@ int main() {
         plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
 
         // Plot Gyroscope Data
-        plotData("Gyroscope Data", time, gyro_x, gyro_y, gyro_z);
+        // plotData("Gyroscope Data", time, gyro_x, gyro_y, gyro_z);
 
         // Plot Magnetometer Data
-        plotData("Magnetometer Data", time, mag_x, mag_y, mag_z);
+        // plotData("Magnetometer Data", time, mag_x, mag_y, mag_z);
 
         // Sleep or wait for the next read cycle
         usleep(updateInterval * 1e6);
