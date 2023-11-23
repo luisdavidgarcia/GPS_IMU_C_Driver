@@ -1,8 +1,19 @@
 #include "../../imu_module/imu.h"
 #include "matplotlibcpp.h"
 #include <vector>
+#include <unistd.h> // for sleep
 
 namespace plt = matplotlibcpp;
+
+void plotData(const std::string &title, const std::vector<double> &time, const std::vector<double> &x, const std::vector<double> &y, const std::vector<double> &z) {
+    plt::clf(); // Clear the current figure
+    plt::named_plot("X", time, x);
+    plt::named_plot("Y", time, y);
+    plt::named_plot("Z", time, z);
+    plt::title(title);
+    plt::legend();
+    plt::show();
+}
 
 int main() {
     Imu imu_module;
@@ -11,9 +22,6 @@ int main() {
     double elapsedTime = 0.0;
     const double updateInterval = 0.1; // 100 ms
     const int maxDataPoints = 100; // Maximum number of points to display on graph
-
-    // Initialize matplotlib
-    plt::figure_size(1200, 780); // Set the size of the figure
 
     while (true) {
         imu_module.readSensorData();
@@ -35,40 +43,16 @@ int main() {
             mag_z.erase(mag_z.begin());
         }
 
-        time.push_back(elapsedTime);
-        accel_x.push_back(accel_data[0]);
-        accel_y.push_back(accel_data[1]);
-        accel_z.push_back(accel_data[2]);
-        gyro_x.push_back(gyro_data[0]);
-        gyro_y.push_back(gyro_data[1]);
-        gyro_z.push_back(gyro_data[2]);
-        mag_x.push_back(mag_data[0]);
-        mag_y.push_back(mag_data[1]);
-        mag_z.push_back(mag_data[2]);
-
         elapsedTime += updateInterval;
 
-        // Clear and plot new data
-        plt::clf(); // Clear the current figure
-        plt::subplot(3, 1, 1);
-        plt::named_plot("Accel X", time, accel_x);
-        plt::named_plot("Accel Y", time, accel_y);
-        plt::named_plot("Accel Z", time, accel_z);
-        plt::legend();
+        // Plot Accelerometer Data
+        plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
 
-        plt::subplot(3, 1, 2);
-        plt::named_plot("Gyro X", time, gyro_x);
-        plt::named_plot("Gyro Y", time, gyro_y);
-        plt::named_plot("Gyro Z", time, gyro_z);
-        plt::legend();
+        // Plot Gyroscope Data
+        plotData("Gyroscope Data", time, gyro_x, gyro_y, gyro_z);
 
-        plt::subplot(3, 1, 3);
-        plt::named_plot("Mag X", time, mag_x);
-        plt::named_plot("Mag Y", time, mag_y);
-        plt::named_plot("Mag Z", time, mag_z);
-        plt::legend();
-
-        plt::pause(updateInterval); // Update the plot
+        // Plot Magnetometer Data
+        plotData("Magnetometer Data", time, mag_x, mag_y, mag_z);
 
         // Sleep or wait for the next read cycle
         usleep(updateInterval * 1e6);
