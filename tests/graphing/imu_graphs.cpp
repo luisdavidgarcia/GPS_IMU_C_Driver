@@ -46,18 +46,29 @@ int main() {
             mag_z.erase(mag_z.begin());
         }
 
+        time.push_back(elapsedTime);
+        accel_x.push_back(accel_data[0]);
+        accel_y.push_back(accel_data[1]);
+        accel_z.push_back(accel_data[2]);
+        gyro_x.push_back(gyro_data[0]);
+        gyro_y.push_back(gyro_data[1]);
+        gyro_z.push_back(gyro_data[2]);
+        mag_x.push_back(mag_data[0]);
+        mag_y.push_back(mag_data[1]);
+        mag_z.push_back(mag_data[2]);
+
         elapsedTime += updateInterval;
 
         // Plot Accelerometer Data
-        //plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
+        plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
         //plt::clf(); // Clear the current figure
 
-        plt::named_plot("Accel X", time, accel_x);
-        plt::named_plot("Accel Y", time, accel_y);
-        plt::named_plot("Accel Z", time, accel_z);
+        // plt::named_plot("Accel X", time, accel_x);
+        // plt::named_plot("Accel Y", time, accel_y);
+        // plt::named_plot("Accel Z", time, accel_z);
 
-        plt::legend(); // Add a legend
-        plt::show();   // Display the plot
+        // plt::legend(); // Add a legend
+        // plt::show();   // Display the plot
 
         // Plot Gyroscope Data
         // plotData("Gyroscope Data", time, gyro_x, gyro_y, gyro_z);
