@@ -178,6 +178,6 @@ void Imu::Telementary(int delay) {
 		printAccel();
 		printGyro();
 		printMag();
-		usleep(delay * TIME_DELAY_MS);
+		std::this_thread::sleep_for(std::chrono::milliseconds(delay));
 	}
 }
