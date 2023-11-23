@@ -61,7 +61,7 @@ int main() {
 
         // Plot Accelerometer Data
         //plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
-        //plt::clf(); // Clear the current figure
+        plt::clf(); // Clear the current figure
 
         plt::named_plot("Accel X", time, accel_x);
         plt::named_plot("Accel Y", time, accel_y);
@@ -76,7 +76,7 @@ int main() {
         // Plot Magnetometer Data
         // plotData("Magnetometer Data", time, mag_x, mag_y, mag_z);
 
-        plt::pause(updateInterval); // Update the plot
+        //plt::pause(updateInterval); // Update the plot
 
         // Sleep or wait for the next read cycle
         usleep(updateInterval * 1e6);
