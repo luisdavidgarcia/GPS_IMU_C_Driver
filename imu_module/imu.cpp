@@ -171,14 +171,14 @@ void Imu::printGyro(void) {
  */
 void Imu::Telementary(int delay) {
 	while (true) {
-		time_t t = time(NULL);
-		struct tm tm_info;
-		char buffer[26];
+		// time_t t = time(NULL);
+		// struct tm tm_info;
+		// char buffer[26];
 
-		localtime_r(&t, &tm_info);
-		asctime_r(&tm_info, buffer);
+		// localtime_r(&t, &tm_info);
+		// asctime_r(&tm_info, buffer);
 
-		printf("%s", buffer);
+		// printf("%s", buffer);
 		readSensorData();
 		printAccel();
 		printGyro();
