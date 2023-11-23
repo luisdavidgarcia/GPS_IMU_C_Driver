@@ -60,19 +60,12 @@ int main() {
 
         // Plot Accelerometer Data
         plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
-        //plt::clf(); // Clear the current figure
-
-        // plt::named_plot("Accel X", time, accel_x);
-        // plt::named_plot("Accel Y", time, accel_y);
-        // plt::named_plot("Accel Z", time, accel_z);
-
-        // plt::legend(); // Add a legend
 
         // Plot Gyroscope Data
-        // plotData("Gyroscope Data", time, gyro_x, gyro_y, gyro_z);
+        plotData("Gyroscope Data", time, gyro_x, gyro_y, gyro_z);
 
         // Plot Magnetometer Data
-        // plotData("Magnetometer Data", time, mag_x, mag_y, mag_z);
+        plotData("Magnetometer Data", time, mag_x, mag_y, mag_z);
 
         plt::pause(updateInterval); // Update the plot
 
