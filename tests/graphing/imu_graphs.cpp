@@ -50,23 +50,23 @@ int main() {
 
         // Clear and plot new data
         plt::clf(); // Clear the current figure
-        //plt::subplot(3, 1, 1);
+        plt::subplot(3, 1, 1);
         plt::named_plot("Accel X", time, accel_x);
         plt::named_plot("Accel Y", time, accel_y);
         plt::named_plot("Accel Z", time, accel_z);
         plt::legend();
 
-        // plt::subplot(3, 1, 2);
-        // plt::named_plot("Gyro X", time, gyro_x);
-        // plt::named_plot("Gyro Y", time, gyro_y);
-        // plt::named_plot("Gyro Z", time, gyro_z);
-        // plt::legend();
+        plt::subplot(3, 1, 2);
+        plt::named_plot("Gyro X", time, gyro_x);
+        plt::named_plot("Gyro Y", time, gyro_y);
+        plt::named_plot("Gyro Z", time, gyro_z);
+        plt::legend();
 
-        // plt::subplot(3, 1, 3);
-        // plt::named_plot("Mag X", time, mag_x);
-        // plt::named_plot("Mag Y", time, mag_y);
-        // plt::named_plot("Mag Z", time, mag_z);
-        // plt::legend();
+        plt::subplot(3, 1, 3);
+        plt::named_plot("Mag X", time, mag_x);
+        plt::named_plot("Mag Y", time, mag_y);
+        plt::named_plot("Mag Z", time, mag_z);
+        plt::legend();
 
         plt::pause(updateInterval); // Update the plot
 
