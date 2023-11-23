@@ -12,7 +12,6 @@ void plotData(const std::string &title, const std::vector<double> &time, const s
     plt::named_plot("Z", time, z);
     plt::title(title);
     plt::legend();
-    plt::show();
 }
 
 int main() {
@@ -60,15 +59,14 @@ int main() {
         elapsedTime += updateInterval;
 
         // Plot Accelerometer Data
-        //plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
+        plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
         //plt::clf(); // Clear the current figure
 
-        plt::named_plot("Accel X", time, accel_x);
-        plt::named_plot("Accel Y", time, accel_y);
-        plt::named_plot("Accel Z", time, accel_z);
+        // plt::named_plot("Accel X", time, accel_x);
+        // plt::named_plot("Accel Y", time, accel_y);
+        // plt::named_plot("Accel Z", time, accel_z);
 
-        plt::legend(); // Add a legend
-        plt::show();   // Display the plot
+        // plt::legend(); // Add a legend
 
         // Plot Gyroscope Data
         // plotData("Gyroscope Data", time, gyro_x, gyro_y, gyro_z);
@@ -79,7 +77,7 @@ int main() {
         plt::pause(updateInterval); // Update the plot
 
         // Sleep or wait for the next read cycle
-        //usleep(updateInterval * 1e6);
+        usleep(updateInterval * 1e6);
     }
 
     return 0;
