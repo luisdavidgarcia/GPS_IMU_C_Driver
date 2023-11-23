@@ -12,11 +12,31 @@ int main() {
 
     double elapsedTime = 0.0;
     const double updateInterval = 1.0; // Update interval in seconds
+    const int maxDataPoints = 100; // Maximum number of points to display on graph
 
-    plt::figure_size(1800, 1000); // Adjust the size as needed
+    plt::figure_size(800, 400); // Adjust the size as needed
 
     while (true) {
         PVTData data = gps_module.GetPvt(true, 1);
+
+        if (time.size() > maxDataPoints) {
+            time.erase(time.begin());
+            longitude.erase(longitude.begin());
+            latitude.erase(latitude.begin());
+            height.erase(height.begin());
+            heightMSL.erase(heightMSL.begin());
+            horizontalAccuracy.erase(horizontalAccuracy.begin());
+            verticalAccuracy.erase(verticalAccuracy.begin());
+
+            velocityNorth.erase(velocityNorth.begin());
+            velocityEast.erase(velocityEast.begin());
+            velocityDown.erase(velocityDown.begin());
+            groundSpeed.erase(groundSpeed.begin());
+            vehicleHeading.erase(vehicleHeading.begin());
+            motionHeading.erase(motionHeading.begin());
+            speedAccuracy.erase(speedAccuracy.begin());
+            motionHeadingAccuracy.erase(motionHeadingAccuracy.begin());
+        }
 
         // Update the time and data vectors
         double current_time = data.hour + data.min / 60.0 + data.sec / 3600.0;
@@ -40,59 +60,59 @@ int main() {
         // Clear the current figure and create subplots
         plt::clf();
 
-        plt::subplot(4, 4, 1);
+        plt::figure(1);
         plt::title("Longitude");
         plt::plot(time, longitude);
 
-        plt::subplot(4, 4, 2);
+        plt::figure(2);
         plt::title("Latitude");
         plt::plot(time, latitude);
 
-        plt::subplot(4, 4, 3);
+        plt::figure(3);
         plt::title("Height");
         plt::plot(time, height);
 
-        plt::subplot(4, 4, 4);
+        plt::figure(4);
         plt::title("Height above MSL");
         plt::plot(time, heightMSL);
 
-        plt::subplot(4, 4, 5);
+        plt::figure(5);
         plt::title("Horizontal Accuracy");
         plt::plot(time, horizontalAccuracy);
 
-        plt::subplot(4, 4, 6);
+        plt::figure(6);
         plt::title("Vertical Accuracy");
         plt::plot(time, verticalAccuracy);
 
-        plt::subplot(4, 4, 7);
+        plt::figure(7);
         plt::title("North Velocity");
         plt::plot(time, velocityNorth);
 
-        plt::subplot(4, 4, 8);
+        plt::figure(8);
         plt::title("East Velocity");
         plt::plot(time, velocityEast);
 
-        plt::subplot(4, 4, 9);
+        plt::figure(9);
         plt::title("Down Velocity");
         plt::plot(time, velocityDown);
 
-        plt::subplot(4, 4, 10);
+        plt::figure(10);
         plt::title("Ground Speed");
         plt::plot(time, groundSpeed);
 
-        plt::subplot(4, 4, 11);
+        plt::figure(11);
         plt::title("Vehicle Heading");
         plt::plot(time, vehicleHeading);
 
-        plt::subplot(4, 4, 12);
+        plt::figure(12);
         plt::title("Motion Heading");
         plt::plot(time, motionHeading);
 
-        plt::subplot(4, 4, 13);
+        plt::figure(13);
         plt::title("Speed Accuracy");
         plt::plot(time, speedAccuracy);
 
-        plt::subplot(4, 4, 14);
+        plt::figure(14);
         plt::title("Motion Heading Accuracy");
         plt::plot(time, motionHeadingAccuracy);
 
