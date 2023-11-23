@@ -180,9 +180,9 @@ void Imu::Telementary(int delay) {
 
 		// printf("%s", buffer);
 		readSensorData();
-		printAccel();
-		printGyro();
-		printMag();
+		// printAccel();
+		// printGyro();
+		// printMag();
 		std::this_thread::sleep_for(std::chrono::milliseconds(delay));
 	}
 }
