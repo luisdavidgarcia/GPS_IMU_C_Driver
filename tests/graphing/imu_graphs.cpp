@@ -12,6 +12,7 @@ void plotData(const std::string &title, const std::vector<double> &time, const s
     plt::named_plot("Z", time, z);
     plt::title(title);
     plt::legend();
+    plt::pause(0.01);
 }
 
 int main() {
@@ -58,17 +59,15 @@ int main() {
 
         elapsedTime += updateInterval;
 
-        // TODO: Try to generate subplots
-        // Plot Accelerometer Data
+        // Create three separate windows for each plot
+        plt::figure(1);
         plotData("Accelerometer Data", time, accel_x, accel_y, accel_z);
 
-        // Plot Gyroscope Data
+        plt::figure(2);
         plotData("Gyroscope Data", time, gyro_x, gyro_y, gyro_z);
 
-        // Plot Magnetometer Data
+        plt::figure(3);
         plotData("Magnetometer Data", time, mag_x, mag_y, mag_z);
-
-        plt::pause(updateInterval); // Update the plot
 
         // Sleep or wait for the next read cycle
         usleep(updateInterval * 1e6);
