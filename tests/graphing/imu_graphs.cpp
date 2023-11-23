@@ -17,9 +17,9 @@ int main() {
 
     while (true) {
         imu_module.readSensorData();
-        const int16_t *accel_data = imu_module.getAccelData();
-        const int16_t *gyro_data = imu_module.getGyroData();
-        const int16_t *mag_data = imu_module.getMagData();
+        const int16_t *accel_data = imu_module.getAccelerometerData();
+        const int16_t *gyro_data = imu_module.getGyroscopeData();
+        const int16_t *mag_data = imu_module.getMagnetometerData();
 
         // Update the data vectors
         if (time.size() > maxDataPoints) {

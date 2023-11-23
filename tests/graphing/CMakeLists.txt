@@ -9,12 +9,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -ggdb")
 
 # Find the required Python and NumPy libraries
-find_package(PythonLibs 2.7 REQUIRED)
+find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 # NumPy headers
-find_package(NumPy REQUIRED)
-include_directories(${NUMPY_INCLUDE_DIRS})
+#find_package(NumPy REQUIRED)
+#include_directories(${NUMPY_INCLUDE_DIRS})
 
 # Include the matplotlib-cpp header file
 include_directories("path/to/matplotlib-cpp") # Update with the actual path
