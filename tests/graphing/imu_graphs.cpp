@@ -23,6 +23,9 @@ int main() {
     const double updateInterval = 0.1; // 100 ms
     const int maxDataPoints = 100; // Maximum number of points to display on graph
 
+    // Initialize matplotlib
+    plt::figure_size(1200, 780); // Set the size of the figure
+
     while (true) {
         imu_module.readSensorData();
         const int16_t *accel_data = imu_module.getAccelerometerData();
@@ -53,6 +56,8 @@ int main() {
 
         // Plot Magnetometer Data
         // plotData("Magnetometer Data", time, mag_x, mag_y, mag_z);
+
+        plt::pause(updateInterval); // Update the plot
 
         // Sleep or wait for the next read cycle
         usleep(updateInterval * 1e6);
