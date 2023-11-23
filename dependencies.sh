@@ -37,3 +37,7 @@ sudo cmake --install .
 
 # Install Matplot++ system-wide
 sudo make install
+
+# Install the MatplotLib C++ header
+wget https://raw.githubusercontent.com/lava/matplotlib-cpp/master/matplotlibcpp.h
+
