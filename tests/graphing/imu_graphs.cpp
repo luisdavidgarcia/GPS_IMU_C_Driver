@@ -1,87 +1,78 @@
 #include "../../imu_module/imu.h"
-#include <matplot/matplot.h>
+#include "matplotlibcpp.h"
 #include <vector>
-#include <chrono>
-#include <thread>
-#include <math.h>
 
-#define X_AXIS 0
-#define Y_AXIS 1
-#define Z_AXIS 2
+namespace plt = matplotlibcpp;
 
 int main() {
-    using namespace matplot;
+    Imu imu_module;
+    std::vector<double> time, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z;
 
-    Imu imu;
-    std::vector<double> time_axis;
-    std::vector<double> accelX, accelY, accelZ;
-    std::vector<double> magX, magY, magZ;
-    std::vector<double> gyroX, gyroY, gyroZ;
+    double elapsedTime = 0.0;
+    const double updateInterval = 0.1; // 100 ms
+    const int maxDataPoints = 100; // Maximum number of points to display on graph
 
-    // Create a figure and set up subplots
-    auto f = figure(true); // true for keeping the figure window open
-//f->layout(3, 1); // 3 rows, 1 column
-
-    // Accelerometer subplot
-    subplot(3, 1, 0);
-    title("Accelerometer Data");
-    auto accel_plot_x = plot(time_axis, accelX, "r-"); // X-axis in red
-    auto accel_plot_y = plot(time_axis, accelY, "g-"); // Y-axis in green
-    auto accel_plot_z = plot(time_axis, accelZ, "b-"); // Z-axis in blue
-    xlabel("Time (s)");
-    ylabel("Acceleration (m/s^2)");
-
-    // Gyroscope subplot
-    subplot(3, 1, 1);
-    title("Gyroscope Data");
-    auto gyro_plot_x = plot(time_axis, gyroX, "r-"); // X-axis in red
-    auto gyro_plot_y = plot(time_axis, gyroY, "g-"); // Y-axis in green
-    auto gyro_plot_z = plot(time_axis, gyroZ, "b-"); // Z-axis in blue
-    xlabel("Time (s)");
-    ylabel("Gyroscope (radians/s)");
-
-    // Magnetometer subplot
-    subplot(3, 1, 2);
-    title("Magnetometer Data");
-    auto mag_plot_x = plot(time_axis, magX, "r-"); // X-axis in red
-    auto mag_plot_y = plot(time_axis, magY, "g-"); // Y-axis in green
-    auto mag_plot_z = plot(time_axis, magZ, "b-"); // Z-axis in blue
-    xlabel("Time (s)");
-    ylabel("Magnetometer (uTesla)");
-
-    auto start = std::chrono::steady_clock::now();
+    // Initialize matplotlib
+    plt::figure_size(1200, 780); // Set the size of the figure
 
     while (true) {
-        imu.readSensorData();
-        const int16_t* accelData = imu.getAccelerometerData();
-        const int16_t* magData = imu.getMagnetometerData();
-        const int16_t* gyroData = imu.getGyroscopeData();
+        imu_module.readSensorData();
+        const int16_t *accel_data = imu_module.getAccelData();
+        const int16_t *gyro_data = imu_module.getGyroData();
+        const int16_t *mag_data = imu_module.getMagData();
 
-        auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
-        time_axis.push_back(elapsed);
+        // Update the data vectors
+        if (time.size() > maxDataPoints) {
+            time.erase(time.begin());
+            accel_x.erase(accel_x.begin());
+            accel_y.erase(accel_y.begin());
+            accel_z.erase(accel_z.begin());
+            gyro_x.erase(gyro_x.begin());
+            gyro_y.erase(gyro_y.begin());
+            gyro_z.erase(gyro_z.begin());
+            mag_x.erase(mag_x.begin());
+            mag_y.erase(mag_y.begin());
+            mag_z.erase(mag_z.begin());
+        }
 
-        // Update accelerometer data
-        accel_plot_x->x_data(time_axis).y_data(accelX);
-        accel_plot_y->y_data(accelY);
-        accel_plot_z->y_data(accelZ);
+        time.push_back(elapsedTime);
+        accel_x.push_back(accel_data[0]);
+        accel_y.push_back(accel_data[1]);
+        accel_z.push_back(accel_data[2]);
+        gyro_x.push_back(gyro_data[0]);
+        gyro_y.push_back(gyro_data[1]);
+        gyro_z.push_back(gyro_data[2]);
+        mag_x.push_back(mag_data[0]);
+        mag_y.push_back(mag_data[1]);
+        mag_z.push_back(mag_data[2]);
 
-        // Update gyroscope data
-        gyro_plot_x->x_data(time_axis).y_data(gyroX);
-        gyro_plot_y->y_data(gyroY);
-        gyro_plot_z->y_data(gyroZ);
+        elapsedTime += updateInterval;
 
-        // Update magnetometer data
-        mag_plot_x->x_data(time_axis).y_data(magX);
-        mag_plot_y->y_data(magY);
-        mag_plot_z->y_data(magZ);
+        // Clear and plot new data
+        plt::clf(); // Clear the current figure
+        plt::subplot(3, 1, 1);
+        plt::named_plot("Accel X", time, accel_x);
+        plt::named_plot("Accel Y", time, accel_y);
+        plt::named_plot("Accel Z", time, accel_z);
+        plt::legend();
 
-        // Redraw the plot
-        show(); // or draw() based on your Matplot++ version
+        plt:subplot(3, 1, 2);
+        plt::named_plot("Gyro X", time, gyro_x);
+        plt::named_plot("Gyro Y", time, gyro_y);
+        plt::named_plot("Gyro Z", time, gyro_z);
+        plt::legend();
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        plt:subplot(3, 1, 3);
+        plt::named_plot("Mag X", time, mag_x);
+        plt::named_plot("Mag Y", time, mag_y);
+        plt::named_plot("Mag Z", time, mag_z);
+        plt::legend();
+
+        plt::pause(updateInterval); // Update the plot
+
+        // Sleep or wait for the next read cycle
+        usleep(updateInterval * 1e6);
     }
 
     return 0;
 }
-
