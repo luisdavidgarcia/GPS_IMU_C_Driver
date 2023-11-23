@@ -119,7 +119,9 @@ int main() {
         // Update the plot and wait for the next data update
         plt::pause(updateInterval);
         elapsedTime += updateInterval;
-        sleep(1);
+        
+        // Sleep or wait for the next read cycle
+        usleep(updateInterval * 1e6);
     }
 
     return 0;
