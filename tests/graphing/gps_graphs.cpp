@@ -60,66 +60,51 @@ int main() {
         // Clear the current figure and create subplots
         plt::clf();
 
+        // plt::figure(1);
+        // plt::title("Longitude");
+        // plt::plot(time, longitude);
+
+        // plt::figure(2);
+        // plt::title("Latitude");
+        // plt::plot(time, latitude);
+
         plt::figure(1);
-        plt::title("Longitude");
-        plt::plot(time, longitude);
+        plt::title("Height");
+        plt::named_plot("Height",time, height);
+        plt::named_plot("Height above MSL", time, heightMSL);
+        plt::legend();
+        plt::pause(0.01);
 
         plt::figure(2);
-        plt::title("Latitude");
-        plt::plot(time, latitude);
+        plt::title("Accuracy");
+        plt::named_plot("Horizontal Accuracy", time, horizontalAccuracy);
+        plt::named_plot("Vertical Accuracy", time, verticalAccuracy);
+        plt::named_plot("Speed Accuracy", time, speedAccuracy);
+        plt::named_plot("Motion Heading Accuracy", time, motionHeadingAccuracy);
+        plt::legend();
+        plt::pause(0.01);
 
         plt::figure(3);
-        plt::title("Height");
-        plt::plot(time, height);
+        plt::title("Velocities");
+        plt::named_plot("North Velocity", time, velocityNorth);
+        plt::named_plot("East Velocity", time, velocityEast);
+        plt::named_plot("Down Velocity", time, velocityDown);
+        plt::legend();
+        plt::pause(0.01);
 
         plt::figure(4);
-        plt::title("Height above MSL");
-        plt::plot(time, heightMSL);
-
-        plt::figure(5);
-        plt::title("Horizontal Accuracy");
-        plt::plot(time, horizontalAccuracy);
-
-        plt::figure(6);
-        plt::title("Vertical Accuracy");
-        plt::plot(time, verticalAccuracy);
-
-        plt::figure(7);
-        plt::title("North Velocity");
-        plt::plot(time, velocityNorth);
-
-        plt::figure(8);
-        plt::title("East Velocity");
-        plt::plot(time, velocityEast);
-
-        plt::figure(9);
-        plt::title("Down Velocity");
-        plt::plot(time, velocityDown);
-
-        plt::figure(10);
         plt::title("Ground Speed");
         plt::plot(time, groundSpeed);
 
-        plt::figure(11);
-        plt::title("Vehicle Heading");
-        plt::plot(time, vehicleHeading);
-
-        plt::figure(12);
-        plt::title("Motion Heading");
-        plt::plot(time, motionHeading);
-
-        plt::figure(13);
-        plt::title("Speed Accuracy");
-        plt::plot(time, speedAccuracy);
-
-        plt::figure(14);
-        plt::title("Motion Heading Accuracy");
-        plt::plot(time, motionHeadingAccuracy);
+        plt::figure(5);
+        plt::title("Headings");
+        plt::named_plot("Vehical Heading", time, vehicleHeading);
+        plt::named_plot("Motion Heading", time, motionHeading);
 
         // Update the plot and wait for the next data update
         plt::pause(updateInterval);
         elapsedTime += updateInterval;
-        
+
         // Sleep or wait for the next read cycle
         usleep(updateInterval * 1e6);
     }
