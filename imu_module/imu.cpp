@@ -105,7 +105,7 @@ void Imu::readSensorData(void) {
     accel_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x31);
     accel_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x32);
 
-    Converting Raw Accel Data to Readable data
+    // Converting Raw Accel Data to Readable data
     accelerometer[0] = (accel_x_h << 8) | (accel_x_l & 0xFF);
     accelerometer[1] = (accel_y_h << 8) | (accel_y_l & 0xFF);
     accelerometer[2] = (accel_z_h << 8) | (accel_z_l & 0xFF);
