@@ -21,7 +21,7 @@ int main(void) {
   signal(SIGINT, signal_handler);
 
   Gps gps_module;
-  while(1) {
+  while(!exit_flag) {
     PVTData data = gps_module.GetPvt(true, 1);
     if (data.year == 2023) {
       /* Use these times to plot on x-axis */
