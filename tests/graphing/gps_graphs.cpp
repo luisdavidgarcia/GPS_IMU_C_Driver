@@ -69,6 +69,7 @@ int main() {
         // plt::plot(time, latitude);
 
         plt::figure(1);
+        plt::clf(); // Clear the current figure
         plt::title("Height");
         plt::named_plot("Height",time, height);
         plt::named_plot("Height above MSL", time, heightMSL);
@@ -76,6 +77,7 @@ int main() {
         plt::pause(0.01);
 
         plt::figure(2);
+        plt::clf(); // Clear the current figure
         plt::title("Accuracy");
         plt::named_plot("Horizontal Accuracy", time, horizontalAccuracy);
         plt::named_plot("Vertical Accuracy", time, verticalAccuracy);
@@ -85,6 +87,7 @@ int main() {
         plt::pause(0.01);
 
         plt::figure(3);
+        plt::clf(); // Clear the current figure
         plt::title("Velocities");
         plt::named_plot("North Velocity", time, velocityNorth);
         plt::named_plot("East Velocity", time, velocityEast);
@@ -93,16 +96,22 @@ int main() {
         plt::pause(0.01);
 
         plt::figure(4);
+        plt::clf(); // Clear the current figure
         plt::title("Ground Speed");
         plt::plot(time, groundSpeed);
+        plt::legend();
+        plt::pause(0.01);
 
         plt::figure(5);
+        plt::clf(); // Clear the current figure
         plt::title("Headings");
         plt::named_plot("Vehical Heading", time, vehicleHeading);
         plt::named_plot("Motion Heading", time, motionHeading);
+        plt::legend();
+        plt::pause(0.01);
 
         // Update the plot and wait for the next data update
-        plt::pause(updateInterval);
+        // plt::pause(updateInterval);
         elapsedTime += updateInterval;
 
         // Sleep or wait for the next read cycle
