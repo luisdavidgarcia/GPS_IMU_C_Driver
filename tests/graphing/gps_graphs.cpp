@@ -7,7 +7,7 @@ namespace plt = matplotlibcpp;
 int main() {
     Gps gps_module;
     std::vector<double> time, longitude, latitude, height, heightMSL, horizontalAccuracy, verticalAccuracy;
-    std::vector<double> velocityNorth, velocityEast, velocityDown, groundSpeed, vehicleHeading, motionHeading;
+    std::vector<int32_t> velocityNorth, velocityEast, velocityDown, groundSpeed, vehicleHeading, motionHeading;
     std::vector<double> speedAccuracy, motionHeadingAccuracy;
 
     double elapsedTime = 0.0;
@@ -48,9 +48,17 @@ int main() {
         horizontalAccuracy.push_back(static_cast<double>(data.horizontalAccuracy));
         verticalAccuracy.push_back(static_cast<double>(data.verticalAccuracy));
 
-        velocityNorth.push_back(static_cast<double>(data.velocityNorth));
-        velocityEast.push_back(static_cast<double>(data.velocityEast));
-        velocityDown.push_back(static_cast<double>(data.velocityDown));
+        // velocityNorth.push_back(static_cast<double>(data.velocityNorth));
+        // velocityEast.push_back(static_cast<double>(data.velocityEast));
+        // velocityDown.push_back(static_cast<double>(data.velocityDown));
+        // groundSpeed.push_back(static_cast<double>(data.groundSpeed));
+        // vehicleHeading.push_back(static_cast<double>(data.vehicalHeading));
+        // motionHeading.push_back(static_cast<double>(data.motionHeading));
+        // speedAccuracy.push_back(static_cast<double>(data.speedAccuracy));
+        // motionHeadingAccuracy.push_back(static_cast<double>(data.motionHeadingAccuracy));
+        velocityNorth.push_back(data.velocityNorth);
+        velocityEast.push_back(data.velocityEast);
+        velocityDown.push_back(data.velocityDown);
         groundSpeed.push_back(static_cast<double>(data.groundSpeed));
         vehicleHeading.push_back(static_cast<double>(data.vehicalHeading));
         motionHeading.push_back(static_cast<double>(data.motionHeading));
