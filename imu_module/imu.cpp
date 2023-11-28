@@ -94,18 +94,18 @@ void Imu::readSensorData(void) {
     i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x00); //set bank
 
     /* Read accelerometer data */
-    uint8_t accel_x_h, accel_x_l, accel_y_h, accel_y_l, accel_z_h, accel_z_l;
-    accel_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x2D);
-    accel_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x2E);
-    accel_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x2F);
-    accel_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x30);
-    accel_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x31);
-    accel_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x32);
+    // uint8_t accel_x_h, accel_x_l, accel_y_h, accel_y_l, accel_z_h, accel_z_l;
+    // accel_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x2D);
+    // accel_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x2E);
+    // accel_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x2F);
+    // accel_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x30);
+    // accel_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x31);
+    // accel_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x32);
 
     // Converting Raw Accel Data to Readable data
-    accelerometer[0] = (accel_x_h << 8) | (accel_x_l & 0xFF);
-    accelerometer[1] = (accel_y_h << 8) | (accel_y_l & 0xFF);
-    accelerometer[2] = (accel_z_h << 8) | (accel_z_l & 0xFF);
+    // accelerometer[0] = (accel_x_h << 8) | (accel_x_l & 0xFF);
+    // accelerometer[1] = (accel_y_h << 8) | (accel_y_l & 0xFF);
+    // accelerometer[2] = (accel_z_h << 8) | (accel_z_l & 0xFF);
 
     /* Read gyroscope data */
     uint8_t gyro_x_h, gyro_x_l, gyro_y_h, gyro_y_l, gyro_z_h, gyro_z_l;
