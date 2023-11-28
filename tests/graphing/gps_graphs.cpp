@@ -7,7 +7,7 @@ namespace plt = matplotlibcpp;
 int main() {
     Gps gps_module;
     std::vector<double> time, longitude, latitude, height, heightMSL, horizontalAccuracy, verticalAccuracy;
-    std::vector<int32_t> velocityNorth, velocityEast, velocityDown, groundSpeed, vehicleHeading, motionHeading;
+    std::vector<float> velocityNorth, velocityEast, velocityDown, groundSpeed, vehicleHeading, motionHeading;
     std::vector<double> speedAccuracy, motionHeadingAccuracy;
 
     double elapsedTime = 0.0;
@@ -59,6 +59,9 @@ int main() {
         velocityNorth.push_back(data.velocityNorth);
         velocityEast.push_back(data.velocityEast);
         velocityDown.push_back(data.velocityDown);
+
+
+
         groundSpeed.push_back(static_cast<double>(data.groundSpeed));
         vehicleHeading.push_back(static_cast<double>(data.vehicalHeading));
         motionHeading.push_back(static_cast<double>(data.motionHeading));
@@ -103,9 +106,9 @@ int main() {
         plt::legend();
         plt::pause(0.01);
 
-        printf("Velocity North: %d\n", data.velocityNorth);
-        printf("Velocity East: %d\n", data.velocityEast);
-        printf("Velocity Down: %d\n", data.velocityDown);
+        printf("Velocity North: %f\n", (float) data.velocityNorth);
+        printf("Velocity East: %f\n", (float) data.velocityEast);
+        printf("Velocity Down: %f\n", (float) data.velocityDown);
 
         // plt::figure(4);
         // plt::clf(); // Clear the current figure
