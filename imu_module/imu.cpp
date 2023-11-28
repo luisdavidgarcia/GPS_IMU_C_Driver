@@ -108,32 +108,32 @@ void Imu::readSensorData(void) {
     // accelerometer[2] = (accel_z_h << 8) | (accel_z_l & 0xFF);
 
     /* Read gyroscope data */
-    uint8_t gyro_x_h, gyro_x_l, gyro_y_h, gyro_y_l, gyro_z_h, gyro_z_l;
-    gyro_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x33);
-    gyro_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x34);
-    gyro_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x35);
-    gyro_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x36);
-    gyro_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x37);
-    gyro_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x38);
+    // uint8_t gyro_x_h, gyro_x_l, gyro_y_h, gyro_y_l, gyro_z_h, gyro_z_l;
+    // gyro_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x33);
+    // gyro_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x34);
+    // gyro_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x35);
+    // gyro_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x36);
+    // gyro_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x37);
+    // gyro_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x38);
 
-    // Converting Raw Gyro Data to Readable data
-    gyroscope[0] = (gyro_x_h << 8) | (gyro_x_l & 0xFF);
-    gyroscope[1] = (gyro_y_h << 8) | (gyro_y_l & 0xFF);
-    gyroscope[2] = (gyro_z_h << 8) | (gyro_z_l & 0xFF);
+    // // Converting Raw Gyro Data to Readable data
+    // gyroscope[0] = (gyro_x_h << 8) | (gyro_x_l & 0xFF);
+    // gyroscope[1] = (gyro_y_h << 8) | (gyro_y_l & 0xFF);
+    // gyroscope[2] = (gyro_z_h << 8) | (gyro_z_l & 0xFF);
 
     /* Read magentometer data */
-	uint8_t mag_x_h, mag_x_l, mag_y_h, mag_y_l, mag_z_h, mag_z_l;
-    mag_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x3C);
-    mag_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x3D);
-    mag_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x3E);
-    mag_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x3F);
-    mag_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x40);
-    mag_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x41);
+	// uint8_t mag_x_h, mag_x_l, mag_y_h, mag_y_l, mag_z_h, mag_z_l;
+    // mag_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x3C);
+    // mag_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x3D);
+    // mag_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x3E);
+    // mag_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x3F);
+    // mag_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x40);
+    // mag_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x41);
 
-    // Converting Raw Mag Data to Readable data
-    magnetometer[0] = (mag_x_l << 8) | (mag_x_h & 0xFF);
-    magnetometer[1] = (mag_y_l << 8) | (mag_y_h & 0xFF);
-    magnetometer[2] = (mag_z_l << 8) | (mag_z_h & 0xFF);
+    // // Converting Raw Mag Data to Readable data
+    // magnetometer[0] = (mag_x_l << 8) | (mag_x_h & 0xFF);
+    // magnetometer[1] = (mag_y_l << 8) | (mag_y_h & 0xFF);
+    // magnetometer[2] = (mag_z_l << 8) | (mag_z_h & 0xFF);
 }
 
 /**
