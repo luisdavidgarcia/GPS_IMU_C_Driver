@@ -170,20 +170,19 @@ void Imu::printGyro(void) {
  * @param   delay   Delay in milliseconds between data prints.
  */
 void Imu::Telementary(int delay) {
-	while (true) {
-		// time_t t = time(NULL);
-		// struct tm tm_info;
-		// char buffer[26];
+	while (1) {
+		time_t t = time(NULL);
+		struct tm tm_info;
+		char buffer[26];
 
-		// localtime_r(&t, &tm_info);
-		// asctime_r(&tm_info, buffer);
+		localtime_r(&t, &tm_info);
+		asctime_r(&tm_info, buffer);
 
-		// printf("%s", buffer);
+		printf("%s", buffer);
 		readSensorData();
-		// printAccel();
-		// printGyro();
-		// printMag();
-		//std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+		printAccel();
+		printGyro();
+		printMag();
+		std::this_thread::sleep_for(std::chrono::milliseconds(delay));
 	}
-	close(i2c_fd);
 }
