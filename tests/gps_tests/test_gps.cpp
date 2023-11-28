@@ -1,6 +1,7 @@
 #include "../../gps_module/gps.h"
 #include <stdio.h>
 #include <csignal>
+#include <iostream>
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
