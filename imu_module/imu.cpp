@@ -163,33 +163,3 @@ void Imu::printGyro(void) {
     	gyroscope[1], gyroscope[2]);
 }
 
-/**
- * @brief   Continuously print sensor data with a specified delay.
- *
- * Continuously prints sensor data, including accelerometer,
- * gyroscope, and magnetometer data, to the console with a specified delay
- * in milliseconds.
- *
- * @param   delay   Delay in milliseconds between data prints.
- */
-void Imu::Telementary(int delay) {
-	// while (1) {
-	// 	printf("In Telemeentary\n");
-		// time_t t = time(NULL);
-		// struct tm tm_info;
-		// char buffer[26];
-
-		// localtime_r(&t, &tm_info);
-		// asctime_r(&tm_info, buffer);
-
-		// printf("%s", buffer);
-		//readSensorData();
-		// printAccel();
-		// printGyro();
-		// printMag();
-		// std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-	// }
-	for (int i = 0; i < 5; i++) {
-		printf("In Telementary\n");
-	}
-}

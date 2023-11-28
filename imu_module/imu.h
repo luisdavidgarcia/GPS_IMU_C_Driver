@@ -105,7 +105,6 @@ public:
 	void printAccel(void);
 	void printMag(void);
 	void printGyro(void);
-	void Telementary(int delay);
 	void readSensorData(void);
 
     const int16_t* getAccelerometerData() const {

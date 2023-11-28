@@ -17,11 +17,15 @@ extern "C" {
 
 int main(void) {
   Imu imu_module;
-  imu_module.Telementary(1000);
-  // imu_readSensorData();
-  // const int16_t *accel_data = imu_module.getAccelerometerData();
-  // const int16_t *gyro_data = imu_module.getGyroscopeData();
-  // const int16_t *mag_data = imu_module.getMagnetometerData();
+  while (1) {
+    imu_module.readSensorData();
+    // const int16_t *accel_data = imu_module.getAccelerometerData();
+    // const int16_t *gyro_data = imu_module.getGyroscopeData();
+    // const int16_t *mag_data = imu_module.getMagnetometerData();
+    imu_module.printAccel();
+    imu_module.printGyro();
+    imu_module.printMag();
+  }
 
   return 0;
 }
