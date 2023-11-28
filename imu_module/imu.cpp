@@ -91,7 +91,7 @@ void Imu::begin() {
  */
 void Imu::readSensorData(void) {
     /* Reset bank to 0 on every read */
-    i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x00); //set bank
+    // i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x00); //set bank
 
     /* Read accelerometer data */
     // uint8_t accel_x_h, accel_x_l, accel_y_h, accel_y_l, accel_z_h, accel_z_l;
