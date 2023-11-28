@@ -31,7 +31,10 @@ Imu::Imu() {
  *
  * Closes the I2C device when the Imu object is destroyed.
  */
-Imu::~Imu() { close(i2c_fd); }
+Imu::~Imu() {
+	printf("About to close fd\n");
+	close(i2c_fd);
+}
 
 
 /**
