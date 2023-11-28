@@ -95,6 +95,10 @@ int main() {
         plt::legend();
         plt::pause(0.01);
 
+        print("Velocity North: %d\n", velocityNorth);
+        print("Velocity East: %d\n",velocityEast);
+        print("Velocity Down: %d\n", velocityDown);
+
         // plt::figure(4);
         // plt::clf(); // Clear the current figure
         // plt::title("Ground Speed");
