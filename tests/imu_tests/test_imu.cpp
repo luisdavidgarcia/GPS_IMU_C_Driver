@@ -17,7 +17,7 @@ extern "C" {
 
 int main(void) {
   Imu imu_module;
-  while (1) {
+  for (int i = 0; i < 10; i++) {
     imu_module.readSensorData();
     // const int16_t *accel_data = imu_module.getAccelerometerData();
     // const int16_t *gyro_data = imu_module.getGyroscopeData();
@@ -25,6 +25,8 @@ int main(void) {
     imu_module.printAccel();
     imu_module.printGyro();
     imu_module.printMag();
+    printf("\n");
+    sleep(1);
   }
 
   return 0;
