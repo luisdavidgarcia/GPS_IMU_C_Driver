@@ -179,7 +179,7 @@ void Imu::Telementary(int delay) {
 		// asctime_r(&tm_info, buffer);
 
 		// printf("%s", buffer);
-		readSensorData();
+		//readSensorData();
 		// printAccel();
 		// printGyro();
 		// printMag();
