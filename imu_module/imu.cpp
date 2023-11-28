@@ -174,6 +174,7 @@ void Imu::printGyro(void) {
  */
 void Imu::Telementary(int delay) {
 	while (1) {
+		printf("In Telemeentary\n");
 		// time_t t = time(NULL);
 		// struct tm tm_info;
 		// char buffer[26];
