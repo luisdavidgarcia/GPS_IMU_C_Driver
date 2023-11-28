@@ -23,7 +23,6 @@ int main(void) {
   Gps gps_module;
   while(!exit_flag) {
     PVTData data = gps_module.GetPvt(true, 1);
-    printf("Year: %d\n", data.year);
     if (data.year == 2023) {
       /* Use these times to plot on x-axis */
       printf("Year: %d\n", data.year);
