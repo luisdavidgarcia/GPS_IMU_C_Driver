@@ -1,7 +1,23 @@
 #include "../../gps_module/gps.h"
 #include <stdio.h>
+#include <csignal>
+
+// Define a flag to indicate if the program should exit gracefully.
+volatile bool exit_flag = false;
+
+// Signal handler function for Ctrl+C (SIGINT)
+void signal_handler(int signum) {
+    if (signum == SIGINT) {
+        std::cout << "Ctrl+C received. Cleaning up..." << std::endl;
+
+        // Set the exit flag to true to trigger graceful exit.
+        exit_flag = true;
+    }
+}
 
 int main(void) {
+  // Register the signal handler for SIGINT (Ctrl+C)
+  signal(SIGINT, signal_handler);
 
   Gps gps_module;
   while(1) {
