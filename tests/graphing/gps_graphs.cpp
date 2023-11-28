@@ -103,9 +103,9 @@ int main() {
         plt::legend();
         plt::pause(0.01);
 
-        printf("Velocity North: %d\n", velocityNorth);
-        printf("Velocity East: %d\n",velocityEast);
-        printf("Velocity Down: %d\n", velocityDown);
+        printf("Velocity North: %d\n", data.velocityNorth);
+        printf("Velocity East: %d\n", data.velocityEast);
+        printf("Velocity Down: %d\n", data.velocityDown);
 
         // plt::figure(4);
         // plt::clf(); // Clear the current figure
