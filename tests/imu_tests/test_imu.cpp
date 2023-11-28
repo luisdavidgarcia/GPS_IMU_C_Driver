@@ -10,6 +10,7 @@
 #include <chrono>
 #include <thread>
 #include <csignal>
+#include <iostream>
 
 extern "C" {
 #include <i2c/smbus.h>
