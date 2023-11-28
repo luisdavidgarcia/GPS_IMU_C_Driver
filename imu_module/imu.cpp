@@ -173,8 +173,8 @@ void Imu::printGyro(void) {
  * @param   delay   Delay in milliseconds between data prints.
  */
 void Imu::Telementary(int delay) {
-	while (1) {
-		printf("In Telemeentary\n");
+	// while (1) {
+	// 	printf("In Telemeentary\n");
 		// time_t t = time(NULL);
 		// struct tm tm_info;
 		// char buffer[26];
@@ -188,5 +188,8 @@ void Imu::Telementary(int delay) {
 		// printGyro();
 		// printMag();
 		// std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+	// }
+	for (int i = 0; i < 5; i++) {
+		printf("In Telementary\n");
 	}
 }
