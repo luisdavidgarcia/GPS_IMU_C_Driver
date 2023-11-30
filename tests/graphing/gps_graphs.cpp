@@ -132,7 +132,8 @@ int main() {
         elapsedTime += updateInterval;
 
         // Sleep or wait for the next read cycle
-        usleep(updateInterval * 1e6);
+        //usleep(updateInterval * 1e6);
+        sleep(1);
     }
 
     return 0;
