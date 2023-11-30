@@ -107,7 +107,7 @@ int main() {
         // plt::named_plot("East Velocity", time, velocityEast);
         // plt::named_plot("Down Velocity", time, velocityDown);
         plt::legend();
-        plt::pause(2);
+        plt::pause(0.1);
 
         // plt::figure(4);
         // plt::clf(); // Clear the current figure
