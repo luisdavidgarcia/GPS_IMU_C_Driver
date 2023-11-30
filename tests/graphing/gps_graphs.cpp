@@ -11,7 +11,7 @@ int main() {
     std::vector<double> speedAccuracy, motionHeadingAccuracy;
 
     double elapsedTime = 0.0;
-    const double updateInterval = 1.0; // Update interval in seconds
+    const double updateInterval = 0.1; // Update interval in seconds
     const int maxDataPoints = 100; // Maximum number of points to display on graph
 
     plt::figure_size(800, 400); // Adjust the size as needed
@@ -41,12 +41,12 @@ int main() {
         // Update the time and data vectors
         double current_time = data.hour + data.min / 60.0 + data.sec / 3600.0;
         time.push_back(current_time);
-        longitude.push_back(static_cast<double>(data.longitude));
-        latitude.push_back(static_cast<double>(data.latitude));
-        height.push_back(static_cast<double>(data.height));
-        heightMSL.push_back(static_cast<double>(data.heightMSL));
-        horizontalAccuracy.push_back(static_cast<double>(data.horizontalAccuracy));
-        verticalAccuracy.push_back(static_cast<double>(data.verticalAccuracy));
+        longitude.push_back(data.longitude);
+        latitude.push_back(data.latitude);
+        height.push_back(data.height);
+        heightMSL.push_back(data.heightMSL);
+        horizontalAccuracy.push_back(data.horizontalAccuracy);
+        verticalAccuracy.push_back(data.verticalAccuracy);
 
         // velocityNorth.push_back(static_cast<double>(data.velocityNorth));
         // velocityEast.push_back(static_cast<double>(data.velocityEast));
@@ -65,11 +65,11 @@ int main() {
         // printf("Cast Velocity East: %f\n", static_cast<double>(data.velocityEast));
         // printf("Cast Velocity Down: %f\n", static_cast<double>(data.velocityDown));
 
-        groundSpeed.push_back(static_cast<double>(data.groundSpeed));
-        vehicleHeading.push_back(static_cast<double>(data.vehicalHeading));
-        motionHeading.push_back(static_cast<double>(data.motionHeading));
-        speedAccuracy.push_back(static_cast<double>(data.speedAccuracy));
-        motionHeadingAccuracy.push_back(static_cast<double>(data.motionHeadingAccuracy));
+        // groundSpeed.push_back(static_cast<double>(data.groundSpeed));
+        // vehicleHeading.push_back(static_cast<double>(data.vehicalHeading));
+        // motionHeading.push_back(static_cast<double>(data.motionHeading));
+        // speedAccuracy.push_back(static_cast<double>(data.speedAccuracy));
+        // motionHeadingAccuracy.push_back(static_cast<double>(data.motionHeadingAccuracy));
 
         // Clear the current figure and create subplots
         // plt::clf();
@@ -100,6 +100,8 @@ int main() {
         // plt::legend();
         // plt::pause(0.01);
 
+        elapsedTime += updateInterval;
+
         plt::figure(1);
         plt::clf(); // Clear the current figure
         plt::title("Velocities");
@@ -126,11 +128,10 @@ int main() {
 
         // Update the plot and wait for the next data update
         // plt::pause(updateInterval);
-        elapsedTime += updateInterval;
 
         // Sleep or wait for the next read cycle
-        //usleep(updateInterval * 1e6);
-        sleep(1);
+        usleep(updateInterval * 1e6);
+        //sleep(1);
     }
 
     return 0;
