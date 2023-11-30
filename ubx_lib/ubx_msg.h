@@ -80,7 +80,7 @@ CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 
 //******* DEBUG/HELPING CONSTANTS ********
 #define MAX_MESSAGE_LENGTH 1000
-#define MAX_PAYLOAD_LENGTH 1000
+#define MAX_PAYLOAD_LENGTH 92
 
 typedef struct {
     uint8_t sync1;
