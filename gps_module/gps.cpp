@@ -180,6 +180,10 @@ UbxMessage Gps::readUbxMessage(void) {
           ubxMsg.msgClass = message[2];
           ubxMsg.msgId = message[3];
           ubxMsg.payloadLength = (message[5] << 8 | message[4]);
+          printf(":)----------------------\n");
+          printf("Payload length: %d\n", ubxMsg.payloadLength);
+          printf("Message length: %d\n", messageLength);
+          printf(":(----------------------\n");
           //if (messageLength - 6 == ubxMsg.payloadLength) {
             memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
             ubxMsg.checksumA = message[message.size() - 2];
