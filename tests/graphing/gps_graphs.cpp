@@ -39,8 +39,7 @@ int main() {
         }
 
         // Update the time and data vectors
-        double current_time = data.hour + data.min / 60.0 + data.sec / 3600.0;
-        time.push_back(current_time);
+        time.push_back(elapsedTime);
         longitude.push_back(data.longitude);
         latitude.push_back(data.latitude);
         height.push_back(data.height);
