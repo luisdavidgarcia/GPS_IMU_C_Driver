@@ -60,9 +60,9 @@ int main() {
         velocityEast.push_back(data.velocityEast);
         velocityDown.push_back(data.velocityDown);
 
-        printf("Cast Velocity North: %f\n", static_cast<double> data.velocityNorth);
-        printf("Cast Velocity East: %f\n", static_cast<double> data.velocityEast);
-        printf("Cast Velocity Down: %f\n", static_cast<double> data.velocityDown);
+        printf("Cast Velocity North: %f\n", static_cast<double>(data.velocityNorth));
+        printf("Cast Velocity East: %f\n", static_cast<double>(data.velocityEast));
+        printf("Cast Velocity Down: %f\n", static_cast<double>(data.velocityDown));
 
         groundSpeed.push_back(static_cast<double>(data.groundSpeed));
         vehicleHeading.push_back(static_cast<double>(data.vehicalHeading));
