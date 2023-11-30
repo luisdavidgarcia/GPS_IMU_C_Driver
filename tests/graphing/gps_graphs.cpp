@@ -59,6 +59,8 @@ int main() {
         velocityEast.push_back(data.velocityEast);
         velocityDown.push_back(data.velocityDown);
 
+        // Print type of velocityNorth
+        printf("Type Velocity North: %s\n", typeid(data.velocityNorth).name());
         printf("RAW Velocity North: %f\n", data.velocityNorth);
         // printf("Cast Velocity East: %f\n", static_cast<double>(data.velocityEast));
         // printf("Cast Velocity Down: %f\n", static_cast<double>(data.velocityDown));
