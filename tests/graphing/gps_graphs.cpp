@@ -101,9 +101,11 @@ int main() {
         elapsedTime += updateInterval;
         // Print Last value in velocityNorth
         printf("Last Velocity North: %f\n", velocityNorth.back());
+        printf("Vector: ");
         for (int i = 0; i < velocityNorth.size(); i++) {
-            printf("Velocity North: %f\n", velocityNorth[i]);
+            printf("%f , ", velocityNorth[i]);
         }
+        printf("\n");
 
         plt::figure(1);
         plt::clf(); // Clear the current figure
@@ -112,7 +114,7 @@ int main() {
         // plt::named_plot("East Velocity", time, velocityEast);
         // plt::named_plot("Down Velocity", time, velocityDown);
         plt::legend();
-        plt::pause(1);
+        plt::pause(0.1);
 
         // plt::figure(4);
         // plt::clf(); // Clear the current figure
