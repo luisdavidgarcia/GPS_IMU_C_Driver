@@ -61,7 +61,6 @@ int main() {
         velocityDown.push_back(data.velocityDown);
 
         printf("RAW Velocity North: %f\n", data.velocityNorth);
-        printf("Cast Velocity North: %f\n", static_cast<double>(data.velocityNorth));
         // printf("Cast Velocity East: %f\n", static_cast<double>(data.velocityEast));
         // printf("Cast Velocity Down: %f\n", static_cast<double>(data.velocityDown));
 
