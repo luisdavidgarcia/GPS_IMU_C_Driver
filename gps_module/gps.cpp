@@ -180,11 +180,11 @@ UbxMessage Gps::readUbxMessage(void) {
           ubxMsg.msgClass = message[2];
           ubxMsg.msgId = message[3];
           ubxMsg.payloadLength = (message[5] << 8 | message[4]);
-          if (messageLength - 6 == ubxMsg.payloadLength) {
+          //if (messageLength - 6 == ubxMsg.payloadLength) {
             memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
             ubxMsg.checksumA = message[message.size() - 2];
             ubxMsg.checksumB = message[message.size() - 1];
-          }
+          //}
 
           return ubxMsg;
         }
