@@ -27,7 +27,7 @@ Gps::Gps(void) {
     exit(-1);
   }
 
-  result = this->setMeasurementFrequency(500, 1, 0);
+  result = this->setMeasurementFrequency(1000, 1, 0);
   if (!result) {
       printf("Error: Failed to set measurement frequency.\n");
       exit(-1);
@@ -184,11 +184,9 @@ UbxMessage Gps::readUbxMessage(void) {
           printf("Payload length: %d\n", ubxMsg.payloadLength);
           printf("Message length: %d\n", messageLength);
           printf(":(----------------------\n");
-          //if (messageLength - 6 == ubxMsg.payloadLength) {
-            memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
-            ubxMsg.checksumA = message[message.size() - 2];
-            ubxMsg.checksumB = message[message.size() - 1];
-          //}
+          memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
+          ubxMsg.checksumA = message[message.size() - 2];
+          ubxMsg.checksumB = message[message.size() - 1];
 
           return ubxMsg;
         }
