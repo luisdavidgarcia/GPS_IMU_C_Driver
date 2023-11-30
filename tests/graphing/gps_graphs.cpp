@@ -99,6 +99,8 @@ int main() {
         // plt::pause(0.01);
 
         elapsedTime += updateInterval;
+        // Print Last value in velocityNorth
+        printf("Last Velocity North: %f\n", velocityNorth.back());
 
         plt::figure(1);
         plt::clf(); // Clear the current figure
