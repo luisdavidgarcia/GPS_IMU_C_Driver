@@ -184,12 +184,12 @@ UbxMessage Gps::readUbxMessage(void) {
           printf("Payload length: %d\n", ubxMsg.payloadLength);
           printf("Message length: %d\n", messageLength);
           printf(":(----------------------\n");
-          if (ubxMsg.payloadLength > MAX_PAYLOAD_LENGTH) {
-            printf("Error: Payload length exceeds maximum payload length.\n");
-            UbxMessage badMsg;
-            badMsg.sync1 = INVALID_SYNC_FLAG;
-            return badMsg;
-          }
+          // if (ubxMsg.payloadLength > MAX_PAYLOAD_LENGTH) {
+          //   printf("Error: Payload length exceeds maximum payload length.\n");
+          //   UbxMessage badMsg;
+          //   badMsg.sync1 = INVALID_SYNC_FLAG;
+          //   return badMsg;
+          // }
           memcpy(&ubxMsg.payload, &message[6], ubxMsg.payloadLength);
           ubxMsg.checksumA = message[message.size() - 2];
           ubxMsg.checksumB = message[message.size() - 1];
