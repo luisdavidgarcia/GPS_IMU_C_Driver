@@ -180,10 +180,6 @@ UbxMessage Gps::readUbxMessage(void) {
           ubxMsg.msgClass = message[2];
           ubxMsg.msgId = message[3];
           ubxMsg.payloadLength = (message[5] << 8 | message[4]);
-          printf(":)----------------------\n");
-          printf("Payload length: %d\n", ubxMsg.payloadLength);
-          printf("Message length: %d\n", messageLength);
-          printf(":(----------------------\n");
           if (ubxMsg.payloadLength > messageLength) {
             UbxMessage badMsg;
             badMsg.sync1 = INVALID_SYNC_FLAG;
