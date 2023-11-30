@@ -7,7 +7,7 @@ namespace plt = matplotlibcpp;
 int main() {
     Gps gps_module;
     std::vector<double> time, longitude, latitude, height, heightMSL, horizontalAccuracy, verticalAccuracy;
-    std::vector<float> velocityNorth, velocityEast, velocityDown, groundSpeed, vehicleHeading, motionHeading;
+    std::vector<double> velocityNorth, velocityEast, velocityDown, groundSpeed, vehicleHeading, motionHeading;
     std::vector<double> speedAccuracy, motionHeadingAccuracy;
 
     double elapsedTime = 0.0;
@@ -60,9 +60,10 @@ int main() {
         velocityEast.push_back(data.velocityEast);
         velocityDown.push_back(data.velocityDown);
 
+        printf("RAW Velocity North: %f\n", data.velocityNorth);
         printf("Cast Velocity North: %f\n", static_cast<double>(data.velocityNorth));
-        printf("Cast Velocity East: %f\n", static_cast<double>(data.velocityEast));
-        printf("Cast Velocity Down: %f\n", static_cast<double>(data.velocityDown));
+        // printf("Cast Velocity East: %f\n", static_cast<double>(data.velocityEast));
+        // printf("Cast Velocity Down: %f\n", static_cast<double>(data.velocityDown));
 
         groundSpeed.push_back(static_cast<double>(data.groundSpeed));
         vehicleHeading.push_back(static_cast<double>(data.vehicalHeading));
@@ -103,14 +104,10 @@ int main() {
         plt::clf(); // Clear the current figure
         plt::title("Velocities");
         plt::named_plot("North Velocity", time, velocityNorth);
-        plt::named_plot("East Velocity", time, velocityEast);
-        plt::named_plot("Down Velocity", time, velocityDown);
+        // plt::named_plot("East Velocity", time, velocityEast);
+        // plt::named_plot("Down Velocity", time, velocityDown);
         plt::legend();
         plt::pause(0.01);
-
-        printf("Velocity North: %f\n", (float) data.velocityNorth);
-        printf("Velocity East: %f\n", (float) data.velocityEast);
-        printf("Velocity Down: %f\n", (float) data.velocityDown);
 
         // plt::figure(4);
         // plt::clf(); // Clear the current figure
