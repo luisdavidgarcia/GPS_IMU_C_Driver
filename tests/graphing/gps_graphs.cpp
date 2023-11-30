@@ -11,7 +11,7 @@ int main() {
     std::vector<double> speedAccuracy, motionHeadingAccuracy;
 
     double elapsedTime = 0.0;
-    const double updateInterval = 0.1; // Update interval in seconds
+    const double updateInterval = 1.0; // Update interval in seconds
     const int maxDataPoints = 100; // Maximum number of points to display on graph
 
     plt::figure_size(800, 400); // Adjust the size as needed
@@ -109,7 +109,7 @@ int main() {
         // plt::named_plot("East Velocity", time, velocityEast);
         // plt::named_plot("Down Velocity", time, velocityDown);
         plt::legend();
-        plt::pause(0.01);
+        plt::pause(1.0);
 
         // plt::figure(4);
         // plt::clf(); // Clear the current figure
@@ -130,8 +130,8 @@ int main() {
         // plt::pause(updateInterval);
 
         // Sleep or wait for the next read cycle
-        usleep(updateInterval * 1e6);
-        //sleep(1);
+        //usleep(updateInterval * 1e6);
+        sleep(1);
     }
 
     return 0;
