@@ -7,7 +7,8 @@ namespace plt = matplotlibcpp;
 int main() {
     Gps gps_module;
     std::vector<double> time;
-    std::vector<int32_t> velocityNorth, velocityEast;
+    //std::vector<int32_t> velocityNorth, velocityEast;
+    std::vector<double> velocityNorth, velocityEast;
 
     double elapsedTime = 0.0;
     const double updateInterval = 1.0; // Update interval in seconds
@@ -49,8 +50,8 @@ int main() {
         plt::named_plot("North Velocity", time, velocityNorth);
         plt::named_plot("East Velocity", time, velocityEast);
         plt::legend();
-        //plt::pause(0.5);
-        plt::pause(0.01);
+        plt::pause(0.5);
+        //plt::pause(0.01);
 
 
         sleep(1);
