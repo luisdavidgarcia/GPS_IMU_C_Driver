@@ -19,31 +19,32 @@ int main() {
 
     while (true) {
         PVTData data = gps_module.GetPvt(true, 1);
+        if (data.year == 2023) {
+            if (time.size() > maxDataPoints) {
+                time.erase(time.begin());
+                velocityNorth.erase(velocityNorth.begin());
+                velocityEast.erase(velocityEast.begin());
+            }
 
-        if (time.size() > maxDataPoints) {
-            time.erase(time.begin());
-            velocityNorth.erase(velocityNorth.begin());
-            velocityEast.erase(velocityEast.begin());
+            // Update the time and data vectors
+            time.push_back(elapsedTime);
+            velocityNorth.push_back(data.velocityNorth);
+            velocityEast.push_back(data.velocityEast);
+
+            // Print type of velocityNorth
+            printf("RAW Velocity North: %d\n", data.velocityNorth);
+            printf("Vector Velocity North: %f\n", velocityNorth.back());
+
+            elapsedTime += updateInterval;
+
+            plt::figure(1);
+            plt::clf(); // Clear the current figure
+            plt::title("Velocities");
+            plt::named_plot("North Velocity", time, velocityNorth);
+            plt::named_plot("East Velocity", time, velocityEast);
+            plt::legend();
+            plt::pause(0.5);
         }
-
-        // Update the time and data vectors
-        time.push_back(elapsedTime);
-        velocityNorth.push_back(data.velocityNorth);
-        velocityEast.push_back(data.velocityEast);
-
-        // Print type of velocityNorth
-        printf("RAW Velocity North: %d\n", data.velocityNorth);
-        printf("Vector Velocity North: %f\n", velocityNorth.back());
-
-        elapsedTime += updateInterval;
-
-        plt::figure(1);
-        plt::clf(); // Clear the current figure
-        plt::title("Velocities");
-        plt::named_plot("North Velocity", time, velocityNorth);
-        plt::named_plot("East Velocity", time, velocityEast);
-        plt::legend();
-        plt::pause(0.5);
 
         sleep(1);
     }
