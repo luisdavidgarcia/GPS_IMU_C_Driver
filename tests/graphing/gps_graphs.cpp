@@ -32,17 +32,10 @@ int main() {
         velocityEast.push_back(data.velocityEast);
 
         // Print type of velocityNorth
-        // printf("Type Velocity North: %s\n", typeid(data.velocityNorth).name());
-        // printf("RAW Velocity North: %d\n", data.velocityNorth);
+        printf("RAW Velocity North: %d\n", data.velocityNorth);
+        printf("Vector Velocity North: %f\n", velocityNorth.back());
 
         elapsedTime += updateInterval;
-        // Print Last value in velocityNorth
-        // printf("Last Velocity North: %d\n", velocityNorth.back());
-        // printf("Vector: ");
-        // for (int i = 0; i < velocityNorth.size(); i++) {
-        //     printf("%d , ", velocityNorth[i]);
-        // }
-        // printf("\n");
 
         plt::figure(1);
         plt::clf(); // Clear the current figure
