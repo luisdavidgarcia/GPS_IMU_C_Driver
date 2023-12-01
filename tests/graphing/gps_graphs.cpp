@@ -12,7 +12,7 @@ int main() {
 
     double elapsedTime = 0.0;
     const double updateInterval = 1.0; // Update interval in seconds
-    const int maxDataPoints = 500; // Maximum number of points to display on graph
+    const int maxDataPoints = 100; // Maximum number of points to display on graph
 
     plt::figure_size(800, 400); // Adjust the size as needed
     plt::ion(); // Turn on interactive mode
