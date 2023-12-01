@@ -37,13 +37,11 @@ int main(void) {
   Imu imu_module;
   while (!exit_flag) {
     imu_module.readSensorData();
-    // const int16_t *accel_data = imu_module.getAccelerometerData();
-    // const int16_t *gyro_data = imu_module.getGyroscopeData();
-    // const int16_t *mag_data = imu_module.getMagnetometerData();
+    printf("--------------------\n");
     imu_module.printAccel();
     imu_module.printGyro();
     imu_module.printMag();
-    printf("\n");
+    printf("--------------------\n");
     sleep(1);
   }
     // Perform any necessary cleanup before exiting

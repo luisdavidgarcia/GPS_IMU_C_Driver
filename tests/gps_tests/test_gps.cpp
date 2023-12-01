@@ -30,7 +30,7 @@ int main(void) {
       printf("Day: %d\n", data.day);
       printf("Hour: %d\n", data.hour);
       printf("Min: %d\n", data.min);
-      printf("Sec: %d\n", data.sec);
+      printf("Sec: %d\n\n", data.sec);
       /* Don't Plot These */
       printf("Valid Time Flag: %d\n", data.validTimeFlag);
       printf("Valid Date Flag: %d\n", data.validDateFlag);
@@ -38,7 +38,7 @@ int main(void) {
       printf("Valid Magnetic Flag: %d\n", data.validMagFlag);
       printf("GNSS Fix: %d\n", data.gnssFix);
       printf("Fix Status Flags: %d\n", data.fixStatusFlags);
-      printf("Number of Satellites: %d\n", data.numberOfSatellites);
+      printf("Number of Satellites: %d\n\n", data.numberOfSatellites);
       /* Plot the Long, Lat, and Height */
       printf("Longitude: %d\n", data.longitude);
       printf("Latitude: %d\n", data.latitude);
@@ -56,8 +56,8 @@ int main(void) {
       printf("Speed Accuracy: %u\n", data.speedAccuracy);
       printf("Motion Heading Accuracy: %d\n", data.motionHeadingAccuracy);
       /* Don't Plot These */
-      printf("Magnetic Declination: %d\n", data.magneticDeclination);
-      printf("Magnetic Declination Accuracy: %u\n", data.magnetDeclinationAccuracy);
+      //printf("Magnetic Declination: %d\n", data.magneticDeclination);
+      //printf("Magnetic Declination Accuracy: %u\n", data.magnetDeclinationAccuracy);
       printf("\n---------------------\n");
     } else {
       printf("No data\n");

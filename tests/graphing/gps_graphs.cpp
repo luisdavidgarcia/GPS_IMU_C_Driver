@@ -14,6 +14,7 @@ int main() {
     const int maxDataPoints = 100; // Maximum number of points to display on graph
 
     plt::figure_size(800, 400); // Adjust the size as needed
+    plt::ion(); // Turn on interactive mode
 
     while (true) {
         PVTData data = gps_module.GetPvt(true, 1);
@@ -48,7 +49,8 @@ int main() {
         plt::named_plot("North Velocity", time, velocityNorth);
         plt::named_plot("East Velocity", time, velocityEast);
         plt::legend();
-        plt::pause(0.5);
+        //plt::pause(0.5);
+        plt::pause(0.01);
 
 
         sleep(1);
