@@ -26,7 +26,7 @@ int main() {
                 velocityEast.erase(velocityEast.begin());
             }
 
-            if ((data.velocityNorth < 500 || data.velocityNorth > -500) & (data.velocityEast < 500 || data.velocityEast > -500)) {
+            if ((data.velocityNorth < 500 || data.velocityNorth > -500) && (data.velocityEast < 500 || data.velocityEast > -500)) {
                 // Update the time and data vectors
                 time.push_back(elapsedTime);
                 velocityNorth.push_back(data.velocityNorth);
@@ -44,7 +44,7 @@ int main() {
                 plt::named_plot("North Velocity", time, velocityNorth);
                 plt::named_plot("East Velocity", time, velocityEast);
                 plt::legend();
-                plt::pause(0.01);
+                plt::pause(0.5);
             }
         }
 
