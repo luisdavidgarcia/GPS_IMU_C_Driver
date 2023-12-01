@@ -7,7 +7,7 @@ namespace plt = matplotlibcpp;
 int main() {
     Gps gps_module;
     std::vector<double> time;
-    std::vector<int32_t> velocityNorth, velocityEast;
+    std::vector<double> velocityNorth, velocityEast;
     //std::vector<double> velocityNorth, velocityEast;
 
     double elapsedTime = 0.0;
