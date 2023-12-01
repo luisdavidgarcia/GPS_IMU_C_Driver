@@ -43,7 +43,7 @@ int main() {
             plt::named_plot("North Velocity", time, velocityNorth);
             plt::named_plot("East Velocity", time, velocityEast);
             plt::legend();
-            plt::pause(0.5);
+            plt::pause(0.01);
         }
 
         sleep(1);
