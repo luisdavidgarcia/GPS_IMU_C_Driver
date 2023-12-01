@@ -7,8 +7,8 @@ namespace plt = matplotlibcpp;
 int main() {
     Gps gps_module;
     std::vector<double> time;
-    //std::vector<int32_t> velocityNorth, velocityEast;
-    std::vector<double> velocityNorth, velocityEast;
+    std::vector<int32_t> velocityNorth, velocityEast;
+    //std::vector<double> velocityNorth, velocityEast;
 
     double elapsedTime = 0.0;
     const double updateInterval = 1.0; // Update interval in seconds
@@ -20,11 +20,11 @@ int main() {
     while (true) {
         PVTData data = gps_module.GetPvt(true, 1);
 
-        // if (time.size() > maxDataPoints) {
-        //     time.erase(time.begin());
-        //     velocityNorth.erase(velocityNorth.begin());
-        //     velocityEast.erase(velocityEast.begin());
-        // }
+        if (time.size() > maxDataPoints) {
+            time.erase(time.begin());
+            velocityNorth.erase(velocityNorth.begin());
+            velocityEast.erase(velocityEast.begin());
+        }
 
         // Update the time and data vectors
         time.push_back(elapsedTime);
