@@ -26,24 +26,26 @@ int main() {
                 velocityEast.erase(velocityEast.begin());
             }
 
-            // Update the time and data vectors
-            time.push_back(elapsedTime);
-            velocityNorth.push_back(data.velocityNorth);
-            velocityEast.push_back(data.velocityEast);
+            if ((data.velocityNorth > 500 || data.velocityNorth < -500) & (data.velocityEast > 500 || data.velocityEast < -500)) {
+                // Update the time and data vectors
+                time.push_back(elapsedTime);
+                velocityNorth.push_back(data.velocityNorth);
+                velocityEast.push_back(data.velocityEast);
 
-            // Print type of velocityNorth
-            printf("RAW Velocity North: %d\n", data.velocityNorth);
-            printf("Vector Velocity North: %f\n", velocityNorth.back());
+                // Print type of velocityNorth
+                printf("RAW Velocity North: %d\n", data.velocityNorth);
+                printf("Vector Velocity North: %f\n", velocityNorth.back());
 
-            elapsedTime += updateInterval;
+                elapsedTime += updateInterval;
 
-            plt::figure(1);
-            plt::clf(); // Clear the current figure
-            plt::title("Velocities");
-            plt::named_plot("North Velocity", time, velocityNorth);
-            plt::named_plot("East Velocity", time, velocityEast);
-            plt::legend();
-            plt::pause(0.01);
+                plt::figure(1);
+                plt::clf(); // Clear the current figure
+                plt::title("Velocities");
+                plt::named_plot("North Velocity", time, velocityNorth);
+                plt::named_plot("East Velocity", time, velocityEast);
+                plt::legend();
+                plt::pause(0.01);
+            }
         }
 
         sleep(1);
