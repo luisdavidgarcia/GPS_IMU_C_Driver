@@ -80,11 +80,6 @@ int main() {
     plt::xlabel("Time");
     plt::ylabel("Velocity");
 
-    // Create empty plots for North and East velocities
-    plt::plot(time, velocityNorth, "b-", "North Velocity");
-    plt::plot(time, velocityEast, "r-", "East Velocity");
-    plt::legend();
-
     while (true) {
         PVTData data = gps_module.GetPvt(true, 1);
 
@@ -99,8 +94,20 @@ int main() {
         velocityNorth.push_back(data.velocityNorth);
         velocityEast.push_back(data.velocityEast);
 
-        // Update the plots with new data
-        plt::update(); // Update the plot with new data
+        // Redraw the entire plot with new data
+        plt::clf(); // Clear the current figure
+        plt::title("Velocities");
+        plt::xlabel("Time");
+        plt::ylabel("Velocity");
+
+        // Plot North Velocity in blue
+        plt::plot(time, velocityNorth, "b-");
+
+        // Plot East Velocity in red
+        plt::plot(time, velocityEast, "r-");
+
+        plt::legend();
+        plt::pause(0.01); // Small pause to allow the plot to update
 
         elapsedTime += updateInterval;
 
@@ -109,3 +116,4 @@ int main() {
 
     return 0;
 }
+
