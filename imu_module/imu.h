@@ -46,16 +46,18 @@ extern "C" {
 
 /** IMU Constants */
 #define TIME_DELAY_MS 1000
-#define ACCEL_REG_START 0x00
-#define MAGNETO_REG_START 0x00
 #define ACCEL_MAG_DATA_SIZE 12
+#define PI 3.14159265359F
+#define DEG_TO_RAD PI / 180.0
 #define SENSORS_GRAVITY_STD 9.81F
+#define GYRO_MAX_THRESHOLD 2200.0 // rad/s, adjust as needed
+#define ACCEL_MAX_THRESHOLD 17.6 // m/s², adjust as needed
 #define BYTE_SHIFT_AMOUNT 8
-#define BANK_VALUE 0x02
-#define PWR_MGMT_2_VALUE 0x000000
 #define X_AXIS 0
 #define Y_AXIS 1
 #define Z_AXIS 2
+#define BITS_PER_BYTE 8
+#define BYTE_MASK 0xFF
 
 /** I2C Specifics */
 #define IMU_I2C_ADDRESS 0x69
@@ -64,7 +66,25 @@ extern "C" {
 
 /** General Registers */
 #define BANK_SEL 0x7F
-#define PWR_MGMT_2 0x07
+#define BANK_REG_0 0x00
+#define BANK_REG_1 0x10
+#define BANK_REG_2 0x20
+#define BANK_REG_3 0x30
+
+/** Bank 0 Registers */
+#define WHO_AM_I 0x00
+#define PWR_MGMT_1 0x06
+#define INT_PIN_CFG 0x0F
+
+/** Bank 3 Registers */
+#define I2C_MST_CTRL 0x01
+#define I2C_SLV0_ADDR 0x03
+#define I2C_SLV0_REG 0x04
+#define I2C_SLV0_CTRL 0x05
+#define I2C_SLV4_ADDR 0x13
+#define I2C_SLV4_REG 0x14
+#define I2C_SLV4_CTRL 0x15
+#define I2C_SLV4_DO 0x16
 
 /** Gyroscope Registers */
 #define GYRO_REG_START 0x00
@@ -75,6 +95,26 @@ extern "C" {
 #define GYRO_YOUT_L 0x36
 #define GYRO_ZOUT_H 0x37
 #define GYRO_ZOUT_L 0x38
+
+/** Accelerometer Registers */
+#define ACCEL_REG_START 0x00
+#define ACCEL_CONFIG 0x01
+#define ACCEL_XOUT_H 0x2D
+#define ACCEL_XOUT_L 0x2E
+#define ACCEL_YOUT_H 0x2F
+#define ACCEL_YOUT_L 0x30
+#define ACCEL_ZOUT_H 0x31
+#define ACCEL_ZOUT_L 0x32
+
+/** Magnetometer Registers */
+#define MAGNETO_REG_START 0x00
+#define MAGNETO_CONFIG 0x01
+#define MAGNETO_XOUT_H 0x3C
+#define MAGNETO_XOUT_L 0x3D
+#define MAGNETO_YOUT_H 0x3E
+#define MAGNETO_YOUT_L 0x3F
+#define MAGNETO_ZOUT_H 0x40
+#define MAGNETO_ZOUT_L 0x41
 
 /** Gyroscope sensitivity at 250dps */
 #define GYRO_SENSITIVITY_250DPS (0.0078125F) // Table 35 of datasheet
@@ -90,6 +130,7 @@ extern "C" {
 
 /** Macro for micro tesla (uT) per LSB (1 LSB = 0.1uT) */
 #define MAG_UT_LSB (0.1R)
+#define MAG_MAX_THRESHOLD 5000 // µT, adjust as needed
 
 class Imu {
 private:
@@ -108,14 +149,65 @@ public:
 	void readSensorData(void);
 
     const int16_t* getAccelerometerData() const {
+		int8_t badRead = 0;
+		for (int i = 0; i < 3; i++) {
+			if (accelerometer[i] > ACCEL_MAX_THRESHOLD) {
+				badRead = 1;
+				break;
+			} else if (accelerometer[i] < -ACCEL_MAX_THRESHOLD) {
+				badRead = 1;
+				break;
+			} else {
+				accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+			}
+		}
+
+		if (badRead) {
+			accelerometer[0] = accelerometer[1] = accelerometer[2] = ACCEL_MAX_THRESHOLD;
+		}
+
         return accelerometer;
     }
 
     const int16_t* getMagnetometerData() const {
+		int8_t badRead = 0;
+		for (int i = 0; i < 3; i++) {
+			if (magnetometer[i] > MAG_MAX_THRESHOLD) {
+				badRead = 1;
+				break;
+			} else if (magnetometer[i] < -MAG_MAX_THRESHOLD) {
+				badRead = 1;
+				break;
+			} else {
+				magnetometer[i] = magnetometer[i] * MAG_UT_LSB;
+			}
+		}
+
+		if (badRead) {
+			magnetometer[0] = magnetometer[1] = magnetometer[2] = MAG_MAX_THRESHOLD;
+		}
+
         return magnetometer;
     }
 
     const int16_t* getGyroscopeData() const {
+		int8_t badRead = 0;
+		for (int i = 0; i < 3; i++) {
+			if (gyroscope[i] > GYRO_MAX_THRESHOLD) {
+				badRead = 1;
+				break;
+			} else if (gyroscope[i] < -GYRO_MAX_THRESHOLD) {
+				badRead = 1;
+				break;
+			} else {
+				gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD;
+			}
+		}
+
+		if (badRead) {
+			gyroscope[0] = gyroscope[1] = gyroscope[2] = GYRO_MAX_THRESHOLD;
+		}
+
         return gyroscope;
     }
 };

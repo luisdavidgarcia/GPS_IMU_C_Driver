@@ -19,7 +19,7 @@ Imu::Imu() {
 		perror("Failed to acquire bus access and/or talk to slave");
 	}
 
-	if (i2c_smbus_read_byte_data(i2c_fd, 0x00) != IMU_ID) {
+	if (i2c_smbus_read_byte_data(i2c_fd, WHO_AM_I) != IMU_ID) {
 		perror("Failed to identify chip");
 	}
 
@@ -36,7 +36,6 @@ Imu::~Imu() {
 	close(i2c_fd);
 }
 
-
 /**
  * @brief   Initialize the IMU sensor configuration.
  *
@@ -45,38 +44,38 @@ Imu::~Imu() {
  */
 void Imu::begin() {
 	// Select Clock to Automatic (Init Accel and Gyro)
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x00); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x06, 0x01);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_0); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, PWR_MGMT_1, 0x01);
 
 	/* Init Magnometer */
 	// Master Pass Through set to false (For Magnometer)
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x00); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x0F, 0x00);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_0); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, INT_PIN_CFG, 0x00);
 
 	// Enable Master (For Magnometer)
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x30); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x01, 0x17);
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x00); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x03, 0x20);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_3); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, I2C_MST_CTRL, 0x17);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, 0x00); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, I2C_SLV0_ADDR, 0x20);
 
 	// Transact directly with an I2C device, one byte at a time (For Magnometer)
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x30); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x13, 0x0C);
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x30); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x14, 0x31);
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x30); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x16, 0x08);
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x30); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x15, 0x80);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_3); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, I2C_SLV4_ADDR, 0x0C);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_3); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, I2C_SLV4_REG, 0x31);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_3); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, I2C_SLV4_DO, 0x08);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_3); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, I2C_SLV4_CTRL, 0x80);
 
 	// Set up Slaves with Master (For Magnometer)
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x30); //set bank
-	i2c_smbus_write_byte_data(i2c_fd, 0x03, 0x8C);
-	i2c_smbus_write_byte_data(i2c_fd, 0x04, 0x10);
-	i2c_smbus_write_byte_data(i2c_fd, 0x05, 0x89);
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_3); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, I2C_SLV0_ADDR, 0x8C);
+	i2c_smbus_write_byte_data(i2c_fd, I2C_SLV0_REG, 0x10);
+	i2c_smbus_write_byte_data(i2c_fd, I2C_SLV0_CTRL, 0x89);
 
 	/* Reset Bank to Zero 0 For Reading Data */
-	i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x00); //set bank
+	i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_0); //set bank
 }
 
 /**
@@ -94,49 +93,49 @@ void Imu::begin() {
  */
 void Imu::readSensorData(void) {
     /* Reset bank to 0 on every read */
-    i2c_smbus_write_byte_data(i2c_fd, 0x7F, 0x00); //set bank
+    i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_0); //set bank
 
     /* Read accelerometer data */
     uint8_t accel_x_h, accel_x_l, accel_y_h, accel_y_l, accel_z_h, accel_z_l;
-    accel_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x2D);
-    accel_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x2E);
-    accel_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x2F);
-    accel_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x30);
-    accel_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x31);
-    accel_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x32);
+    accel_x_h = i2c_smbus_read_byte_data(i2c_fd, ACCEL_XOUT_H);
+    accel_x_l = i2c_smbus_read_byte_data(i2c_fd, ACCEL_XOUT_L);
+    accel_y_h = i2c_smbus_read_byte_data(i2c_fd, ACCEL_YOUT_H);
+    accel_y_l = i2c_smbus_read_byte_data(i2c_fd, ACCEL_YOUT_L);
+    accel_z_h = i2c_smbus_read_byte_data(i2c_fd, ACCEL_ZOUT_H);
+    accel_z_l = i2c_smbus_read_byte_data(i2c_fd, ACCEL_ZOUT_L);
 
     // Converting Raw Accel Data to Readable data
-    accelerometer[0] = (accel_x_h << 8) | (accel_x_l & 0xFF);
-    accelerometer[1] = (accel_y_h << 8) | (accel_y_l & 0xFF);
-    accelerometer[2] = (accel_z_h << 8) | (accel_z_l & 0xFF);
+    accelerometer[0] = (accel_x_h << BITS_PER_BYTE) | (accel_x_l & BYTE_MASK);
+    accelerometer[1] = (accel_y_h << BITS_PER_BYTE) | (accel_y_l & BYTE_MASK);
+    accelerometer[2] = (accel_z_h << BITS_PER_BYTE) | (accel_z_l & BYTE_MASK);
 
     /* Read gyroscope data */
     uint8_t gyro_x_h, gyro_x_l, gyro_y_h, gyro_y_l, gyro_z_h, gyro_z_l;
-    gyro_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x33);
-    gyro_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x34);
-    gyro_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x35);
-    gyro_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x36);
-    gyro_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x37);
-    gyro_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x38);
+    gyro_x_h = i2c_smbus_read_byte_data(i2c_fd, GYRO_XOUT_H);
+    gyro_x_l = i2c_smbus_read_byte_data(i2c_fd, GYRO_XOUT_L);
+    gyro_y_h = i2c_smbus_read_byte_data(i2c_fd, GYRO_YOUT_H);
+    gyro_y_l = i2c_smbus_read_byte_data(i2c_fd, GYRO_YOUT_L);
+    gyro_z_h = i2c_smbus_read_byte_data(i2c_fd, GYRO_ZOUT_H);
+    gyro_z_l = i2c_smbus_read_byte_data(i2c_fd, GYRO_ZOUT_L);
 
     // Converting Raw Gyro Data to Readable data
-    gyroscope[0] = (gyro_x_h << 8) | (gyro_x_l & 0xFF);
-    gyroscope[1] = (gyro_y_h << 8) | (gyro_y_l & 0xFF);
-    gyroscope[2] = (gyro_z_h << 8) | (gyro_z_l & 0xFF);
+    gyroscope[0] = (gyro_x_h << BITS_PER_BYTE) | (gyro_x_l & BYTE_MASK);
+    gyroscope[1] = (gyro_y_h << BITS_PER_BYTE) | (gyro_y_l & BYTE_MASK);
+    gyroscope[2] = (gyro_z_h << BITS_PER_BYTE) | (gyro_z_l & BYTE_MASK);
 
     /* Read magentometer data */
 	uint8_t mag_x_h, mag_x_l, mag_y_h, mag_y_l, mag_z_h, mag_z_l;
-    mag_x_h = i2c_smbus_read_byte_data(i2c_fd, 0x3C);
-    mag_x_l = i2c_smbus_read_byte_data(i2c_fd, 0x3D);
-    mag_y_h = i2c_smbus_read_byte_data(i2c_fd, 0x3E);
-    mag_y_l = i2c_smbus_read_byte_data(i2c_fd, 0x3F);
-    mag_z_h = i2c_smbus_read_byte_data(i2c_fd, 0x40);
-    mag_z_l = i2c_smbus_read_byte_data(i2c_fd, 0x41);
+    mag_x_h = i2c_smbus_read_byte_data(i2c_fd, MAGNETO_XOUT_H);
+    mag_x_l = i2c_smbus_read_byte_data(i2c_fd, MAGNETO_XOUT_L);
+    mag_y_h = i2c_smbus_read_byte_data(i2c_fd, MAGNETO_YOUT_H);
+    mag_y_l = i2c_smbus_read_byte_data(i2c_fd, MAGNETO_YOUT_L);
+    mag_z_h = i2c_smbus_read_byte_data(i2c_fd, MAGNETO_ZOUT_H);
+    mag_z_l = i2c_smbus_read_byte_data(i2c_fd, MAGNETO_ZOUT_L);
 
     // Converting Raw Mag Data to Readable data
-    magnetometer[0] = (mag_x_l << 8) | (mag_x_h & 0xFF);
-    magnetometer[1] = (mag_y_l << 8) | (mag_y_h & 0xFF);
-    magnetometer[2] = (mag_z_l << 8) | (mag_z_h & 0xFF);
+    magnetometer[0] = (mag_x_l << BITS_PER_BYTE) | (mag_x_h & BYTE_MASK);
+    magnetometer[1] = (mag_y_l << BITS_PER_BYTE) | (mag_y_h & BYTE_MASK);
+    magnetometer[2] = (mag_z_l << BITS_PER_BYTE) | (mag_z_h & BYTE_MASK);
 }
 
 /**
