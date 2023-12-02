@@ -38,9 +38,21 @@ int main(void) {
   while (!exit_flag) {
     imu_module.readSensorData();
     printf("--------------------\n");
-    imu_module.printAccel();
-    imu_module.printGyro();
-    imu_module.printMag();
+    int16_t *accel_data = imu_module.getAccelerometerData();
+    if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
+      printf("Accelerometer data is invalid.\n");
+      continue;
+    }
+    int16_t *gyro_data = imu_module.getGyroscopeData();
+    if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
+      printf("Gyroscope data is invalid.\n");
+      continue;
+    }
+    int16_t *mag_data = imu_module.getMagnetometerData();
+    if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
+      printf("Magnetometer data is invalid.\n");
+      continue;
+    }
     printf("--------------------\n");
     sleep(1);
   }
