@@ -148,7 +148,7 @@ public:
 	void printGyro(void);
 	void readSensorData(void);
 
-    const int16_t* getAccelerometerData() const {
+    const int16_t* getAccelerometerData() {
 		int8_t badRead = 0;
 		for (int i = 0; i < 3; i++) {
 			if (accelerometer[i] > ACCEL_MAX_THRESHOLD) {
@@ -169,7 +169,7 @@ public:
         return accelerometer;
     }
 
-    const int16_t* getMagnetometerData() const {
+    const int16_t* getMagnetometerData() {
 		int8_t badRead = 0;
 		for (int i = 0; i < 3; i++) {
 			if (magnetometer[i] > MAG_MAX_THRESHOLD) {
@@ -190,7 +190,7 @@ public:
         return magnetometer;
     }
 
-    const int16_t* getGyroscopeData() const {
+    const int16_t* getGyroscopeData() {
 		int8_t badRead = 0;
 		for (int i = 0; i < 3; i++) {
 			if (gyroscope[i] > GYRO_MAX_THRESHOLD) {
