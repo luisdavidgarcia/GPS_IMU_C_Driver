@@ -150,17 +150,17 @@ public:
 
     const int16_t* getAccelerometerData() {
 		int8_t badRead = 0;
-		// for (int i = 0; i < 3; i++) {
-		// 	if (accelerometer[i] > ACCEL_MAX_THRESHOLD) {
-		// 		badRead = 1;
-		// 		break;
-		// 	} else if (accelerometer[i] < -ACCEL_MAX_THRESHOLD) {
-		// 		badRead = 1;
-		// 		break;
-		// 	} else {
-		// 		accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-		// 	}
-		// }
+		for (int i = 0; i < 3; i++) {
+			// if (accelerometer[i] > ACCEL_MAX_THRESHOLD) {
+			// 	badRead = 1;
+			// 	break;
+			// } else if (accelerometer[i] < -ACCEL_MAX_THRESHOLD) {
+			// 	badRead = 1;
+			// 	break;
+			// } else {
+				accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+			// }
+		}
 
 		if (badRead) {
 			accelerometer[0] = accelerometer[1] = accelerometer[2] = ACCEL_MAX_THRESHOLD;
@@ -172,15 +172,15 @@ public:
     const int16_t* getMagnetometerData() {
 		int8_t badRead = 0;
 		for (int i = 0; i < 3; i++) {
-			if (magnetometer[i] > MAG_MAX_THRESHOLD) {
-				badRead = 1;
-				break;
-			} else if (magnetometer[i] < -MAG_MAX_THRESHOLD) {
-				badRead = 1;
-				break;
-			} else {
+			// if (magnetometer[i] > MAG_MAX_THRESHOLD) {
+			// 	badRead = 1;
+			// 	break;
+			// } else if (magnetometer[i] < -MAG_MAX_THRESHOLD) {
+			// 	badRead = 1;
+			// 	break;
+			// } else {
 				magnetometer[i] = magnetometer[i] * MAG_UT_LSB;
-			}
+			// }
 		}
 
 		if (badRead) {
