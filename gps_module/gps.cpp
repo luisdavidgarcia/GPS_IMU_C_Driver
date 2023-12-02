@@ -89,8 +89,8 @@ bool Gps::setMessageSendRate(uint8_t msgClass, uint8_t msgId, uint8_t sendRate =
 bool Gps::setMeasurementFrequency(uint16_t measurementPeriodMillis = DEFAULT_UPDATE_MILLS, uint8_t navigationRate = 1, uint8_t timeref = 0) {
     uint8_t payload[6];
 
-    payload[0] = static_cast<uint8_t>(measurementPeriodMillis & 0xFF);
-    payload[1] = static_cast<uint8_t>((measurementPeriodMillis >> 8) & 0xFF);
+    payload[0] = static_cast<uint8_t>(measurementPeriodMillis & BYTE_MASK);
+    payload[1] = static_cast<uint8_t>((measurementPeriodMillis >> BYTE_SHIFT_AMOUNT) & BYTE_MASK);
     payload[2] = navigationRate;
     payload[3] = 0x00;
     payload[4] = timeref;
@@ -112,7 +112,7 @@ uint16_t Gps::getAvailableBytes() {
   uint8_t msb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_MSB);
   uint8_t lsb = i2c_smbus_read_byte_data(i2c_fd, AVAILABLE_BYTES_LSB);
 
-  uint16_t availableBytes = (msb << 8) | lsb;
+  uint16_t availableBytes = (msb << BYTE_SHIFT_AMOUNT) | lsb;
   return availableBytes;
 }
 
@@ -128,8 +128,8 @@ bool Gps::writeUbxMessage(UbxMessage &msg) {
   tempBuf.push_back(msg.sync2);
   tempBuf.push_back(msg.msgClass);
   tempBuf.push_back(msg.msgId);
-  tempBuf.push_back(msg.payloadLength & 0xFF);
-  tempBuf.push_back(msg.payloadLength >> 8);
+  tempBuf.push_back(msg.payloadLength & BYTE_MASK);
+  tempBuf.push_back(msg.payloadLength >> BYTE_SHIFT_AMOUNT);
   for (int i = 0; i < msg.payloadLength; i++) {
     tempBuf.push_back(msg.payload[i]);
   }
@@ -179,7 +179,7 @@ UbxMessage Gps::readUbxMessage(void) {
           ubxMsg.sync2 = message[1];
           ubxMsg.msgClass = message[2];
           ubxMsg.msgId = message[3];
-          ubxMsg.payloadLength = (message[5] << 8 | message[4]);
+          ubxMsg.payloadLength = (message[5] << BYTE_SHIFT_AMOUNT | message[4]);
           if (ubxMsg.payloadLength > messageLength) {
             UbxMessage badMsg;
             badMsg.sync1 = INVALID_SYNC_FLAG;
@@ -227,10 +227,10 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
         uint8_t valid_flag = message.payload[11];
 
         // Extract and clarify flags
-        pvtData.validDateFlag = (valid_flag & 0x01) == 0x01 ? 1 : 0;
-        pvtData.validTimeFlag = (valid_flag & 0x02) == 0x02 ? 1 : 0;
-        pvtData.fullyResolved = (valid_flag & 0x04) == 0x04 ? 1 : 0;
-        pvtData.validMagFlag = (valid_flag & 0x08) == 0x08 ? 1 : 0;
+        pvtData.validDateFlag = (valid_flag & VALID_DATE_FLAG) == VALID_DATE_FLAG ? 1 : 0;
+        pvtData.validTimeFlag = (valid_flag & VALID_TIME_FLAG) == VALID_TIME_FLAG ? 1 : 0;
+        pvtData.fullyResolved = (valid_flag & FULLY_RESOLVED_FLAG) == FULLY_RESOLVED_FLAG ? 1 : 0;
+        pvtData.validMagFlag = (valid_flag & VALID_MAG_FLAG) == VALID_MAG_FLAG ? 1 : 0;
 
         // Extract GNSS fix and related data
         pvtData.gnssFix = message.payload[20];
@@ -283,7 +283,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
  * @return  The converted signed 16-bit integer.
  */
 int16_t Gps::i2_to_int(const uint8_t *little_endian_bytes) {
-    return (int16_t)(((uint16_t)little_endian_bytes[1] << 8) |
+    return (int16_t)(((uint16_t)little_endian_bytes[1] << BYTE_SHIFT_AMOUNT) |
 		(uint16_t)little_endian_bytes[0]);
 }
 
@@ -294,7 +294,7 @@ int16_t Gps::i2_to_int(const uint8_t *little_endian_bytes) {
  * @return  The converted unsigned 16-bit integer.
  */
 uint16_t Gps::u2_to_int(const uint8_t *little_endian_bytes) {
-    return (uint16_t)(((uint16_t)little_endian_bytes[1] << 8) |
+    return (uint16_t)(((uint16_t)little_endian_bytes[1] << BYTE_SHIFT_AMOUNT) |
 		(uint16_t)little_endian_bytes[0]);
 }
 
@@ -305,9 +305,9 @@ uint16_t Gps::u2_to_int(const uint8_t *little_endian_bytes) {
  * @return  The converted signed 32-bit integer.
  */
 int32_t Gps::i4_to_int(const uint8_t *little_endian_bytes) {
-    return (int32_t)(((uint32_t)little_endian_bytes[3] << 24) |
-		((uint32_t)little_endian_bytes[2] << 16) |
-		((uint32_t)little_endian_bytes[1] << 8) |
+    return (int32_t)(((uint32_t)little_endian_bytes[3] << THREE_BYTE_SHIFT_AMOUNT) |
+		((uint32_t)little_endian_bytes[2] << HALF_WORD_SHIFT_AMOUNT) |
+		((uint32_t)little_endian_bytes[1] << BYTE_SHIFT_AMOUNT) |
 		(uint32_t)little_endian_bytes[0]);
 }
 
@@ -318,9 +318,9 @@ int32_t Gps::i4_to_int(const uint8_t *little_endian_bytes) {
  * @return  The converted unsigned 32-bit integer.
  */
 uint32_t Gps::u4_to_int(const uint8_t *little_endian_bytes) {
-    return (uint32_t)(((uint32_t)little_endian_bytes[3] << 24) |
-		((uint32_t)little_endian_bytes[2] << 16) |
-		((uint32_t)little_endian_bytes[1] << 8) |
+    return (uint32_t)(((uint32_t)little_endian_bytes[3] << THREE_BYTE_SHIFT_AMOUNT) |
+		((uint32_t)little_endian_bytes[2] << HALF_WORD_SHIFT_AMOUNT) |
+		((uint32_t)little_endian_bytes[1] << BYTE_SHIFT_AMOUNT) |
 		(uint32_t)little_endian_bytes[0]);
 }
 
