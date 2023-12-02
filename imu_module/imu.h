@@ -200,7 +200,7 @@ public:
 			// 	badRead = 1;
 			// 	break;
 			// } else {
-				gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD;
+				gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS; // * DEG_TO_RAD;
 			// }
 		}
 
