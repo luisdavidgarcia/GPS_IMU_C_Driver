@@ -29,8 +29,17 @@ int main() {
     while (true) {
         imu_module.readSensorData();
         const int16_t *accel_data = imu_module.getAccelerometerData();
+        if (accel_data[0] == 0 && accel_data[1] == 0 && accel_data[2] == 0) {
+            continue;
+        }
         const int16_t *gyro_data = imu_module.getGyroscopeData();
+        if (gyro_data[0] == 0 && gyro_data[1] == 0 && gyro_data[2] == 0) {
+            continue;
+        }
         const int16_t *mag_data = imu_module.getMagnetometerData();
+        if (mag_data[0] == 0 && mag_data[1] == 0 && mag_data[2] == 0) {
+            continue;
+        }
 
         // Update the data vectors
         if (time.size() > maxDataPoints) {
