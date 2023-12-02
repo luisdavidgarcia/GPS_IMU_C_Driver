@@ -245,10 +245,10 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
         }
 
         uint8_t valid_flag = message.payload[11];
-        if (valid_flag == 0) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if (valid_flag == 0) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
 
         // Extract and clarify flags
         pvtData.validDateFlag = (valid_flag & VALID_DATE_FLAG) == VALID_DATE_FLAG ? 1 : 0;
@@ -275,15 +275,15 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract height data
         pvtData.height = i4_to_int(&message.payload[32]);
-        if ((pvtData.height < MIN_ALTITUDE_METERS) || (pvtData.height > MAX_ALTITUDE_METERS)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if ((pvtData.height < MIN_ALTITUDE_METERS) || (pvtData.height > MAX_ALTITUDE_METERS)) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
         pvtData.heightMSL = i4_to_int(&message.payload[36]);
-        if ((pvtData.heightMSL < MIN_ALTITUDE_METERS) || (pvtData.heightMSL > MAX_ALTITUDE_METERS)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if ((pvtData.heightMSL < MIN_ALTITUDE_METERS) || (pvtData.heightMSL > MAX_ALTITUDE_METERS)) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
 
         // Extract horizontal and vertical accuracy in millimeters
         pvtData.horizontalAccuracy = u4_to_int(&message.payload[40]);
@@ -300,7 +300,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract North East Down velocity in mm/s
         pvtData.velocityNorth = i4_to_int(&message.payload[48]);
-        if ((pvtData.velocityNorth > MAX_VELOCITY_MPS) || (pvtData.velocityNorth < MIN_ALTITUDE_METERS)) {
+        if ((pvtData.velocityNorth > MAX_VELOCITY_MPS) || (pvtData.velocityNorth < MIN_VELOCITY_MPS)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
