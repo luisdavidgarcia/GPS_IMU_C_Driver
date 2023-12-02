@@ -263,15 +263,15 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract longitude and latitude in degrees
         pvtData.longitude = i4_to_int(&message.payload[24]) * 1e-07;
-        if ((pvtData.longitude < MIN_LONGTITUTE) || (pvtData.longitude > MAX_LONGTITUTE)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if ((pvtData.longitude < MIN_LONGTITUTE) || (pvtData.longitude > MAX_LONGTITUTE)) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
         pvtData.latitude = i4_to_int(&message.payload[28]) * 1e-07;
-        if ((pvtData.latitude < MIN_LATITUDE) || (pvtData.latitude > MAX_LATITUDE)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if ((pvtData.latitude < MIN_LATITUDE) || (pvtData.latitude > MAX_LATITUDE)) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
 
         // Extract height data
         pvtData.height = i4_to_int(&message.payload[32]);
