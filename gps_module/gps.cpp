@@ -263,24 +263,24 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract longitude and latitude in degrees
         pvtData.longitude = i4_to_int(&message.payload[24]) * 1e-07;
-        if (pvtData.longitude < MIN_LONGTITUTE|| pvtData.longitude > MAX_LONGTITUTE) {
+        if ((pvtData.longitude < MIN_LONGTITUTE) || (pvtData.longitude > MAX_LONGTITUTE)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
         pvtData.latitude = i4_to_int(&message.payload[28]) * 1e-07;
-        if (pvtData.latitude < MIN_LATITUDE || pvtData.latitude > MAX_LATITUDE) {
+        if ((pvtData.latitude < MIN_LATITUDE) || (pvtData.latitude > MAX_LATITUDE)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
 
         // Extract height data
         pvtData.height = i4_to_int(&message.payload[32]);
-        if (pvtData.height < MIN_ALTITUDE_METERS || pvtData.height > MAX_ALTITUDE_METERS) {
+        if ((pvtData.height < MIN_ALTITUDE_METERS) || (pvtData.height > MAX_ALTITUDE_METERS)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
         pvtData.heightMSL = i4_to_int(&message.payload[36]);
-        if (pvtData.heightMSL < MIN_ALTITUDE_METERS || pvtData.heightMSL > MAX_ALTITUDE_METERS) {
+        if ((pvtData.heightMSL < MIN_ALTITUDE_METERS) || (pvtData.heightMSL > MAX_ALTITUDE_METERS)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
@@ -299,24 +299,24 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract North East Down velocity in mm/s
         pvtData.velocityNorth = i4_to_int(&message.payload[48]);
-        if (pvtData.velocityNorth > MAX_VELOCITY_MPS || pvtData.velocityNorth < MIN_ALTITUDE_METERS)) {
+        if ((pvtData.velocityNorth > MAX_VELOCITY_MPS) || (pvtData.velocityNorth < MIN_ALTITUDE_METERS)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
         pvtData.velocityEast = i4_to_int(&message.payload[52]);
-        if (pvtData.velocityEast > MAX_VELOCITY_MPS || pvtData.velocityEast < MIN_VELOCITY_MPS)) {
+        if ((pvtData.velocityEast > MAX_VELOCITY_MPS) || (pvtData.velocityEast < MIN_VELOCITY_MPS)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
         pvtData.velocityDown = i4_to_int(&message.payload[56]);
-        if (pvtData.velocityDown > MAX_VELOCITY_MPS || pvtData.velocityDown < MIN_VELOCITY_MPS)) {
+        if ((pvtData.velocityDown > MAX_VELOCITY_MPS) || (pvtData.velocityDown < MIN_VELOCITY_MPS)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
 
         // Extract ground speed in mm/s and motion heading in degrees
         pvtData.groundSpeed = i4_to_int(&message.payload[60]);
-        if (pvtData.groundSpeed > MAX_VELOCITY_MPS || pvtData.groundSpeed < MIN_VELOCITY_MPS)) {
+        if ((pvtData.groundSpeed > MAX_VELOCITY_MPS) || (pvtData.groundSpeed < MIN_VELOCITY_MPS)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
@@ -340,14 +340,14 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract vehicle heading in degrees
         pvtData.vehicalHeading = i4_to_int(&message.payload[84]) * 1e-05;
-        if (pvtData.vehicalHeading > MAX_DEGREE || pvtData.vehicalHeading < MIN_DEGREE) {
+        if ((pvtData.vehicalHeading > MAX_DEGREE) || (pvtData.vehicalHeading < MIN_DEGREE)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
 
         // Extract magnetic declination and accuracy in degrees
         pvtData.magneticDeclination = i2_to_int(&message.payload[88]) * 1e-02;
-        if (pvtData.magneticDeclination > MAX_DEGREE || pvtData.magneticDeclination < MIN_DEGREE) {
+        if ((pvtData.magneticDeclination > MAX_DEGREE) || (pvtData.magneticDeclination < MIN_DEGREE)) {
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
