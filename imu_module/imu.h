@@ -158,7 +158,7 @@ public:
 		// 		badRead = 1;
 		// 		break;
 		// 	} else {
-				accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+		// 		accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
 		// 	}
 		// }
 
