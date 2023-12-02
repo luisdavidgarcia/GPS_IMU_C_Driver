@@ -193,15 +193,15 @@ public:
     const int16_t* getGyroscopeData() {
 		int8_t badRead = 0;
 		for (int i = 0; i < 3; i++) {
-			if (gyroscope[i] > GYRO_MAX_THRESHOLD) {
-				badRead = 1;
-				break;
-			} else if (gyroscope[i] < -GYRO_MAX_THRESHOLD) {
-				badRead = 1;
-				break;
-			} else {
+			// if (gyroscope[i] > GYRO_MAX_THRESHOLD) {
+			// 	badRead = 1;
+			// 	break;
+			// } else if (gyroscope[i] < -GYRO_MAX_THRESHOLD) {
+			// 	badRead = 1;
+			// 	break;
+			// } else {
 				gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD;
-			}
+			// }
 		}
 
 		if (badRead) {
