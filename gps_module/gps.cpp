@@ -287,15 +287,16 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract horizontal and vertical accuracy in millimeters
         pvtData.horizontalAccuracy = u4_to_int(&message.payload[40]);
-        if (pvtData.horizontalAccuracy > HORIZONTAL_ACCURACY_GPS_GLONASS_M) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if (pvtData.horizontalAccuracy > HORIZONTAL_ACCURACY_GPS_GLONASS_M) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
+
         pvtData.verticalAccuracy = u4_to_int(&message.payload[44]);
-        if (pvtData.verticalAccuracy > HORIZONTAL_ACCURACY_GPS_GLONASS_M) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if (pvtData.verticalAccuracy > HORIZONTAL_ACCURACY_GPS_GLONASS_M) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
 
         // Extract North East Down velocity in mm/s
         pvtData.velocityNorth = i4_to_int(&message.payload[48]);
