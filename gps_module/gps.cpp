@@ -317,46 +317,46 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract ground speed in mm/s and motion heading in degrees
         pvtData.groundSpeed = i4_to_int(&message.payload[60]);
-        if ((pvtData.groundSpeed > MAX_VELOCITY_MPS) || (pvtData.groundSpeed < MIN_VELOCITY_MPS)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if ((pvtData.groundSpeed > MAX_VELOCITY_MPS) || (pvtData.groundSpeed < MIN_VELOCITY_MPS)) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
         pvtData.motionHeading = i4_to_int(&message.payload[64]) * 1e-05;
-        if (pvtData.motionHeading > MAX_DEGREE || pvtData.motionHeading < MIN_DEGREE) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if (pvtData.motionHeading > MAX_DEGREE || pvtData.motionHeading < MIN_DEGREE) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
 
         // Extract speed accuracy in mm/s and heading accuracy in degrees
         pvtData.speedAccuracy = u4_to_int(&message.payload[68]);
-        if (pvtData.speedAccuracy > VELOCITY_ACCURACY_THRESHOLD_MPS) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if (pvtData.speedAccuracy > VELOCITY_ACCURACY_THRESHOLD_MPS) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
         pvtData.motionHeadingAccuracy = u4_to_int(&message.payload[72]) * 1e-05;
-        if (pvtData.motionHeadingAccuracy > HEADING_ACCURACY_DEGREES) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if (pvtData.motionHeadingAccuracy > HEADING_ACCURACY_DEGREES) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
 
         // Extract vehicle heading in degrees
         pvtData.vehicalHeading = i4_to_int(&message.payload[84]) * 1e-05;
-        if ((pvtData.vehicalHeading > MAX_DEGREE) || (pvtData.vehicalHeading < MIN_DEGREE)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if ((pvtData.vehicalHeading > MAX_DEGREE) || (pvtData.vehicalHeading < MIN_DEGREE)) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
 
         // Extract magnetic declination and accuracy in degrees
         pvtData.magneticDeclination = i2_to_int(&message.payload[88]) * 1e-02;
-        if ((pvtData.magneticDeclination > MAX_DEGREE) || (pvtData.magneticDeclination < MIN_DEGREE)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if ((pvtData.magneticDeclination > MAX_DEGREE) || (pvtData.magneticDeclination < MIN_DEGREE)) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
         pvtData.magnetDeclinationAccuracy = u2_to_int(&message.payload[90]) * 1e-02;
-        if (pvtData.magnetDeclinationAccuracy > MAX_MAG_DEGREE_ACCURACY) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+        // if (pvtData.magnetDeclinationAccuracy > MAX_MAG_DEGREE_ACCURACY) {
+        //     pvtData.year = INVALID_YEAR_FLAG;
+        //     return this->pvtData;
+        // }
 
       return this->pvtData;
     }
