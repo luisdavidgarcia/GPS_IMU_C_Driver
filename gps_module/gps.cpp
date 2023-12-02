@@ -311,6 +311,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
         }
         pvtData.velocityDown = i4_to_int(&message.payload[56]);
         if ((pvtData.velocityDown > MAX_VELOCITY_MPS) || (pvtData.velocityDown < MIN_VELOCITY_MPS)) {
+            printf("Bad Read Velocity Down: %d\n", pvtData.velocityDown);
             pvtData.year = INVALID_YEAR_FLAG;
             return this->pvtData;
         }
