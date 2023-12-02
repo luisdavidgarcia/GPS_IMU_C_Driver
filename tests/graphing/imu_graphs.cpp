@@ -24,7 +24,7 @@ int main() {
     const int maxDataPoints = 100; // Maximum number of points to display on graph
 
     // Initialize matplotlib
-    plt::figure_size(1200, 780); // Set the size of the figure
+    plt::figure_size(800, 400); // Set the size of the figure
 
     while (true) {
         imu_module.readSensorData();

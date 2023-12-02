@@ -46,6 +46,8 @@ int main() {
                 plt::legend();
                 plt::pause(0.1);
             }
+        } else {
+            printf("GPS data is invalid.\n");
         }
 
         sleep(1);
