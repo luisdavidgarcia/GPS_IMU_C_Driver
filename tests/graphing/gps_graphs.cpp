@@ -54,7 +54,14 @@ int main() {
             plt::legend();
             plt::pause(0.1);
 
+            // Plotting the longitude and latitude
             plt::figure(2);
+            plt::clf(); // Clear the current figure
+            plt::title("GPS Coordinates");
+            plt::xlabel("Longitude");
+            plt::ylabel("Latitude");
+            plt::scatter(longitude, latitude); // Scatter plot for longitude and latitude
+            plt::pause(0.1);
         } else {
             printf("GPS data is invalid.\n");
         }
