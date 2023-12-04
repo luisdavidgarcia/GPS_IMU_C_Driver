@@ -7,7 +7,9 @@ namespace plt = matplotlibcpp;
 int main() {
     Gps gps_module;
     std::vector<double> time;
-    std::vector<double> velocityNorth, velocityEast;
+    std::vector<double> velocityNorth, velocityEast, velocityDown;
+
+    std::vector<double> longitude, latitude;
     //std::vector<double> velocityNorth, velocityEast;
 
     double elapsedTime = 0.0;
@@ -24,12 +26,18 @@ int main() {
                 time.erase(time.begin());
                 velocityNorth.erase(velocityNorth.begin());
                 velocityEast.erase(velocityEast.begin());
+                velocityDown.erase(velocityDown.begin());
+                longitude.erase(longitude.begin());
+                latitude.erase(latitude.begin());
             }
 
             // Update the time and data vectors
             time.push_back(elapsedTime);
             velocityNorth.push_back(data.velocityNorth);
             velocityEast.push_back(data.velocityEast);
+            velocityDown.push_back(data.velocityDown);
+            longitude.push_back(data.longitude);
+            latitude.push_back(data.latitude);
 
             // Print type of velocityNorth
             printf("RAW Velocity North: %d\n", data.velocityNorth);
@@ -42,8 +50,11 @@ int main() {
             plt::title("Velocities");
             plt::named_plot("North Velocity", time, velocityNorth);
             plt::named_plot("East Velocity", time, velocityEast);
+            plt::named_plot("Down Velocity", time, velocityDown);
             plt::legend();
             plt::pause(0.1);
+
+            plt::figure(2);
         } else {
             printf("GPS data is invalid.\n");
         }
