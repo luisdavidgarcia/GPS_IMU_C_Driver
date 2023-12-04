@@ -29,15 +29,18 @@ int main() {
     while (true) {
         imu_module.readSensorData();
         const int16_t *accel_data = imu_module.getAccelerometerData();
-        if (accel_data[0] == 0 && accel_data[1] == 0 && accel_data[2] == 0) {
+        if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
+        //if (accel_data[0] == 0 && accel_data[1] == 0 && accel_data[2] == 0) {
             continue;
         }
         const int16_t *gyro_data = imu_module.getGyroscopeData();
-        if (gyro_data[0] == 0 && gyro_data[1] == 0 && gyro_data[2] == 0) {
+        //if (gyro_data[0] == 0 && gyro_data[1] == 0 && gyro_data[2] == 0) {
+        if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
             continue;
         }
         const int16_t *mag_data = imu_module.getMagnetometerData();
-        if (mag_data[0] == 0 && mag_data[1] == 0 && mag_data[2] == 0) {
+        if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
+        //if (mag_data[0] == 0 && mag_data[1] == 0 && mag_data[2] == 0) {
             continue;
         }
 
