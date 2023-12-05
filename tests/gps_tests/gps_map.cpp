@@ -68,9 +68,9 @@ int main() {
         }
 
         sleep(1);
-        if(std::filesystem::exists("map_image.png") == true) {
-            system("rm map_image.png");
-        }
+        // if(std::filesystem::exists("map_image.png") == true) {
+        //     system("rm map_image.png");
+        // }
     }
 
     return 0;
