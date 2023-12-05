@@ -42,6 +42,10 @@ int main() {
             // Print type of velocityNorth
             printf("RAW Velocity North: %d\n", data.velocityNorth);
             printf("Vector Velocity North: %f\n", velocityNorth.back());
+            printf("RAW Longitude: %f\n", data.longitude);
+            printf("Vector Longitude: %f\n", longitude.back());
+            printf("RAW Latitude: %f\n", data.latitude);
+            printf("Vector Latitude: %f\n", latitude.back());
 
             elapsedTime += updateInterval;
 
@@ -60,10 +64,7 @@ int main() {
             plt::title("GPS Coordinates");
             plt::xlabel("Longitude");
             plt::ylabel("Latitude");
-
-            // Scatter plot for longitude and latitude with larger dots
-            plt::scatter(longitude, latitude, 10); // 10 is the size of the dots
-
+            plt::scatter(longitude, latitude, 10);
             plt::pause(0.1);
         } else {
             printf("GPS data is invalid.\n");
