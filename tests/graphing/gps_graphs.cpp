@@ -65,6 +65,10 @@ int main() {
             plt::xlabel("Longitude");
             plt::ylabel("Latitude");
             plt::scatter(longitude, latitude, 10);
+            // Set the scales of the axes to integer values
+            plt::plot("plt.xticks(range(int(min(longitude)), int(max(longitude)) + 1, 1))");
+            plt::plot("plt.yticks(range(int(min(latitude)), int(max(latitude)) + 1, 1))");
+
             plt::pause(0.1);
         } else {
             printf("GPS data is invalid.\n");
