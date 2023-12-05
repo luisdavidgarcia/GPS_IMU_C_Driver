@@ -66,7 +66,6 @@ int main() {
         }
 
         sleep(1);
-        if
     }
 
     return 0;
