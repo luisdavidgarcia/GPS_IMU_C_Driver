@@ -55,12 +55,15 @@ int main() {
             plt::pause(0.1);
 
             // Plotting the longitude and latitude
-            plt::figure(2);
+             plt::figure(2);
             plt::clf(); // Clear the current figure
             plt::title("GPS Coordinates");
             plt::xlabel("Longitude");
             plt::ylabel("Latitude");
-            plt::scatter(longitude, latitude); // Scatter plot for longitude and latitude
+
+            // Scatter plot for longitude and latitude with larger dots
+            plt::scatter(longitude, latitude, 10); // 10 is the size of the dots
+
             plt::pause(0.1);
         } else {
             printf("GPS data is invalid.\n");
