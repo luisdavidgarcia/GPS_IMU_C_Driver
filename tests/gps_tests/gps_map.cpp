@@ -5,6 +5,7 @@
 #include <vector>
 #include <curl/curl.h>
 #include <unistd.h>
+#include <filesystem>
 
 // Function to write data received from HTTP request
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *s) {
@@ -66,6 +67,9 @@ int main() {
         }
 
         sleep(1);
+        if(std::filesystem::exists("map_image.png") == true) {
+            system("rm map_image.png");
+        }
     }
 
     return 0;
