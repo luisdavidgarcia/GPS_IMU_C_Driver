@@ -62,7 +62,7 @@ int main() {
            printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
         //    download_map({coordinates}, api_key);
         //    system("xdg-open map_image.png"); // Open the image using the default application
-           sleep(2);
+           sleep(1);
         //    system("rm map_image.png");
         }
     }
