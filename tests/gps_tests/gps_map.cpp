@@ -57,14 +57,15 @@ int main() {
     while(1) {
         PVTData data = gps_module.GetPvt(true, 1);
         if (data.year == 2023) {
-           std::pair<double, double> coordinates = std::make_pair(data.latitude, data.longitude);
-           all_coordinates.push_back({coordinates});
-           printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
+            std::pair<double, double> coordinates = std::make_pair(data.latitude, data.longitude);
+            all_coordinates.push_back({coordinates});
+            printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
         //    download_map({coordinates}, api_key);
         //    system("xdg-open map_image.png"); // Open the image using the default application
-           sleep(1);
         //    system("rm map_image.png");
         }
+
+        sleep(1);
     }
 
     return 0;
