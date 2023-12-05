@@ -58,7 +58,7 @@ int main() {
         download_map(coordinates_list, api_key);
         system("xdg-open map_image.png"); // Open the image using the default application
         sleep(1);
-        system("pkill -f eog");
+        system("pkill -f eom");
         system("rm map_image.png");
     }
 
