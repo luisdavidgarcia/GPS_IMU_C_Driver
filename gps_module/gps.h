@@ -187,7 +187,7 @@ class Gps {
 		uint8_t navigationRate, uint8_t timeref);
 
 		int16_t i2_to_int(const uint8_t *little_endian_bytes);
-        double bytes_to_double(const uint8_t *little_endian_bytes);
+        // double bytes_to_double(const uint8_t *little_endian_bytes);
 		uint16_t u2_to_int(const uint8_t *little_endian_bytes);
 		int32_t i4_to_int(const uint8_t *little_endian_bytes);
 		uint32_t u4_to_int(const uint8_t *little_endian_bytes);
