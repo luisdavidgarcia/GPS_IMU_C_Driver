@@ -73,7 +73,6 @@ int main() {
             printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
            download_map(all_coordinates, api_key);
            system("xdg-open map_image.png"); // Open the image using the default application
-           sleep(1);
            system("pkill -f /usr/bin/eom");
            system("rm map_image.png");
         }
