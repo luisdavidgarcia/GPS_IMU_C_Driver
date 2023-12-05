@@ -60,6 +60,7 @@ int main() {
         if (data.year == 2023) {
             std::pair<double, double> coordinates = std::make_pair(data.latitude, data.longitude);
             all_coordinates.push_back({coordinates});
+            printf("Length of all_coordinates: %d\n", all_coordinates.size());
             printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
            download_map({coordinates}, api_key);
            system("xdg-open map_image.png"); // Open the image using the default application
