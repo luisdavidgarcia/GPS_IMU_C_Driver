@@ -262,12 +262,13 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
         pvtData.numberOfSatellites = message.payload[23];
 
         // Extract longitude and latitude in degrees
-        pvtData.longitude = i4_to_int(&message.payload[24]) * 1e-07;
+        //pvtData.longitude = i4_to_int(&message.payload[24]);// * 1e-07;
+        pvtData.longitude = bytes_to_double(&message.payload[24]);
         // if ((pvtData.longitude < MIN_LONGTITUTE) || (pvtData.longitude > MAX_LONGTITUTE)) {
         //     pvtData.year = INVALID_YEAR_FLAG;
         //     return this->pvtData;
         // }
-        pvtData.latitude = i4_to_int(&message.payload[28]) * 1e-07;
+        pvtData.latitude = i4_to_int(&message.payload[28]); // * 1e-07;
         // if ((pvtData.latitude < MIN_LATITUDE) || (pvtData.latitude > MAX_LATITUDE)) {
         //     pvtData.year = INVALID_YEAR_FLAG;
         //     return this->pvtData;
@@ -387,6 +388,15 @@ uint16_t Gps::u2_to_int(const uint8_t *little_endian_bytes) {
     return (uint16_t)(((uint16_t)little_endian_bytes[1] << BYTE_SHIFT_AMOUNT) |
 		(uint16_t)little_endian_bytes[0]);
 }
+
+double Gps::bytes_to_double(const uint8_t *little_endian_bytes) {
+    // Assuming little_endian_bytes is a representation of a double
+    // If it's not, you'll need to adjust the conversion logic accordingly
+    double result;
+    memcpy(&result, little_endian_bytes, sizeof(result));
+    return result;
+}
+
 
 /**
  * @brief   Convert a little-endian byte array to a signed 32-bit integer.

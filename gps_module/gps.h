@@ -145,7 +145,8 @@ typedef struct {
     uint8_t numberOfSatellites;
 
     // Coordinates
-    int32_t longitude;           // Longitude (degrees * 1e7)
+    //int32_t longitude;           // Longitude (degrees * 1e7)
+    double longitude;
     int32_t latitude;            // Latitude (degrees * 1e7)
     int32_t height;              // Height above ellipsoid (millimeters)
     int32_t heightMSL;                // Height above mean sea level (millimeters)
