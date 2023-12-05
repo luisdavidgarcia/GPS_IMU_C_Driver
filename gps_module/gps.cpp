@@ -262,7 +262,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
         pvtData.numberOfSatellites = message.payload[23];
 
         // Extract longitude and latitude in degrees
-        pvtData.longitude = i4_to_int(&message.payload[24]);// * 1e-07;
+        pvtData.longitude = i4_to_int(&message.payload[24])* 1e-07;
         // if ((pvtData.longitude < MIN_LONGTITUTE) || (pvtData.longitude > MAX_LONGTITUTE)) {
         //     pvtData.year = INVALID_YEAR_FLAG;
         //     return this->pvtData;

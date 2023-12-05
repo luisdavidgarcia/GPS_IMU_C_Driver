@@ -43,7 +43,7 @@ int main(void) {
       printf("Number of Satellites: %d\n\n", data.numberOfSatellites);
       /* Plot the Long, Lat, and Height */
       printf("Longitude: %f\n", data.longitude);
-      printf("Latitude: %d\n", data.latitude);
+      printf("Latitude: %f\n", data.latitude);
       printf("Height: %d\n", data.height);
       printf("Height above MSL: %d\n", data.heightMSL);
       printf("Horizontal Accuracy: %u\n", data.horizontalAccuracy);
