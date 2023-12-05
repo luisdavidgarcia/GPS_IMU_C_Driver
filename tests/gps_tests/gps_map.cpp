@@ -49,30 +49,33 @@ int main() {
     Gps gps_module;
     std::string api_key = "AIzaSyB8o-avNmKDniIrJkeWqnS9bbffEW9Taaw"; // Replace with your actual API key
     std::vector<std::vector<std::pair<double, double> > > all_coordinates;
-    // = {
-    //     {{40.748817, -73.985428}},
-    //     {{40.748817, -73.985428}, {40.750506, -73.993439}},
-    //     {{40.748817, -73.985428}, {40.750506, -73.993439}, {40.752726, -73.977229}}
-    // };
+    = {
+        {{40.748817, -73.985428}},
+        {{40.748817, -73.985428}, {40.750506, -73.993439}},
+        {{40.748817, -73.985428}, {40.750506, -73.993439}, {40.752726, -73.977229}}
+    };
 
-    while(1) {
-        PVTData data = gps_module.GetPvt(true, 1);
-        if (data.year == 2023) {
-            std::pair<double, double> coordinates = std::make_pair(data.latitude, data.longitude);
-            all_coordinates.push_back({coordinates});
-            printf("Length of all_coordinates: %d\n", all_coordinates.size());
-            printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
-           download_map({coordinates}, api_key);
-           system("xdg-open map_image.png"); // Open the image using the default application
-           sleep(1);
-           system("rm map_image.png");
-        }
+     download_map(coordinates_list, api_key);
+     system("open map_image.png"); // Open the image usi
 
-        sleep(1);
-        // if(std::filesystem::exists("map_image.png") == true) {
-        //     system("rm map_image.png");
-        // }
-    }
+    // while(1) {
+    //     PVTData data = gps_module.GetPvt(true, 1);
+    //     if (data.year == 2023) {
+    //         std::pair<double, double> coordinates = std::make_pair(data.latitude, data.longitude);
+    //         all_coordinates.push_back({coordinates});
+    //         printf("Length of all_coordinates: %d\n", all_coordinates.size());
+    //         printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
+    //        download_map({coordinates}, api_key);
+    //        system("xdg-open map_image.png"); // Open the image using the default application
+    //        sleep(1);
+    //        system("rm map_image.png");
+    //     }
+
+    //     sleep(1);
+    //     // if(std::filesystem::exists("map_image.png") == true) {
+    //     //     system("rm map_image.png");
+    //     // }
+    // }
 
     return 0;
 }
