@@ -60,12 +60,13 @@ int main() {
             std::pair<double, double> coordinates = std::make_pair(data.latitude, data.longitude);
             all_coordinates.push_back({coordinates});
             printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
-        //    download_map({coordinates}, api_key);
-        //    system("xdg-open map_image.png"); // Open the image using the default application
-        //    system("rm map_image.png");
+           download_map({coordinates}, api_key);
+           system("xdg-open map_image.png"); // Open the image using the default application
+           //system("rm map_image.png");
         }
 
         sleep(1);
+        if
     }
 
     return 0;
