@@ -389,13 +389,14 @@ uint16_t Gps::u2_to_int(const uint8_t *little_endian_bytes) {
 		(uint16_t)little_endian_bytes[0]);
 }
 
-double Gps::bytes_to_double(const uint8_t *little_endian_bytes) {
-    // Assuming little_endian_bytes is a representation of a double
-    // If it's not, you'll need to adjust the conversion logic accordingly
-    double result;
-    memcpy(&result, little_endian_bytes, sizeof(result));
-    return result * 1e-07;
-}
+// double Gps::bytes_to_double(const uint8_t *little_endian_bytes) {
+//     // Assuming little_endian_bytes is a representation of a double
+//     // If it's not, you'll need to adjust the conversion logic accordingly
+//     double result;
+//     memcpy(&result, little_endian_bytes, sizeof(result));
+//     printf("Result: %f\n", result);
+//     return result * 1e-07;
+// }
 
 
 /**
