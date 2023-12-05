@@ -48,15 +48,18 @@ void download_map(const std::vector<std::pair<double, double> >& coordinates, co
 int main() {
     Gps gps_module;
     std::string api_key = "AIzaSyB8o-avNmKDniIrJkeWqnS9bbffEW9Taaw"; // Replace with your actual API key
-    std::vector<std::vector<std::pair<double, double> > > all_coordinates;
-    = {
+    std::vector<std::vector<std::pair<double, double> > > all_coordinates = {
         {{40.748817, -73.985428}},
         {{40.748817, -73.985428}, {40.750506, -73.993439}},
         {{40.748817, -73.985428}, {40.750506, -73.993439}, {40.752726, -73.977229}}
     };
 
-     download_map(coordinates_list, api_key);
-     system("open map_image.png"); // Open the image usi
+    for (auto &coordinates_list : all_coordinates) {
+        download_map(coordinates_list, api_key);
+        system("xdg-open map_image.png"); // Open the image using the default application
+        sleep(1);
+        system("rm map_image.png");
+    }
 
     // while(1) {
     //     PVTData data = gps_module.GetPvt(true, 1);
