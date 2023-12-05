@@ -394,7 +394,7 @@ double Gps::bytes_to_double(const uint8_t *little_endian_bytes) {
     // If it's not, you'll need to adjust the conversion logic accordingly
     double result;
     memcpy(&result, little_endian_bytes, sizeof(result));
-    return result;
+    return result * 1e-07;
 }
 
 
