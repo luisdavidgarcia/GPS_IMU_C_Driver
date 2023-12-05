@@ -64,7 +64,8 @@ int main() {
             printf("Coordinates: %f, %f\n", data.latitude, data.longitude);
            download_map({coordinates}, api_key);
            system("xdg-open map_image.png"); // Open the image using the default application
-           //system("rm map_image.png");
+           sleep(1);
+           system("rm map_image.png");
         }
 
         sleep(1);
