@@ -20,7 +20,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::stri
 }
 
 // Function to download map
-void download_map(const std::vector<std::pair<double, double> >& coordinates, const std::string& api_key = "", int zoom = 15, const std::string& size = "800x600", const std::string& filename = "map_image.png") {
+void download_map(const std::vector<std::pair<double, double> >& coordinates, const std::string& api_key = "", int zoom = 30, const std::string& size = "800x600", const std::string& filename = "map_image.png") {
     CURL *curl;
     CURLcode res;
     std::string readBuffer;
