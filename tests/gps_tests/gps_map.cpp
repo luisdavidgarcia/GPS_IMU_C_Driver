@@ -47,7 +47,19 @@ void download_map(const std::vector<std::pair<double, double> >& coordinates, co
 
 int main() {
     Gps gps_module;
-    std::string api_key = "AIzaSyB8o-avNmKDniIrJkeWqnS9bbffEW9Taaw"; // Replace with your actual API key
+   // Use getenv to retrieve the API key from the environment variables
+    const char* env_api_key = std::getenv("API_KEY");
+
+    // Convert the C-style string to a std::string
+    std::string api_key = env_api_key ? std::string(env_api_key) : "";
+
+    // Check if the API key is empty and handle the case where it is not found
+    if (api_key.empty()) {
+        std::cerr << "API_KEY environment variable is not set." << std::endl;
+        // Handle the error appropriately
+        return 1; // Return a non-zero value to indicate failure
+    }
+
     std::vector<std::pair<double, double> >  all_coordinates;
     //std::vector<std::vector<std::pair<double, double> > > all_coordinates;
     // = {
