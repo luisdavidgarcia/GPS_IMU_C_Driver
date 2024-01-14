@@ -6,8 +6,11 @@ sudo apt update
 # Install C++ development tools
 sudo apt install g++ cmake
 
-# Install Matplot++ system-wide
-sudo make install
+# Install I2C libraries
+sudo apt install libi2c-dev
+
+# Install Eigen Library
+sudo apt install libeigen3-dev
 
 # Install JPEG and TIFF libraries
 sudo apt install libjpeg-dev libtiff5-dev
