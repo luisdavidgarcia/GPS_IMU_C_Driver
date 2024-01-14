@@ -57,6 +57,11 @@ extern "C" {
 #define GPS_I2C_ADDRESS 0x42
 #define GPS_I2C_BUS "/dev/i2c-1"
 
+#define BYTE_SHIFT_AMOUNT 8
+#define BYTE_MASK 0xFF
+#define HALF_WORD_SHIFT_AMOUNT 16
+#define THREE_BYTE_SHIFT_AMOUNT 24
+
 #define DATA_STREAM_REGISTER 0xFF
 
 #define AVAILABLE_BYTES_MSB 0xFD
@@ -68,6 +73,54 @@ extern "C" {
 #define DEFAULT_INTERVAL_MILLS 50
 #define DEFAULT_POLLING_STATE false
 
+#define VALID_DATE_FLAG 0x01
+#define VALID_TIME_FLAG 0x02
+#define FULLY_RESOLVED_FLAG 0x04
+#define VALID_MAG_FLAG 0x08
+
+/** SAM-M8Q Limits */
+#define MAX_MONTH 12
+#define MIN_MONTH 1
+#define MAX_DAY 31
+#define MIN_DAY 1
+#define MAX_HOUR 23
+#define MIN_HOUR 0
+#define MAX_MINUTE 59
+#define MIN_MINUTE 0
+#define MAX_SECOND 59
+#define MIN_SECOND 0
+#define MAX_LONGTITUTE 180.0
+#define MIN_LONGTITUTE -180.0
+#define MAX_LATITUDE 90.0
+#define MIN_LATITUDE -90.0
+#define MAX_DEGREE 360
+#define MIN_DEGREE 0
+#define MAX_MAG_DEGREE_ACCURACY 180
+
+#define MAX_DYNAMICS_G 4.0                   // Maximum dynamics in g
+#define MAX_ALTITUDE_METERS 50000            // Maximum altitude in meters
+#define MIN_ALTITUDE_METERS -50000             // Minimum altitude in meters
+#define MAX_VELOCITY_MPS 500                 // Maximum velocity in meters per second
+#define MIN_VELOCITY_MPS -500                // Minimum velocity in meters per second
+#define VELOCITY_ACCURACY_THRESHOLD_MPS 0.05 // Velocity accuracy in meters per second
+#define HEADING_ACCURACY_DEGREES 0.3         // Heading accuracy in degrees
+
+#define HORIZONTAL_ACCURACY_GPS_GLONASS_M 2.5 // Horizontal position accuracy for GPS & GLONASS in meters
+#define HORIZONTAL_ACCURACY_GALILEO_M 8.0     // Horizontal position accuracy for Galileo in meters (To be confirmed)
+
+#define MAX_NAVIGATION_UPDATE_RATE_HZ_GPS 10  // Max navigation update rate for GPS in Hz
+#define MAX_NAVIGATION_UPDATE_RATE_HZ_OTHER 18 // Max navigation update rate for GLONASS and Galileo in Hz
+
+#define COLD_START_TTFF_SECONDS 26    // Time-To-First-Fix for cold start in seconds
+#define HOT_START_TTFF_SECONDS 1      // Time-To-First-Fix for hot start in seconds
+#define AIDED_START_TTFF_SECONDS 2    // Time-To-First-Fix for aided starts in seconds
+
+#define SENSITIVITY_TRACK_NAV_DBM -165 // Sensitivity for tracking & navigation in dBm
+#define SENSITIVITY_REACQUISITION_DBM -158 // Sensitivity for reacquisition in dBm
+#define SENSITIVITY_COLD_HOT_START_DBM -146 // Sensitivity for cold and hot starts in dBm
+
+
+/** Error Handling */
 #define INVALID_YEAR_FLAG 0xBEEF
 #define INVALID_SYNC_FLAG 255
 
@@ -92,8 +145,9 @@ typedef struct {
     uint8_t numberOfSatellites;
 
     // Coordinates
-    int32_t longitude;           // Longitude (degrees * 1e7)
-    int32_t latitude;            // Latitude (degrees * 1e7)
+    //int32_t longitude;           // Longitude (degrees * 1e7)
+    double longitude;
+    double latitude;            // Latitude (degrees * 1e7)
     int32_t height;              // Height above ellipsoid (millimeters)
     int32_t heightMSL;                // Height above mean sea level (millimeters)
 
@@ -133,6 +187,7 @@ class Gps {
 		uint8_t navigationRate, uint8_t timeref);
 
 		int16_t i2_to_int(const uint8_t *little_endian_bytes);
+        // double bytes_to_double(const uint8_t *little_endian_bytes);
 		uint16_t u2_to_int(const uint8_t *little_endian_bytes);
 		int32_t i4_to_int(const uint8_t *little_endian_bytes);
 		uint32_t u4_to_int(const uint8_t *little_endian_bytes);

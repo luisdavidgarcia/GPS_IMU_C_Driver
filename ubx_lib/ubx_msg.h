@@ -79,8 +79,8 @@ CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 #define TIME_ONLY_FIX 5
 
 //******* DEBUG/HELPING CONSTANTS ********
-#define MAX_MESSAGE_LENGTH 1008
-#define MAX_PAYLOAD_LENGTH 1000
+#define MAX_MESSAGE_LENGTH 1000
+#define MAX_PAYLOAD_LENGTH 92
 
 typedef struct {
     uint8_t sync1;
