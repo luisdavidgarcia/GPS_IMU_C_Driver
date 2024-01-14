@@ -61,20 +61,6 @@ int main() {
     }
 
     std::vector<std::pair<double, double> >  all_coordinates;
-    //std::vector<std::vector<std::pair<double, double> > > all_coordinates;
-    // = {
-    //     {{40.748817, -73.985428}},
-    //     {{40.748817, -73.985428}, {40.750506, -73.993439}},
-    //     {{40.748817, -73.985428}, {40.750506, -73.993439}, {40.752726, -73.977229}}
-    // };
-
-    // for (auto &coordinates_list : all_coordinates) {
-    //     download_map(coordinates_list, api_key);
-    //     system("xdg-open map_image.png"); // Open the image using the default application
-    //     sleep(1);
-    //     system("pkill -f eom");
-    //     system("rm map_image.png");
-    // }
 
     while(1) {
         PVTData data = gps_module.GetPvt(true, 1);
@@ -90,9 +76,6 @@ int main() {
         }
 
         sleep(1);
-        // if(std::filesystem::exists("map_image.png") == true) {
-        //     system("rm map_image.png");
-        // }
     }
 
     return 0;
