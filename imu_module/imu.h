@@ -43,6 +43,9 @@ extern "C" {
 #include <time.h>
 #include <chrono>
 #include <thread>
+#include <cstdio>
+#include <fcntl.h>
+#include <unistd.h>
 
 /** IMU Constants */
 #define TIME_DELAY_MS 1000

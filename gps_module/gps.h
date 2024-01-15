@@ -41,11 +41,6 @@
 #include "../ubx_lib/ubx_msg.h"
 #include <fcntl.h>
 #include <unistd.h>
-extern "C" {
-	#include <i2c/smbus.h>
-	#include <linux/i2c-dev.h>
-	#include <linux/i2c.h>
-}
 #include <cstdint>
 #include <sys/ioctl.h>
 #include <string>
@@ -53,6 +48,12 @@ extern "C" {
 #include <thread>
 #include <vector>
 #include <cstring>
+#include <stdio.h>
+extern "C" {
+	#include <i2c/smbus.h>
+	#include <linux/i2c-dev.h>
+	#include <linux/i2c.h>
+}
 
 #define GPS_I2C_ADDRESS 0x42
 #define GPS_I2C_BUS "/dev/i2c-1"

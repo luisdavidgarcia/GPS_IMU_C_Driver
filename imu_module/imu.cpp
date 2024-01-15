@@ -1,7 +1,4 @@
 #include "imu.h"
-#include <cstdio>
-#include <fcntl.h>
-#include <unistd.h>
 
 /**
  * @brief   Constructor for the Imu class.

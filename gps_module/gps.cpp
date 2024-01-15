@@ -397,7 +397,6 @@ uint16_t Gps::u2_to_int(const uint8_t *little_endian_bytes) {
 //     return result * 1e-07;
 // }
 
-
 /**
  * @brief   Convert a little-endian byte array to a signed 32-bit integer.
  *
@@ -423,4 +422,3 @@ uint32_t Gps::u4_to_int(const uint8_t *little_endian_bytes) {
 		((uint32_t)little_endian_bytes[1] << BYTE_SHIFT_AMOUNT) |
 		(uint32_t)little_endian_bytes[0]);
 }
-
