@@ -152,19 +152,19 @@ void ekfNavINS::ekf_update(uint64_t time) {
 
 void ekfNavINS::imuUpdateEKF(uint64_t time, imuData imu) {
   {
-    std::unique_lock lock(shMutex);
+//    std::unique_lock lock(shMutex);
     imuDat = imu;
   }
   ekf_update(time);
 }
 
 void ekfNavINS::gpsCoordinateUpdateEKF(gpsCoordinate coor) {
-  std::unique_lock lock(shMutex);
+//  std::unique_lock lock(shMutex);
   gpsCoor = coor;
 }
 
 void ekfNavINS::gpsVelocityUpdateEKF(gpsVelocity vel) {
-  std::unique_lock lock(shMutex);
+//  std::unique_lock lock(shMutex);
   gpsVel = vel;
 }
 

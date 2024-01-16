@@ -29,8 +29,8 @@ Original Author: Adhika Lie
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <tuple>
-#include <mutex>
-#include <shared_mutex>
+//#include <mutex>
+//#include <shared_mutex>
 
 constexpr float SIG_W_A = 0.05f;
 // Std dev of gyro output noise (rad/s)
@@ -147,7 +147,7 @@ class ekfNavINS {
     gpsCoordinate gpsCoor;
     gpsVelocity   gpsVel;
     imuData       imuDat;
-    mutable std::shared_mutex shMutex;
+//    mutable std::shared_mutex shMutex;
     // initialized
     bool initialized_ = false;
     // timing
