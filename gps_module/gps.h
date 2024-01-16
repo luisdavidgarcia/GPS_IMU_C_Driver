@@ -48,7 +48,9 @@
 #include <thread>
 #include <vector>
 #include <cstring>
-#include <stdio.h>
+#include <cstdio>
+#include <unistd.h>
+#include <vector>
 extern "C" {
 	#include <i2c/smbus.h>
 	#include <linux/i2c-dev.h>

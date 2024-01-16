@@ -1,7 +1,4 @@
 #include "gps.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <vector>
 
 /**
  * @brief   Constructor for the Gps class.
