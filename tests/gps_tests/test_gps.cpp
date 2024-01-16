@@ -3,6 +3,8 @@
 #include <csignal>
 #include <iostream>
 
+#define CURRENT_YEAR 2024
+
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
 
@@ -25,7 +27,7 @@ int main(void) {
 
     PVTData data = gps_module.GetPvt(true, 1);
     printf("Year: %d\n", data.year);
-    if (data.year == 2023 && data.numberOfSatellites > 0) {
+    if (data.year != CURRENT_YEAR && data.numberOfSatellites > 0) {
       /* Use these times to plot on x-axis */
       printf("Year: %d\n", data.year);
       printf("Month: %d\n", data.month);
