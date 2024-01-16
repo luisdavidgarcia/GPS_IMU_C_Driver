@@ -242,10 +242,10 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
         }
 
         uint8_t valid_flag = message.payload[11];
-        // if (valid_flag == 0) {
-        //     pvtData.year = INVALID_YEAR_FLAG;
-        //     return this->pvtData;
-        // }
+         if (valid_flag == 0) {
+             pvtData.year = INVALID_YEAR_FLAG;
+             return this->pvtData;
+         }
 
         // Extract and clarify flags
         pvtData.validDateFlag = (valid_flag & VALID_DATE_FLAG) == VALID_DATE_FLAG ? 1 : 0;
