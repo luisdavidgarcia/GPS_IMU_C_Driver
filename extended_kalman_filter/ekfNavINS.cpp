@@ -142,7 +142,7 @@ void ekfNavINS::ekf_update( uint64_t time/*, unsigned long TOW*/, double vn,doub
 }
 
 void ekfNavINS::ekf_update(uint64_t time) {
-  std::shared_lock lock(shMutex);
+  //std::shared_lock lock(shMutex);
   ekf_update(time, /*0,*/ gpsVel.vN, gpsVel.vE, gpsVel.vD,
                       gpsCoor.lat, gpsCoor.lon, gpsCoor.alt,
                       imuDat.gyroX, imuDat.gyroY, imuDat.gyroZ,
@@ -152,19 +152,19 @@ void ekfNavINS::ekf_update(uint64_t time) {
 
 void ekfNavINS::imuUpdateEKF(uint64_t time, imuData imu) {
   {
-    std::unique_lock lock(shMutex);
+//    std::unique_lock lock(shMutex);
     imuDat = imu;
   }
   ekf_update(time);
 }
 
 void ekfNavINS::gpsCoordinateUpdateEKF(gpsCoordinate coor) {
-  std::unique_lock lock(shMutex);
+//  std::unique_lock lock(shMutex);
   gpsCoor = coor;
 }
 
 void ekfNavINS::gpsVelocityUpdateEKF(gpsVelocity vel) {
-  std::unique_lock lock(shMutex);
+//  std::unique_lock lock(shMutex);
   gpsVel = vel;
 }
 
