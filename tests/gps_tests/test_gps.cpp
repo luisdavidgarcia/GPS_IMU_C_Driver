@@ -25,8 +25,7 @@ int main(void) {
 
     PVTData data = gps_module.GetPvt(true, 1);
     printf("Year: %d\n", data.year);
-    printf("Satellites: %d\n", data.numberOfSatellites);
-    if (data.year == 2023 & data.numberOfSatellites > 0) {
+    if (data.year == 2023 && data.numberOfSatellites > 0) {
       /* Use these times to plot on x-axis */
       printf("Year: %d\n", data.year);
       printf("Month: %d\n", data.month);
