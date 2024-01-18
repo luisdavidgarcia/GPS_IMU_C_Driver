@@ -260,15 +260,15 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract longitude and latitude in degrees
         pvtData.longitude = i4_to_int(&message.payload[24])* 1e-07;
-        if ((pvtData.longitude < MIN_LONGTITUTE) || (pvtData.longitude > MAX_LONGTITUTE)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+//        if ((pvtData.longitude < MIN_LONGTITUTE) || (pvtData.longitude > MAX_LONGTITUTE)) {
+//            pvtData.year = INVALID_YEAR_FLAG;
+//            return this->pvtData;
+//        }
         pvtData.latitude = i4_to_int(&message.payload[28]) * 1e-07;
-        if ((pvtData.latitude < MIN_LATITUDE) || (pvtData.latitude > MAX_LATITUDE)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+//        if ((pvtData.latitude < MIN_LATITUDE) || (pvtData.latitude > MAX_LATITUDE)) {
+//            pvtData.year = INVALID_YEAR_FLAG;
+//            return this->pvtData;
+//        }
 
         // Extract height data
         pvtData.height = i4_to_int(&message.payload[32]);
@@ -297,21 +297,21 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
         // Extract North East Down velocity in mm/s
         pvtData.velocityNorth = i4_to_int(&message.payload[48]);
-        if ((pvtData.velocityNorth > MAX_VELOCITY_MPS) || (pvtData.velocityNorth < MIN_VELOCITY_MPS)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+//        if ((pvtData.velocityNorth > MAX_VELOCITY_MPS) || (pvtData.velocityNorth < MIN_VELOCITY_MPS)) {
+//            pvtData.year = INVALID_YEAR_FLAG;
+//            return this->pvtData;
+//        }
         pvtData.velocityEast = i4_to_int(&message.payload[52]);
-        if ((pvtData.velocityEast > MAX_VELOCITY_MPS) || (pvtData.velocityEast < MIN_VELOCITY_MPS)) {
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+//        if ((pvtData.velocityEast > MAX_VELOCITY_MPS) || (pvtData.velocityEast < MIN_VELOCITY_MPS)) {
+//            pvtData.year = INVALID_YEAR_FLAG;
+//            return this->pvtData;
+//        }
         pvtData.velocityDown = i4_to_int(&message.payload[56]);
-        if ((pvtData.velocityDown > MAX_VELOCITY_MPS) || (pvtData.velocityDown < MIN_VELOCITY_MPS)) {
-            printf("Bad Read Velocity Down: %d\n", pvtData.velocityDown);
-            pvtData.year = INVALID_YEAR_FLAG;
-            return this->pvtData;
-        }
+//        if ((pvtData.velocityDown > MAX_VELOCITY_MPS) || (pvtData.velocityDown < MIN_VELOCITY_MPS)) {
+//            printf("Bad Read Velocity Down: %d\n", pvtData.velocityDown);
+//            pvtData.year = INVALID_YEAR_FLAG;
+//            return this->pvtData;
+//        }
 
         // Extract ground speed in mm/s and motion heading in degrees
         pvtData.groundSpeed = i4_to_int(&message.payload[60]);
