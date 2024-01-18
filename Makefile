@@ -9,7 +9,7 @@ gps_test:
 	g++ gps_module/gps.cpp ubx_lib/ubx_msg.cpp tests/gps_tests/test_gps.cpp -o test_gps $(FLAGS)
 
 kalman_test:
-	g++ -std=c++14 gps_module/gps.cpp ubx_lib/ubx_msg.cpp tests/kalman_tests/test_kalman.cpp -o test_ekf ekfNavINS.o $(FLAGS) -I /usr/include/eigen3
+	g++ -std=c++14 imu_module/imu.cpp gps_module/gps.cpp ubx_lib/ubx_msg.cpp tests/kalman_tests/test_kalman.cpp -o test_ekf ekfNavINS.o $(FLAGS) -I /usr/include/eigen3
 
 
 graphing:
