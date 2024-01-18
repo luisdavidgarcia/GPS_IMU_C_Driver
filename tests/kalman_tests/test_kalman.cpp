@@ -74,18 +74,18 @@ int main(void) {
             hz = mag_data[2];
 
             std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
-            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
-                           gps_data.velocityDown*1e-3, gps_data.latitude*1e-7*DEG_TO_RAD,
-                           gps_data.longitude*1e-7*DEG_TO_RAD, (gps_data.height*1e-3),
-                           gx*DEG_TO_RAD, gy*DEG_TO_RAD, gz*DEG_TO_RAD,
-                           ax, ay, az, hx, hy, hz);
-
-            printf("Latitude  : %2.7f %2.7f\n", gps_data.latitude*1e-7, ekf.getLatitude_rad()*RAD_TO_DEG);
-            printf("Longitude : %2.7f %2.7f\n", gps_data.longitude*1e-7, ekf.getLongitude_rad()*RAD_TO_DEG);
-            printf("Altitude  : %2.3f %2.3f\n", gps_data.height*1e-3, ekf.getAltitude_m());
-            printf("Speed (N) : %2.3f %2.3f\n", gps_data.velocityNorth*1e-3, ekf.getVelNorth_ms());
-            printf("Speed (E) : %2.3f %2.3f\n", gps_data.velocityEast*1e-3, ekf.getVelEast_ms());
-            printf("Speed (D) : %2.3f %2.3f\n", gps_data.velocityDown*1e-3, ekf.getVelDown_ms());
+//            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
+//                           gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,
+//                           gps_data.longitude*DEG_TO_RAD, (gps_data.height*1e-3),
+//                           gx*DEG_TO_RAD, gy*DEG_TO_RAD, gz*DEG_TO_RAD,
+//                           ax, ay, az, hx, hy, hz);
+//
+//            printf("Latitude  : %2.7f %2.7f\n", gps_data.latitude, ekf.getLatitude_rad()*RAD_TO_DEG);
+//            printf("Longitude : %2.7f %2.7f\n", gps_data.longitude, ekf.getLongitude_rad()*RAD_TO_DEG);
+//            printf("Altitude  : %2.3f %2.3f\n", gps_data.height*1e-3, ekf.getAltitude_m());
+//            printf("Speed (N) : %2.3f %2.3f\n", gps_data.velocityNorth*1e-3, ekf.getVelNorth_ms());
+//            printf("Speed (E) : %2.3f %2.3f\n", gps_data.velocityEast*1e-3, ekf.getVelEast_ms());
+//            printf("Speed (D) : %2.3f %2.3f\n", gps_data.velocityDown*1e-3, ekf.getVelDown_ms());
             printf("Roll 	  : %2.3f %2.3f\n", roll, ekf.getRoll_rad());
             printf("Pitch     : %2.3f %2.3f\n", pitch, ekf.getPitch_rad());
             printf("Yaw       : %2.3f %2.3f\n", yaw, ekf.getHeading_rad());
