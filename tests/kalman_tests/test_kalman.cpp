@@ -30,8 +30,9 @@ int main(void) {
     float ax, ay, az, gx, gy, gz, hx, hy, hz, pitch, roll, yaw;
 
     while(!exit_flag) {
-        //PVTData gps_data = gps_module.GetPvt(true, 1);
-        //if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
+        PVTData gps_data = gps_module.GetPvt(true, 1);
+        imu_module.readSensorData();
+        if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
             const int16_t *accel_data = imu_module.getAccelerometerData();
             if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
                 printf("Accelerometer data is invalid.\n");
@@ -72,27 +73,27 @@ int main(void) {
             hy = mag_data[1];
             hz = mag_data[2];
 
-//            std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
-//            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
-//                           gps_data.velocityDown*1e-3, gps_data.latitude*1e-7*DEG_TO_RAD,
-//                           gps_data.longitude*1e-7*DEG_TO_RAD, (gps_data.height*1e-3),
-//                           gx*DEG_TO_RAD, gy*DEG_TO_RAD, gz*DEG_TO_RAD,
-//                           ax, ay, az, hx, hy, hz);
-//
-//            printf("Latitude  : %2.7f %2.7f\n", gps_data.latitude*1e-7, ekf.getLatitude_rad()*RAD_TO_DEG);
-//            printf("Longitude : %2.7f %2.7f\n", gps_data.longitude*1e-7, ekf.getLongitude_rad()*RAD_TO_DEG);
-//            printf("Altitude  : %2.3f %2.3f\n", gps_data.height*1e-3, ekf.getAltitude_m());
-//            printf("Speed (N) : %2.3f %2.3f\n", gps_data.velocityNorth*1e-3, ekf.getVelNorth_ms());
-//            printf("Speed (E) : %2.3f %2.3f\n", gps_data.velocityEast*1e-3, ekf.getVelEast_ms());
-//            printf("Speed (D) : %2.3f %2.3f\n", gps_data.velocityDown*1e-3, ekf.getVelDown_ms());
-//            printf("Roll 	  : %2.3f %2.3f\n", roll, ekf.getRoll_rad());
-//            printf("Pitch     : %2.3f %2.3f\n", pitch, ekf.getPitch_rad());
-//            printf("Yaw       : %2.3f %2.3f\n", yaw, ekf.getHeading_rad());
+            std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
+            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
+                           gps_data.velocityDown*1e-3, gps_data.latitude*1e-7*DEG_TO_RAD,
+                           gps_data.longitude*1e-7*DEG_TO_RAD, (gps_data.height*1e-3),
+                           gx*DEG_TO_RAD, gy*DEG_TO_RAD, gz*DEG_TO_RAD,
+                           ax, ay, az, hx, hy, hz);
+
+            printf("Latitude  : %2.7f %2.7f\n", gps_data.latitude*1e-7, ekf.getLatitude_rad()*RAD_TO_DEG);
+            printf("Longitude : %2.7f %2.7f\n", gps_data.longitude*1e-7, ekf.getLongitude_rad()*RAD_TO_DEG);
+            printf("Altitude  : %2.3f %2.3f\n", gps_data.height*1e-3, ekf.getAltitude_m());
+            printf("Speed (N) : %2.3f %2.3f\n", gps_data.velocityNorth*1e-3, ekf.getVelNorth_ms());
+            printf("Speed (E) : %2.3f %2.3f\n", gps_data.velocityEast*1e-3, ekf.getVelEast_ms());
+            printf("Speed (D) : %2.3f %2.3f\n", gps_data.velocityDown*1e-3, ekf.getVelDown_ms());
+            printf("Roll 	  : %2.3f %2.3f\n", roll, ekf.getRoll_rad());
+            printf("Pitch     : %2.3f %2.3f\n", pitch, ekf.getPitch_rad());
+            printf("Yaw       : %2.3f %2.3f\n", yaw, ekf.getHeading_rad());
 
             printf("\n---------------------\n");
-//        } else {
-//            printf("No GPS data\n");
-//        }
+        } else {
+            printf("No GPS data\n");
+        }
         sleep(1);
     }
 
