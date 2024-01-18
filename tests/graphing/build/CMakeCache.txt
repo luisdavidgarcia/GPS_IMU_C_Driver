@@ -148,7 +148,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=MyProject
+CMAKE_PROJECT_NAME:STATIC=SensorGraphing
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -223,6 +223,27 @@ MyProject_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 MyProject_SOURCE_DIR:STATIC=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing
+
+//Path to a file.
+PYTHON_INCLUDE_DIR:PATH=/usr/include/python3.11
+
+//Path to a library.
+PYTHON_LIBRARY:FILEPATH=/usr/lib/aarch64-linux-gnu/libpython3.11.so
+
+//Path to a library.
+PYTHON_LIBRARY_DEBUG:FILEPATH=PYTHON_LIBRARY_DEBUG-NOTFOUND
+
+//Path to a library.
+PYTHON_LIBRARY_RELEASE:FILEPATH=PYTHON_LIBRARY_RELEASE-NOTFOUND
+
+//Value Computed by CMake
+SensorGraphing_BINARY_DIR:STATIC=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build
+
+//Value Computed by CMake
+SensorGraphing_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+SensorGraphing_SOURCE_DIR:STATIC=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing
 
 
 ########################
@@ -372,6 +393,16 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding PythonLibs
+FIND_PACKAGE_MESSAGE_DETAILS_PythonLibs:INTERNAL=[/usr/lib/aarch64-linux-gnu/libpython3.11.so][/usr/include/python3.11][v3.11.2()]
+//ADVANCED property for variable: PYTHON_INCLUDE_DIR
+PYTHON_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PYTHON_LIBRARY
+PYTHON_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PYTHON_LIBRARY_DEBUG
+PYTHON_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PYTHON_LIBRARY_RELEASE
+PYTHON_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 

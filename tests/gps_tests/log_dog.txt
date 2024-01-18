@@ -1,0 +1,92 @@
+[2015/10/18] 0h:2m:21s
+Valid Time: False
+Valid Date: False
+Fully Resolved: False
+Valid Magnetic Declination: False
+GNSS Fix: no fix
+Fix Status Flags: [0, 4]
+Number of Satellites: 0
+Latitude: 0.0
+Longitude: 0.0
+Ellipsoid Height: 0
+MSL Height: -17000
+Horizontal Accuracy: 4294967295
+Vertical Accuracy: 3750000896
+NED Velocity: (0, 0, 0)
+Ground Speed: 0
+Vehicle Heading: 0.0
+Motion Heading: 0.0
+Speed Accuracy: 20000
+Heading Accuracy: 180.00000000000003
+Magnetic Declination: 0.0
+Magnetic Declination Accuracy: 0.0
+
+[2015/10/18] 0h:2m:22s
+Valid Time: False
+Valid Date: False
+Fully Resolved: False
+Valid Magnetic Declination: False
+GNSS Fix: no fix
+Fix Status Flags: [0, 4]
+Number of Satellites: 0
+Latitude: 0.0
+Longitude: 0.0
+Ellipsoid Height: 0
+MSL Height: -17000
+Horizontal Accuracy: 4294967295
+Vertical Accuracy: 3750000896
+NED Velocity: (0, 0, 0)
+Ground Speed: 0
+Vehicle Heading: 0.0
+Motion Heading: 0.0
+Speed Accuracy: 20000
+Heading Accuracy: 180.00000000000003
+Magnetic Declination: 0.0
+Magnetic Declination Accuracy: 0.0
+
+[2015/10/18] 0h:2m:23s
+Valid Time: False
+Valid Date: False
+Fully Resolved: False
+Valid Magnetic Declination: False
+GNSS Fix: no fix
+Fix Status Flags: [0, 4]
+Number of Satellites: 0
+Latitude: 0.0
+Longitude: 0.0
+Ellipsoid Height: 0
+MSL Height: -17000
+Horizontal Accuracy: 4294967295
+Vertical Accuracy: 3750000896
+NED Velocity: (8388608, 0, 0)
+Ground Speed: 0
+Vehicle Heading: 0.0
+Motion Heading: 0.0
+Speed Accuracy: 20000
+Heading Accuracy: 180.00000000000003
+Magnetic Declination: 0.0
+Magnetic Declination Accuracy: 0.0
+
+[2015/10/18] 0h:2m:24s
+Valid Time: False
+Valid Date: False
+Fully Resolved: False
+Valid Magnetic Declination: False
+GNSS Fix: no fix
+Fix Status Flags: [0, 4]
+Number of Satellites: 0
+Latitude: 0.0
+Longitude: 0.0
+Ellipsoid Height: 0
+MSL Height: -17000
+Horizontal Accuracy: 4294967295
+Vertical Accuracy: 3750000896
+NED Velocity: (0, 0, 0)
+Ground Speed: 0
+Vehicle Heading: 0.0
+Motion Heading: 0.0
+Speed Accuracy: 20000
+Heading Accuracy: 180.00000000000003
+Magnetic Declination: 0.0
+Magnetic Declination Accuracy: 0.0
+
