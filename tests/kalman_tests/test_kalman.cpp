@@ -39,9 +39,9 @@ int main(void) {
                 printf("Accelerometer data is invalid.\n");
                 continue;
             }
-//            else {
-//                printf("Acceleration (m/s^2): (X: %d, Y: %d, Z: %d)\n", accel_data[0], accel_data[1], accel_data[2]);
-//            }
+            else {
+                printf("Acceleration (m/s^2): (X: %d, Y: %d, Z: %d)\n", accel_data[0], accel_data[1], accel_data[2]);
+            }
 
             ax = accel_data[0];
             ay = accel_data[1];
@@ -52,9 +52,9 @@ int main(void) {
                 printf("Gyroscope data is invalid.\n");
                 continue;
             }
-//            else {
-//                printf("Gyroscope (radians/s): (X: %d, Y: %d, Z: %d)\n", gyro_data[0], gyro_data[1], gyro_data[2]);
-//            }
+            else {
+                printf("Gyroscope (radians/s): (X: %d, Y: %d, Z: %d)\n", gyro_data[0], gyro_data[1], gyro_data[2]);
+            }
 
             gx = gyro_data[0];
             gy = gyro_data[1];
@@ -64,9 +64,9 @@ int main(void) {
                 printf("Magnetometer data is invalid.\n");
                 continue;
             }
-//            else {
-//                printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", mag_data[0], mag_data[1], mag_data[2]);
-//            }
+            else {
+                printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", mag_data[0], mag_data[1], mag_data[2]);
+            }
 
             hx = mag_data[0];
             hy = mag_data[1];
