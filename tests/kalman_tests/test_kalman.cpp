@@ -30,8 +30,8 @@ int main(void) {
     float ax, ay, az, gx, gy, gz, hx, hy, hz, pitch, roll, yaw;
 
     while(!exit_flag) {
-        PVTData gps_data = gps_module.GetPvt(true, 1);
-        if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
+        //PVTData gps_data = gps_module.GetPvt(true, 1);
+        //if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
             const int16_t *accel_data = imu_module.getAccelerometerData();
             if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
                 printf("Accelerometer data is invalid.\n");
@@ -90,9 +90,9 @@ int main(void) {
 //            printf("Yaw       : %2.3f %2.3f\n", yaw, ekf.getHeading_rad());
 
             printf("\n---------------------\n");
-        } else {
-            printf("No GPS data\n");
-        }
+//        } else {
+//            printf("No GPS data\n");
+//        }
         sleep(1);
     }
 
