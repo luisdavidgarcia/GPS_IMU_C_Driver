@@ -180,12 +180,9 @@ void ekfNavINS::updateINS() {
 }
 
 std::tuple<float,float,float> ekfNavINS::getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz) {
-    printf("\nIn here mate--------------------\n");
   // initial attitude and heading
   theta = asinf(ax/G);
-  printf("theta: %f \n", theta);
   phi = -asinf(ay/(G*cosf(theta)));
-  printf("phi: %f \n", phi);
   // magnetic heading correction due to roll and pitch angle
   Bxc = hx*cosf(theta) + (hy*sinf(phi) + hz*cosf(phi))*sinf(theta);
   Byc = hy*cosf(phi) - hz*sinf(phi);
