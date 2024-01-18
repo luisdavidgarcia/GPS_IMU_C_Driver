@@ -43,11 +43,13 @@ int main(void) {
             }
 
             ax = accel_data[0];
+            ax = ax / 2; // the 2 is because of 2g stting for iMU specific so to normalize divide
             ay = accel_data[1];
-            ay = ay * -1;
+            ay = ay * -1 / 2; // the 2 is because of 2g setting for IMU specific so normalize
             az = accel_data[2];
+            az = az / 2;
 
-            printf("Ax og: %f, Ax norm: %f\n", ax, ax/9.87);
+            printf("Az og: %f, Az norm: %f\n", az, az/9.87);
 
             const int16_t *gyro_data = imu_module.getGyroscopeData();
             if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
