@@ -45,7 +45,7 @@ int main(void) {
             ax = accel_data[0];
             ax = ax / 2; // the 2 is because of 2g stting for iMU specific so to normalize divide
             ay = accel_data[1];
-            ay = ay * -1 / 2; // the 2 is because of 2g setting for IMU specific so normalize
+            ay = ay / 2; // the 2 is because of 2g setting for IMU specific so normalize
             az = accel_data[2];
             az = az / 2;
 
