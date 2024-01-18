@@ -180,6 +180,7 @@ void ekfNavINS::updateINS() {
 }
 
 std::tuple<float,float,float> ekfNavINS::getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz) {
+    printf("\nIn here mate--------------------\n");
   // initial attitude and heading
   theta = asinf(ax/G);
   printf("theta: %f \n", theta);
