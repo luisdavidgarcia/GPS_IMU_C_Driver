@@ -45,7 +45,6 @@ int main(void) {
         ay = ay * -1;
         az = accel_data[2];
 
-
         const int16_t *gyro_data = imu_module.getGyroscopeData();
         if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
             printf("Gyroscope data is invalid.\n");
@@ -61,6 +60,12 @@ int main(void) {
         } else {
             printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", mag_data[0], mag_data[1], mag_data[2]);
         }
+
+        hx = mag_data[0];
+        hy = mag_data[1];
+        hz = mag_data[2];
+
+        std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
 
 //        PVTData data = gps_module.GetPvt(true, 1);
 //        if (data.year == CURRENT_YEAR && data.numberOfSatellites > 0) {
