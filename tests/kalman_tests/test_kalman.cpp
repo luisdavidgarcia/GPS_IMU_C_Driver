@@ -47,6 +47,8 @@ int main(void) {
             ay = ay * -1;
             az = accel_data[2];
 
+            printf("Ax og: %f, Ax norm: %f\n", ax, ax/9.87);
+
             const int16_t *gyro_data = imu_module.getGyroscopeData();
             if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
                 printf("Gyroscope data is invalid.\n");
