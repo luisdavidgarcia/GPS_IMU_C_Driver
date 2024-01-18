@@ -74,6 +74,7 @@ int main(void) {
             hz = mag_data[2];
 
             std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
+            printf("**********************Something\n");
 //            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
 //                           gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,
 //                           gps_data.longitude*DEG_TO_RAD, (gps_data.height*1e-3),
