@@ -52,6 +52,7 @@ extern "C" {
 #define ACCEL_MAG_DATA_SIZE 12
 #define PI 3.14159265359F
 #define DEG_TO_RAD PI / 180.0
+#define RAD_TO_DEG 180.0 / PI
 #define SENSORS_GRAVITY_STD 9.81F
 #define GYRO_MAX_THRESHOLD 2200.0 // rad/s, adjust as needed
 #define ACCEL_MAX_THRESHOLD 17.6 // m/s², adjust as needed
