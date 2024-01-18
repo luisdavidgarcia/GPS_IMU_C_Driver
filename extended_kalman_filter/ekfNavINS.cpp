@@ -23,6 +23,7 @@ Original Author: Adhika Lie
 */
 
 #include "ekfNavINS.h"
+#include "stdio.h"
 
 void ekfNavINS::ekf_init(uint64_t time, double vn,double ve,double vd,double lat,double lon,double alt,float p,float q,float r,float ax,float ay,float az,float hx,float hy, float hz) {
   // grab initial gyro values for biases
