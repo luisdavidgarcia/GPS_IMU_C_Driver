@@ -31,8 +31,7 @@ int main(void) {
 
     while(!exit_flag) {
         PVTData gps_data = gps_module.GetPvt(true, 1);
-        if (data.year == CURRENT_YEAR && data.numberOfSatellites > 0) {
-
+        if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
             const int16_t *accel_data = imu_module.getAccelerometerData();
             if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
                 printf("Accelerometer data is invalid.\n");
