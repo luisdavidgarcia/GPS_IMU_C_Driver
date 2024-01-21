@@ -21,42 +21,51 @@
 # 	rm -rf test_imu test_gps
 
 CXX=g++
-CXXFLAGS=-ggdb -I /usr/include/eigen3
+CXXFLAGS=-ggdb -I /usr/include/eigen3 -I include/
 LDFLAGS=-li2c
 LIBS=-lmatplot -lcurl
-GPS_DEPS=ubx_lib/ubx_msg.cpp
 OBJ_DIR=obj
 CROSS_COMPILE_CXX=aarch64-linux-gnu-g++
 CROSS_COMPILE_FLAGS=-std=c++14 -I /usr/include/eigen3
 
-all: imu_test gps_test kalman_test
+# Source files
+IMU_SRC=src/imu.cpp
+GPS_SRC=src/gps.cpp
+UBX_SRC=src/ubx_msg.cpp
+EKF_SRC=src/ekfNavINS.cpp
 
-$(OBJ_DIR)/%.o: %.cpp
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
+# Object files
+IMU_OBJ=$(OBJ_DIR)/imu.o
+GPS_OBJ=$(OBJ_DIR)/gps.o
+UBX_OBJ=$(OBJ_DIR)/ubx_msg.o
+EKF_OBJ=$(OBJ_DIR)/ekfNavINS.o
 
-$(OBJ_DIR)/imu.o: imu_module/imu.cpp
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
+all: imu_test gps_test kalman_test graphing gps_map_test
 
-$(OBJ_DIR)/gps.o: gps_module/gps.cpp $(GPS_DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
+# Pattern rule for object files
+$(OBJ_DIR)/%.o: src/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-ekfNavINS.o: extended_kalman_filter/ekfNavINS.cpp
-	$(CROSS_COMPILE_CXX) $(CROSS_COMPILE_FLAGS) -c extended_kalman_filter/ekfNavINS.cpp -o ekfNavINS.o
+# Specific rule for cross-compiled object
+$(EKF_OBJ): $(EKF_SRC)
+	@mkdir -p $(@D)
+	$(CROSS_COMPILE_CXX) $(CROSS_COMPILE_FLAGS) -c $< -o $@
 
-imu_test: $(OBJ_DIR)/imu.o
-	$(CXX) $(OBJ_DIR)/imu.o tests/imu_tests/test_imu.cpp -o test_imu $(CXXFLAGS) $(LDFLAGS)
+imu_test: $(IMU_OBJ)
+	$(CXX) $^ tests/imu_tests/test_imu.cpp -o test_imu $(CXXFLAGS) $(LDFLAGS)
 
-gps_test: $(OBJ_DIR)/gps.o
-	$(CXX) $(OBJ_DIR)/gps.o $(GPS_DEPS) tests/gps_tests/test_gps.cpp -o test_gps $(CXXFLAGS) $(LDFLAGS)
+gps_test: $(GPS_OBJ) $(UBX_OBJ)
+	$(CXX) $^ tests/gps_tests/test_gps.cpp -o test_gps $(CXXFLAGS) $(LDFLAGS)
 
-kalman_test: $(OBJ_DIR)/imu.o $(OBJ_DIR)/gps.o ekfNavINS.o
-	$(CXX) $(OBJ_DIR)/imu.o $(OBJ_DIR)/gps.o ekfNavINS.o tests/kalman_tests/test_kalman.cpp -o test_ekf $(CXXFLAGS) $(LDFLAGS)
+kalman_test: $(IMU_OBJ) $(GPS_OBJ) $(UBX_OBJ) $(EKF_OBJ)
+	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o test_ekf $(CXXFLAGS) $(LDFLAGS)
 
 graphing:
-	$(CXX) -std=c++17 basic.cpp -o basic $(CXXFLAGS) $(LIBS)
+	$(CXX) -std=c++17 src/basic.cpp -o basic $(CXXFLAGS) $(LIBS)
 
-gps_map_test: $(OBJ_DIR)/gps.o
-	$(CXX) $(OBJ_DIR)/gps.o $(GPS_DEPS) tests/gps_tests/gps_map.cpp -o gps_map_test $(CXXFLAGS) $(LDFLAGS) $(LIBS)
+gps_map_test: $(GPS_OBJ) $(UBX_OBJ)
+	$(CXX) $^ tests/gps_tests/gps_map.cpp -o gps_map_test $(CXXFLAGS) $(LDFLAGS) $(LIBS)
 
 clean:
-	rm -rf $(OBJ_DIR)/*.o test_imu test_gps test_ekf basic gps_map_test ekfNavINS.o
+	rm -rf $(OBJ_DIR)/*.o test_imu test_gps test_ekf basic gps_map_test
