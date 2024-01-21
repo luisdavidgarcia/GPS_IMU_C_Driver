@@ -7,7 +7,7 @@
 
 #define CURRENT_YEAR 2024
 // Assuming FS=0 for ±2g with a sensitivity of 16384 LSB/g
-const float ACCEL_SENSITIVITY = 16384.0;
+const float ACCEL_SENSITIVITY = 16.384;
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
@@ -50,13 +50,12 @@ int main(void) {
             az = static_cast<float>(accel_data[2]) / ACCEL_SENSITIVITY;
 
             // Convert acceleration to m/s^2 if necessary
-            const float GRAVITY = 9.807; // Standard gravity
-            ax *= GRAVITY;
-            ay *= GRAVITY;
-            az *= GRAVITY;
+            // const float GRAVITY = 9.807; // Standard gravity
+            // ax *= GRAVITY;
+            // ay *= GRAVITY;
+            // az *= GRAVITY;
 
-
-            printf("Az og: %f, Az norm: %f\n", az, az/9.87);
+            printf("Acceleration (m/s^2): (X: %.2f, Y: %.2f, Z: %.2f)\n", ax, ay, az);
 
             const int16_t *gyro_data = imu_module.getGyroscopeData();
             if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
