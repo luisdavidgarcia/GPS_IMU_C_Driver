@@ -1,4 +1,4 @@
-#include "../../imu_module/imu.h"
+#include "../../include/imu.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
