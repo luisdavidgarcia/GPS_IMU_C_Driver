@@ -1,4 +1,4 @@
-#include "imu.h"
+#include "../include/imu.h"
 
 /**
  * @brief   Constructor for the Imu class.

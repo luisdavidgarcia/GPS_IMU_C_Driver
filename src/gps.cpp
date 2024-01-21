@@ -1,4 +1,4 @@
-#include "gps.h"
+#include "../include/gps.h"
 
 /**
  * @brief   Constructor for the Gps class.
