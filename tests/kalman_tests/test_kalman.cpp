@@ -46,9 +46,9 @@ int main(void) {
             }
 
             // Normalize acceleration values to g's
-            ax = static_cast<float>(accel_data[0]) / ACCEL_EFFECTIVE_SENSITIVITY;
-            ay = static_cast<float>(accel_data[1]) / ACCEL_EFFECTIVE_SENSITIVITY;
-            az = static_cast<float>(accel_data[2]) / ACCEL_EFFECTIVE_SENSITIVITY;
+            ax = 2 * static_cast<float>(accel_data[0]) / ACCEL_EFFECTIVE_SENSITIVITY;
+            ay = 2 * static_cast<float>(accel_data[1]) / ACCEL_EFFECTIVE_SENSITIVITY;
+            az = 2 * static_cast<float>(accel_data[2]) / ACCEL_EFFECTIVE_SENSITIVITY;
 
         // Convert acceleration to m/s^2 if necessary
         const float GRAVITY = 9.807; // Standard gravity
