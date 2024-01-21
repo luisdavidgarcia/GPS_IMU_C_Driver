@@ -1,4 +1,4 @@
-#include "../../include/gps.h"
+#include "gps.h"
 #include <stdio.h>
 #include <csignal>
 #include <iostream>

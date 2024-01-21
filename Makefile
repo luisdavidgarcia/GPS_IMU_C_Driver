@@ -1,5 +1,6 @@
 CXX=g++
-CXXFLAGS=-ggdb -I /usr/include/eigen3 -I include/
+CXX1FLAGS=-ggdb -I include/
+CXX2FLAGS=-ggdb -I /usr/include/eigen3 -I include/
 LDFLAGS=-li2c
 LIBS=-lmatplot -lcurl
 OBJ_DIR=obj
@@ -31,19 +32,19 @@ $(EKF_OBJ): $(EKF_SRC)
 	$(CROSS_COMPILE_CXX) $(CROSS_COMPILE_FLAGS) -c $< -o $@
 
 imu_test: $(IMU_OBJ)
-	$(CXX) $^ tests/imu_tests/test_imu.cpp -o test_imu $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) $^ tests/imu_tests/test_imu.cpp -o test_imu $(CXX1FLAGS) $(LDFLAGS)
 
 gps_test: $(GPS_OBJ) $(UBX_OBJ)
-	$(CXX) $^ tests/gps_tests/test_gps.cpp -o test_gps $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) $^ tests/gps_tests/test_gps.cpp -o test_gps $(CXX1FLAGS) $(LDFLAGS)
 
 kalman_test: $(IMU_OBJ) $(GPS_OBJ) $(UBX_OBJ) $(EKF_OBJ)
-	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o test_ekf $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o test_ekf $(CXX2FLAGS) $(LDFLAGS)
 
 graphing:
-	$(CXX) -std=c++17 src/basic.cpp -o basic $(CXXFLAGS) $(LIBS)
+	$(CXX) -std=c++17 src/basic.cpp -o basic $(CXX1FLAGS) $(LIBS)
 
 gps_map_test: $(GPS_OBJ) $(UBX_OBJ)
-	$(CXX) $^ tests/gps_tests/gps_map.cpp -o gps_map_test $(CXXFLAGS) $(LDFLAGS) $(LIBS)
+	$(CXX) $^ tests/gps_tests/gps_map.cpp -o gps_map_test $(CXX1FLAGS) $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -rf $(OBJ_DIR)/*.o test_imu test_gps test_ekf basic gps_map_test

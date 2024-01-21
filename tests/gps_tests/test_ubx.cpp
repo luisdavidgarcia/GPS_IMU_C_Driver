@@ -1,4 +1,4 @@
-#include "../../include/imu.h"
+#include "imu.h"
 #include <vector>
 #include <stdio.h>
 #include <iostream>

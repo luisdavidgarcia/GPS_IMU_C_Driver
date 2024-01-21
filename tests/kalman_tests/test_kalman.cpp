@@ -1,6 +1,6 @@
-#include "../../include/gps.h"
-#include "../../include/imu.h"
-#include "../../include/ekfNavINS.h"
+#include "gps.h"
+#include "imu.h"
+#include "ekfNavINS.h"
 #include <stdio.h>
 #include <csignal>
 #include <iostream>
