@@ -8,7 +8,7 @@
 #define CURRENT_YEAR 2024
 // Assuming the output is effectively scaled for ±16g with a sensitivity of 2048 LSB/g
 // and the low-pass filter is causing the values to be 1/8 of what they should be.
-const float ACCEL_EFFECTIVE_SENSITIVITY = 256.0; // 2048 LSB/g divided by 8
+const float ACCEL_EFFECTIVE_SENSITIVITY = 4.096; // 2048 LSB/g divided by 8
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
@@ -46,15 +46,15 @@ int main(void) {
             }
 
             // Normalize acceleration values to g's
-            ax = 2 * static_cast<float>(accel_data[0]) / ACCEL_EFFECTIVE_SENSITIVITY;
-            ay = 2 * static_cast<float>(accel_data[1]) / ACCEL_EFFECTIVE_SENSITIVITY;
-            az = 2 * static_cast<float>(accel_data[2]) / ACCEL_EFFECTIVE_SENSITIVITY;
+            ax = static_cast<float>(accel_data[0]) / ACCEL_EFFECTIVE_SENSITIVITY;
+            ay = static_cast<float>(accel_data[1]) / ACCEL_EFFECTIVE_SENSITIVITY;
+            az = static_cast<float>(accel_data[2]) / ACCEL_EFFECTIVE_SENSITIVITY;
 
         // Convert acceleration to m/s^2 if necessary
-        const float GRAVITY = 9.807; // Standard gravity
-        ax *= GRAVITY; // ax now represents acceleration in m/s^2
-        ay *= GRAVITY; // ay now represents acceleration in m/s^2
-        az *= GRAVITY; // az now represents acceleration in m/s^2
+        // const float GRAVITY = 9.807; // Standard gravity
+        // ax *= GRAVITY; // ax now represents acceleration in m/s^2
+        // ay *= GRAVITY; // ay now represents acceleration in m/s^2
+        // az *= GRAVITY; // az now represents acceleration in m/s^2
 
             printf("Acceleration (m/s^2): (X: %.2f, Y: %.2f, Z: %.2f)\n", ax, ay, az);
 
