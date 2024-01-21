@@ -43,7 +43,7 @@ int main(void) {
             }
 
             ax = accel_data[0];
-            ax = ax / 4; // the 4 is because of 4g stting for iMU specific so to normalize divide
+            ax = ax / 2; // the 4 is because of 4g stting for iMU specific so to normalize divide
             ay = accel_data[1];
             ay = -1 * ay / 4; // the 4 is because of 4g setting for IMU specific so normalize
             az = accel_data[2];
