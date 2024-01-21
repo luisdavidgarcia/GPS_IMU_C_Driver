@@ -1,6 +1,6 @@
-#include "../../gps_module/gps.h"
-#include "../../imu_module/imu.h"
-#include "../../extended_kalman_filter/ekfNavINS.h"
+#include "../../include/gps.h"
+#include "../../include/imu.h"
+#include "../../include/ekfNavINS.h"
 #include <stdio.h>
 #include <csignal>
 #include <iostream>
