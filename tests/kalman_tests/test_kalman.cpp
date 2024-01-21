@@ -43,11 +43,11 @@ int main(void) {
             }
 
             ax = accel_data[0];
-            ax = ax / 2; // the 2 is because of 2g stting for iMU specific so to normalize divide
+            ax = ax / 4; // the 4 is because of 4g stting for iMU specific so to normalize divide
             ay = accel_data[1];
             ay = -1 * ay / 4; // the 4 is because of 4g setting for IMU specific so normalize
             az = accel_data[2];
-            az = az / 2; // the 3
+            az = az / 4; 
 
             printf("Az og: %f, Az norm: %f\n", az, az/9.87);
 
