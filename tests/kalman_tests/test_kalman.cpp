@@ -6,6 +6,8 @@
 #include <iostream>
 
 #define CURRENT_YEAR 2024
+// Assuming FS=0 for ±2g with a sensitivity of 16384 LSB/g
+const float ACCEL_SENSITIVITY = 16384.0;
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
@@ -42,12 +44,17 @@ int main(void) {
                 printf("Acceleration (m/s^2): (X: %d, Y: %d, Z: %d)\n", accel_data[0], accel_data[1], accel_data[2]);
             }
 
-            ax = accel_data[0];
-            ax = ax / 2; // the 4 is because of 4g stting for iMU specific so to normalize divide
-            ay = accel_data[1];
-            ay = -1 * ay / 4; // the 4 is because of 4g setting for IMU specific so normalize
-            az = accel_data[2];
-            az = az / 4; 
+            // Normalize acceleration values to g's
+            ax = static_cast<float>(accel_data[0]) / ACCEL_SENSITIVITY;
+            ay = static_cast<float>(accel_data[1]) / ACCEL_SENSITIVITY;
+            az = static_cast<float>(accel_data[2]) / ACCEL_SENSITIVITY;
+
+            // Convert acceleration to m/s^2 if necessary
+            const float GRAVITY = 9.807; // Standard gravity
+            ax *= GRAVITY;
+            ay *= GRAVITY;
+            az *= GRAVITY;
+
 
             printf("Az og: %f, Az norm: %f\n", az, az/9.87);
 
