@@ -29,7 +29,7 @@ OBJ_DIR=obj
 CROSS_COMPILE_CXX=aarch64-linux-gnu-g++
 CROSS_COMPILE_FLAGS=-std=c++14 -I /usr/include/eigen3
 
-all: imu_test gps_test kalman_test graphing gps_map_test
+all: imu_test gps_test kalman_test
 
 $(OBJ_DIR)/%.o: %.cpp
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
