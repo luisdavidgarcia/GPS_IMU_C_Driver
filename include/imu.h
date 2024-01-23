@@ -135,7 +135,7 @@ extern "C" {
 #define ACCEL_MG_LSB_8G (/4096.0F)
 
 /** Macro for micro tesla (uT) per LSB (1 LSB = 0.1uT) */
-#define MAG_UT_LSB (0.1)
+#define MAG_UT_LSB (0.15)
 #define MAG_MAX_THRESHOLD 5000 // µT, adjust as needed
 
 class Imu {
