@@ -18,6 +18,9 @@ sudo apt install libjpeg-dev libtiff5-dev
 # Install BLAS and LAPACK libraries
 sudo apt install libblas-dev liblapack-dev
 
+# Install a 64-bit ARM Cross-Compiler:
+sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
 # Install FFTW library
 sudo apt install libfftw3-dev
 
