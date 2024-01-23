@@ -88,9 +88,9 @@ int main(void) {
 //            printf("Speed (N) : %2.3f %2.3f\n", gps_data.velocityNorth*1e-3, ekf.getVelNorth_ms());
 //            printf("Speed (E) : %2.3f %2.3f\n", gps_data.velocityEast*1e-3, ekf.getVelEast_ms());
 //            printf("Speed (D) : %2.3f %2.3f\n", gps_data.velocityDown*1e-3, ekf.getVelDown_ms());
-            printf("Roll 	  : %2.3f %2.3f\n", roll, ekf.getRoll_rad());
-            printf("Pitch     : %2.3f %2.3f\n", pitch, ekf.getPitch_rad());
-            printf("Yaw       : %2.3f %2.3f\n", yaw, ekf.getHeading_rad());
+            printf("Roll 	  : %2.3f\n", ekf.getRoll_rad());
+            printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
+            printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
 
             printf("\n---------------------\n");
 //        } else {
