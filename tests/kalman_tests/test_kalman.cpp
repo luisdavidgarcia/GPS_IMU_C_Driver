@@ -33,7 +33,7 @@ int main(void) {
 
     // Open and configure the serial port
     struct sp_port *port;
-    sp_get_port_by_name("/dev/ttyAMA1", &port);
+    sp_get_port_by_name("/dev/ttyS0", &port);
     sp_open(port, SP_MODE_READ_WRITE);
     sp_set_baudrate(port, 115200);  // Set baud rate
 

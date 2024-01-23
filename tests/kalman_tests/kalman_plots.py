@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 # Initialize serial port
-ser = serial.Serial('/dev/ttyAMA1', 115200, timeout=1)
+ser = serial.Serial('/dev/ttyS0', 115200, timeout=1)
 
 # Prepare matplotlib plot
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
