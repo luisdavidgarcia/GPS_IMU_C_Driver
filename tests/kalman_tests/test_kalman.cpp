@@ -35,6 +35,7 @@ int main(void) {
 
     while(!exit_flag) {
 //        PVTData gps_data = gps_module.GetPvt(true, 1);
+        // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
         imu_module.readSensorData();
 //        if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
             const int16_t *accel_data = imu_module.getAccelerometerData();
@@ -47,15 +48,9 @@ int main(void) {
             }
 
             // Normalize acceleration values to g's
-            ax = static_cast<float>(accel_data[0]) / ACCEL_EFFECTIVE_SENSITIVITY;
-            ay = static_cast<float>(accel_data[1]) / ACCEL_EFFECTIVE_SENSITIVITY;
-            az = static_cast<float>(accel_data[2]) / ACCEL_EFFECTIVE_SENSITIVITY;
-
-        // Convert acceleration to m/s^2 if necessary
-        const float GRAVITY = 9.807; // Standard gravity
-        ax *= GRAVITY; // ax now represents acceleration in m/s^2
-        ay *= GRAVITY; // ay now represents acceleration in m/s^2
-        az *= GRAVITY; // az now represents acceleration in m/s^2
+            ax = static_cast<float>(accel_data[0]);
+            ay = static_cast<float>(accel_data[1]);
+            az = static_cast<float>(accel_data[2]);
 
             printf("Acceleration (m/s^2): (X: %.2f, Y: %.2f, Z: %.2f)\n", ax, ay, az);
 
@@ -68,9 +63,9 @@ int main(void) {
                 printf("Gyroscope (radians/s): (X: %d, Y: %d, Z: %d)\n", gyro_data[0], gyro_data[1], gyro_data[2]);
             }
 
-            gx = gyro_data[0];
-            gy = gyro_data[1];
-            gz = gyro_data[2];
+            gx = static_cast<float>(gyro_data[0]);
+            gy = static_cast<float>(gyro_data[1]);
+            gz = static_cast<float>(gyro_data[2]);
 
             const int16_t *mag_data = imu_module.getMagnetometerData();
             if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
@@ -81,15 +76,15 @@ int main(void) {
                 printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", mag_data[0], mag_data[1], mag_data[2]);
             }
 
-            hx = mag_data[0];
-            hy = mag_data[1];
-            hz = mag_data[2];
+            hx = static_cast<float>(mag_data[0]);
+            hy = static_cast<float>(mag_data[1]);
+            hz = static_cast<float>(mag_data[2]);
 
             std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
 //            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
 //                           gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,
 //                           gps_data.longitude*DEG_TO_RAD, (gps_data.height*1e-3),
-//                           gx*DEG_TO_RAD, gy*DEG_TO_RAD, gz*DEG_TO_RAD,
+//                           gx, gy, gz,
 //                           ax, ay, az, hx, hy, hz);
 //
 //            printf("Latitude  : %2.7f %2.7f\n", gps_data.latitude, ekf.getLatitude_rad()*RAD_TO_DEG);

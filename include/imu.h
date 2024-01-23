@@ -53,7 +53,7 @@ extern "C" {
 #define PI 3.14159265359F
 #define DEG_TO_RAD PI / 180.0
 #define RAD_TO_DEG 180.0 / PI
-#define SENSORS_GRAVITY_STD 9.81F
+#define SENSORS_GRAVITY_STD 9.807F
 #define GYRO_MAX_THRESHOLD 2200.0 // rad/s, adjust as needed
 #define ACCEL_MAX_THRESHOLD 17.6 // m/s², adjust as needed
 #define BYTE_SHIFT_AMOUNT 8
@@ -121,16 +121,18 @@ extern "C" {
 #define MAGNETO_ZOUT_L 0x41
 
 /** Gyroscope sensitivity at 250dps */
-#define GYRO_SENSITIVITY_250DPS (0.0078125F) // Table 35 of datasheet
+#define GYRO_SENSITIVITY_250DPS (1/131.0F)
+/** Gyroscope sensitivity at 500dps */
+#define GYRO_SENSITIVITY_500DPS (1/65.5F) 
 #define GYRO_DATA_SIZE 6
 #define GYRO_CONFIG_VALUE 0x11 << 1
 
 /** Macro for mg per LSB at +/- 2g sensitivity (1 LSB = 0.000244mg) */
-#define ACCEL_MG_LSB_2G (0.000244F)
+#define ACCEL_MG_LSB_2G (1/16384.0F)
 /** Macro for mg per LSB at +/- 4g sensitivity (1 LSB = 0.000488mg) */
-#define ACCEL_MG_LSB_4G (0.000488F)
+#define ACCEL_MG_LSB_4G (1/8192.0F)
 /** Macro for mg per LSB at +/- 8g sensitivity (1 LSB = 0.000976mg) */
-#define ACCEL_MG_LSB_8G (0.000976F)
+#define ACCEL_MG_LSB_8G (/4096.0F)
 
 /** Macro for micro tesla (uT) per LSB (1 LSB = 0.1uT) */
 #define MAG_UT_LSB (0.1)
@@ -154,6 +156,7 @@ public:
 
     const int16_t* getAccelerometerData() {
 		int8_t badRead = 0;
+		// 0 = x, 1 = y, 2 = z
 		for (int i = 0; i < 3; i++) {
 			// if (accelerometer[i] > ACCEL_MAX_THRESHOLD) {
 			// 	badRead = 1;
@@ -204,7 +207,7 @@ public:
 			// 	badRead = 1;
 			// 	break;
 			// } else {
-				gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS; // * DEG_TO_RAD;
+				gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD;
 			// }
 		}
 
