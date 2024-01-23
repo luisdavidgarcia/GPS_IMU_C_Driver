@@ -49,8 +49,6 @@ int main(void) {
             ay = static_cast<float>(accel_data[1]);
             az = static_cast<float>(accel_data[2]);
 
-            printf("Acceleration (m/s^2): (X: %.2f, Y: %.2f, Z: %.2f)\n", ax, ay, az);
-
             const int16_t *gyro_data = imu_module.getGyroscopeData();
             if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
                 printf("Gyroscope data is invalid.\n");

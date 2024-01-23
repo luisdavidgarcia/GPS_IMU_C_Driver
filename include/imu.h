@@ -154,6 +154,7 @@ public:
 	void printGyro(void);
 	void readSensorData(void);
 
+	// Rename function names to GetScaledAccelerometerData, etc.
     const int16_t* getAccelerometerData() {
 		int8_t badRead = 0;
 		// 0 = x, 1 = y, 2 = z
