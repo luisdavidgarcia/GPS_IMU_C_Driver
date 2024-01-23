@@ -187,7 +187,8 @@ std::tuple<float,float,float> ekfNavINS::getPitchRollYaw(float ax, float ay, flo
   Bxc = hx*cosf(theta) + (hy*sinf(phi) + hz*cosf(phi))*sinf(theta);
   Byc = hy*cosf(phi) - hz*sinf(phi);
   // finding initial heading
-  psi = -atan2f(Byc,Bxc);
+  //psi = -atan2f(Byc,Bxc); // this was original
+  psi = atan2f(Byc,Bxc); // this was modification
   return (std::make_tuple(theta,phi,psi));
 }
 
