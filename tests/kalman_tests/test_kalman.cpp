@@ -6,10 +6,7 @@
 #include <iostream>
 
 #define CURRENT_YEAR 2024
-// Assuming the output is effectively scaled for ±16g with a sensitivity of 2048 LSB/g
-// Basically acting as 4G accel
 // Might help: https://teslabs.com/articles/magnetometer-calibration/
-const float ACCEL_EFFECTIVE_SENSITIVITY = 4.096; // 2048 LSB/g divided by 8
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
