@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <csignal>
 #include <iostream>
+#include <libserialport.h>
 
 #define CURRENT_YEAR 2024
 // Might help: https://teslabs.com/articles/magnetometer-calibration/
@@ -29,6 +30,12 @@ int main(void) {
     Imu imu_module;
     ekfNavINS ekf;
     float ax, ay, az, gx, gy, gz, hx, hy, hz, pitch, roll, yaw;
+
+    // Open and configure the serial port
+    struct sp_port *port;
+    sp_get_port_by_name("/dev/ttyAMA1", &port);
+    sp_open(port, SP_MODE_READ_WRITE);
+    sp_set_baudrate(port, 115200);  // Set baud rate
 
     while(!exit_flag) {
 //        PVTData gps_data = gps_module.GetPvt(true, 1);
@@ -76,6 +83,14 @@ int main(void) {
             hz = static_cast<float>(mag_data[2]);
 
             std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
+
+            // Format the data to be sent
+            std::stringstream data_stream;
+            data_stream << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << "\n";
+
+            // Send the data over UART
+            sp_blocking_write(port, data_stream.str().c_str(), data_stream.str().length(), 1000);
+
 //            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
 //                           gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,
 //                           gps_data.longitude*DEG_TO_RAD, (gps_data.height*1e-3),
