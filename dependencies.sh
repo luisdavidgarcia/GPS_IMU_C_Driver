@@ -10,7 +10,8 @@ sudo apt install g++ cmake
 sudo apt install libi2c-dev
 
 # Install Serial libraries
-sudo apt install libserial-dev
+sudo apt install libserialport0
+sudo apt install libserialport-dev
 
 # Install Eigen Library
 sudo apt install libeigen3-dev
