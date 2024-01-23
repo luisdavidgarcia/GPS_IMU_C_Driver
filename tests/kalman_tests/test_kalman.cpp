@@ -46,7 +46,7 @@ int main(void) {
 
             // Normalize acceleration values to g's
             ax = static_cast<float>(accel_data[0]);
-            ay = static_cast<float>(accel_data[1]);
+            ay = -1 * static_cast<float>(accel_data[1]);
             az = static_cast<float>(accel_data[2]);
 
             const int16_t *gyro_data = imu_module.getGyroscopeData();
