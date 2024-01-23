@@ -27,6 +27,8 @@ $(OBJ_DIR)/%.o: src/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Specific rule for cross-compiled object
+ekf_obj: $(EKF_OBJ)
+
 $(EKF_OBJ): $(EKF_SRC)
 	@mkdir -p $(@D)
 	$(CROSS_COMPILE_CXX) $(CROSS_COMPILE_FLAGS) -c $< -o $@
