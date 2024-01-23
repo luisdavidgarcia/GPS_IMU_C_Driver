@@ -1,7 +1,7 @@
 CXX=g++
 CXX1FLAGS=-ggdb -I include/
 CXX2FLAGS=-ggdb -I /usr/include/eigen3 -I include/
-LDFLAGS=-li2c
+LDFLAGS=-li2c -lserialport
 LIBS=-lmatplot -lcurl
 OBJ_DIR=obj
 CROSS_COMPILE_CXX=aarch64-linux-gnu-g++

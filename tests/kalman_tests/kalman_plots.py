@@ -35,6 +35,11 @@ def update(frame):
         except ValueError:
             pass
 
-# Initialize animation
-ani = FuncAnimation(fig, update, interval=1000)
+# Initialize animation with a finite save_count
+ani = FuncAnimation(fig, update, interval=1000, save_count=100)
+
+# Keep a reference to the animation object to prevent it from being garbage collected
+_ = ani
+
+# Display the plot
 plt.show()
