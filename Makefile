@@ -37,7 +37,7 @@ imu_test: $(IMU_OBJ)
 gps_test: $(GPS_OBJ) $(UBX_OBJ)
 	$(CXX) $^ tests/gps_tests/test_gps.cpp -o test_gps $(CXX1FLAGS) $(LDFLAGS)
 
-kalman_test: $(IMU_OBJ) $(GPS_OBJ) $(UBX_OBJ) $(EKF_OBJ)
+kalman_test: $(IMU_OBJ) $(GPS_OBJ) $(UBX_OBJ) 
 	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o test_ekf $(CXX2FLAGS) $(LDFLAGS)
 
 graphing:
