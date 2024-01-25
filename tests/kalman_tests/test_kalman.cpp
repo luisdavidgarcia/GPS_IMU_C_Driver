@@ -85,7 +85,7 @@ int main(void) {
 
             std::ofstream outfile("tests/kalman_tests/data.txt");
             if (outfile.is_open()) {
-                outfile << ekf.getRoll_rad() << "," << ekf.getHeading_rad() << std::endl;
+                outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
                 outfile.close(); // Close the file to save the changes
             } else {
                 std::cerr << "Unable to open file for writing." << std::endl;
