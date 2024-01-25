@@ -99,10 +99,18 @@ int main(void) {
             printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
             printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
 
-            std::ofstream outfile("tests/kalman_tests/data.txt");
+            // Write all the data to a file
+            std::ofstream outfile("tests/kalman_tests/data.txt", std::ios_base::app); // Open in append mode
             if (outfile.is_open()) {
-                outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
-                outfile.close(); // Close the file to save the changes
+                outfile << gps_data.latitude << "," << ekf.getLatitude_rad() * RAD_TO_DEG << ","
+                        << gps_data.longitude << "," << ekf.getLongitude_rad() * RAD_TO_DEG << ","
+                        << gps_data.height * 1e-3 << "," << ekf.getAltitude_m() << ","
+                        << gps_data.velocityNorth * 1e-3 << "," << ekf.getVelNorth_ms() << ","
+                        << gps_data.velocityEast * 1e-3 << "," << ekf.getVelEast_ms() << ","
+                        << gps_data.velocityDown * 1e-3 << "," << ekf.getVelDown_ms() << ","
+                        << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad()
+                        << std::endl;
+                outfile.close();
             } else {
                 std::cerr << "Unable to open file for writing." << std::endl;
             }

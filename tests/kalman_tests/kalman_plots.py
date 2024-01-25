@@ -1,45 +1,72 @@
 import matplotlib.pyplot as plt
 import time
 
-# Initialize lists to store the roll, pitch, and yaw values
-roll_values = []
-pitch_values = []
-yaw_values = []
+# Initialize lists for each metric
+# Raw GPS data
+latitudes, longitudes, altitudes, speeds_n, speeds_e, speeds_d = [], [], [], [], [], []
 
-plt.ion()  # Enable interactive mode
-fig, ax = plt.subplots(3, 1, figsize=(10, 8))  # Create three subplots
+# Filtered data
+latitudes_filtered, longitudes_filtered, altitudes_filtered = [], [], []
+speeds_n_filtered, speeds_e_filtered, speeds_d_filtered = [], [], []
 
-def plot_data(roll, pitch, yaw):
-    roll_values.append(roll)
-    pitch_values.append(pitch)
-    yaw_values.append(yaw)
+# Roll, Pitch, Yaw
+rolls, pitches, yaws = [], [], []
 
-    # Clear previous data
-    if len(roll_values) > 50:  # Adjust this value as needed
-        roll_values.pop(0)
-        pitch_values.pop(0)
-        yaw_values.pop(0)
+plt.ion()
+fig, axs = plt.subplots(9, 1, figsize=(10, 15))  # 9 subplots for each metric
 
-    ax[0].cla()  # Clear the previous plot
-    ax[1].cla()
-    ax[2].cla()
+def add_data_to_lists(data):
+    latitudes.append(data[0])
+    longitudes.append(data[1])
+    altitudes.append(data[2])
+    speeds_n.append(data[3])
+    speeds_e.append(data[4])
+    speeds_d.append(data[5])
 
-    ax[0].plot(roll_values, label='Roll')
-    ax[1].plot(pitch_values, label='Pitch')
-    ax[2].plot(yaw_values, label='Yaw')
+    latitudes_filtered.append(data[6])
+    longitudes_filtered.append(data[7])
+    altitudes_filtered.append(data[8])
+    speeds_n_filtered.append(data[9])
+    speeds_e_filtered.append(data[10])
+    speeds_d_filtered.append(data[11])
 
-    ax[0].legend()
-    ax[1].legend()
-    ax[2].legend()
+    rolls.append(data[12])
+    pitches.append(data[13])
+    yaws.append(data[14])
 
-    plt.pause(0.1)  # Pause to update the plots
+def plot_data():
+    # Clear previous data and plot new data for each metric
+    for i, (data, data_filtered, title) in enumerate(zip(
+        [latitudes, longitudes, altitudes, speeds_n, speeds_e, speeds_d],
+        [latitudes_filtered, longitudes_filtered, altitudes_filtered, speeds_n_filtered, speeds_e_filtered, speeds_d_filtered],
+        ["Latitude", "Longitude", "Altitude", "Speed North", "Speed East", "Speed Down"]
+    )):
+        axs[i].cla()
+        axs[i].plot(data, label=f'{title} Raw')
+        axs[i].plot(data_filtered, label=f'{title} Filtered')
+        axs[i].legend()
+
+    axs[6].cla()
+    axs[6].plot(rolls, label='Roll')
+    axs[6].legend()
+
+    axs[7].cla()
+    axs[7].plot(pitches, label='Pitch')
+    axs[7].legend()
+
+    axs[8].cla()
+    axs[8].plot(yaws, label='Yaw')
+    axs[8].legend()
+
+    plt.pause(0.1)
 
 while True:
     try:
-        with open("data.txt", "r") as file:
-            data = file.read().strip()
-            roll, pitch, yaw = map(float, data.split(','))  # Convert string data to float
-            plot_data(roll, pitch, yaw)
+        with open("tests/kalman_tests/data.txt", "r") as file:
+            for line in file:
+                data = list(map(float, line.strip().split(',')))
+                add_data_to_lists(data)
+            plot_data()
     except IOError:
         print("File not accessible")
     except ValueError:
