@@ -126,8 +126,7 @@ int main(void) {
             }
 
             printf("\n---------------------\n");
-       } 
-    //    else {
+    //    } else {
     //        printf("No GPS data\n");
     //    }
         sleep(1);
