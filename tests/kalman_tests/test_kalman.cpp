@@ -1,11 +1,11 @@
 #include "gps.h"
 #include "imu.h"
 #include "ekfNavINS.h"
+#include <fstream> // Include fstream for file operations
 #include <stdio.h>
 #include <csignal>
 #include <iostream>
 #include <libserialport.h>
-// #include <sys/mman.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream>
@@ -83,7 +83,7 @@ int main(void) {
 
             std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
 
-            std::ofstream outfile("data.txt");
+            std::ofstream outfile("tests/kalman_tests/data.txt");
             if (outfile.is_open()) {
                 outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
                 outfile.close(); // Close the file to save the changes
@@ -113,11 +113,6 @@ int main(void) {
 //        }
         sleep(1);
     }
-
-    // Cleanup
-    munmap(shm_ptr, SHM_SIZE);
-    close(shm_fd);
-    shm_unlink(SHM_NAME);
 
     return 0;
 }
