@@ -5,15 +5,13 @@
 #include <csignal>
 #include <iostream>
 #include <libserialport.h>
-#include <sys/mman.h>
+// #include <sys/mman.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream>
 #include <string.h>
 
 #define CURRENT_YEAR 2024
-#define SHM_NAME "/ekf_shared_memory"
-#define SHM_SIZE 1024  // Adjust size as needed
 // Might help: https://teslabs.com/articles/magnetometer-calibration/
 
 // Define a flag to indicate if the program should exit gracefully.
@@ -37,31 +35,6 @@ int main(void) {
     Imu imu_module;
     ekfNavINS ekf;
     float ax, ay, az, gx, gy, gz, hx, hy, hz, pitch, roll, yaw;
-
-    // // Open and configure the serial port
-    // struct sp_port *port;
-    // sp_get_port_by_name("/dev/ttyS0", &port);
-    // sp_open(port, SP_MODE_READ_WRITE);
-    // sp_set_baudrate(port, 115200);  // Set baud rate
-    
-    // Open shared memory
-    int shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
-    if (shm_fd == -1) {
-        std::cerr << "Error opening shared memory" << std::endl;
-        return 1;
-    }
-
-    if (ftruncate(shm_fd, SHM_SIZE) == -1) {
-        std::cerr << "Error setting size of shared memory" << std::endl;
-        return 1;
-    }
-
-    void* shm_ptr = mmap(0, SHM_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0);
-    if (shm_ptr == MAP_FAILED) {
-        std::cerr << "Error mapping shared memory" << std::endl;
-        return 1;
-    }
-
 
     while(!exit_flag) {
 //        PVTData gps_data = gps_module.GetPvt(true, 1);
@@ -110,18 +83,13 @@ int main(void) {
 
             std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
 
-            // Write to shared memory
-            char buffer[SHM_SIZE];
-            snprintf(buffer, SHM_SIZE, "%f,%f,%f\n", ekf.getRoll_rad(), ekf.getPitch_rad(), ekf.getHeading_rad());
-            memcpy(shm_ptr, buffer, strlen(buffer) + 1);
-
-
-            // // Format the data to be sent
-            // std::stringstream data_stream;
-            // data_stream << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << "\n";
-
-            // // Send the data over UART
-            // sp_blocking_write(port, data_stream.str().c_str(), data_stream.str().length(), 1000);
+            std::ofstream outfile("data.txt");
+            if (outfile.is_open()) {
+                outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
+                outfile.close(); // Close the file to save the changes
+            } else {
+                std::cerr << "Unable to open file for writing." << std::endl;
+            }
 
 //            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
 //                           gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,

@@ -41,7 +41,7 @@ gps_test: $(GPS_OBJ) $(UBX_OBJ)
 
 # Exclude EKF object file and hardcode since it is cross-compiled
 kalman_test: $(IMU_OBJ) $(GPS_OBJ) $(UBX_OBJ)
-	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o test_ekf -lrt $(EKF_OBJ) $(CXX2FLAGS) $(LDFLAGS)
+	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o test_ekf $(EKF_OBJ) $(CXX2FLAGS) $(LDFLAGS)
 
 graphing:
 	$(CXX) -std=c++17 src/basic.cpp -o basic $(CXX1FLAGS) $(LIBS)
