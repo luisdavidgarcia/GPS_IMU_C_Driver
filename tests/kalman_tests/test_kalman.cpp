@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream>
+#include <string.h>
 
 #define CURRENT_YEAR 2024
 #define SHM_NAME "/ekf_shared_memory"
@@ -45,8 +46,21 @@ int main(void) {
     
     // Open shared memory
     int shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
-    ftruncate(shm_fd, SHM_SIZE);
+    if (shm_fd == -1) {
+        std::cerr << "Error opening shared memory" << std::endl;
+        return 1;
+    }
+
+    if (ftruncate(shm_fd, SHM_SIZE) == -1) {
+        std::cerr << "Error setting size of shared memory" << std::endl;
+        return 1;
+    }
+
     void* shm_ptr = mmap(0, SHM_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0);
+    if (shm_ptr == MAP_FAILED) {
+        std::cerr << "Error mapping shared memory" << std::endl;
+        return 1;
+    }
 
 
     while(!exit_flag) {
