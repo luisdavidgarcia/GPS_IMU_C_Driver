@@ -83,14 +83,6 @@ int main(void) {
 
             std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
 
-            std::ofstream outfile("tests/kalman_tests/data.txt");
-            if (outfile.is_open()) {
-                outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
-                outfile.close(); // Close the file to save the changes
-            } else {
-                std::cerr << "Unable to open file for writing." << std::endl;
-            }
-
 //            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
 //                           gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,
 //                           gps_data.longitude*DEG_TO_RAD, (gps_data.height*1e-3),
@@ -106,6 +98,14 @@ int main(void) {
             printf("Roll 	  : %2.3f\n", ekf.getRoll_rad());
             printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
             printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
+
+            std::ofstream outfile("tests/kalman_tests/data.txt");
+            if (outfile.is_open()) {
+                outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
+                outfile.close(); // Close the file to save the changes
+            } else {
+                std::cerr << "Unable to open file for writing." << std::endl;
+            }
 
             printf("\n---------------------\n");
 //        } else {
