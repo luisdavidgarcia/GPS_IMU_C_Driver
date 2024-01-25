@@ -31,16 +31,16 @@ int main(void) {
     // Register the signal handler for SIGINT (Ctrl+C)
     signal(SIGINT, signal_handler);
 
-    Gps gps_module;
+    // Gps gps_module;
     Imu imu_module;
     ekfNavINS ekf;
     float ax, ay, az, gx, gy, gz, hx, hy, hz, pitch, roll, yaw;
 
     while(!exit_flag) {
-        PVTData gps_data = gps_module.GetPvt(true, 1);
+        // PVTData gps_data = gps_module.GetPvt(true, 1);
         // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
         imu_module.readSensorData();
-        if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
+        // if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
             const int16_t *accel_data = imu_module.getAccelerometerData();
             if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
                 printf("Accelerometer data is invalid.\n");
@@ -83,42 +83,53 @@ int main(void) {
 
             std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(ax, ay, az, hx, hy, hz);
 
-            ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
-                          gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,
-                          gps_data.longitude*DEG_TO_RAD, (gps_data.height*1e-3),
-                          gx, gy, gz,
-                          ax, ay, az, hx, hy, hz);
+            // ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
+            //               gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,
+            //               gps_data.longitude*DEG_TO_RAD, (gps_data.height*1e-3),
+            //               gx, gy, gz,
+            //               ax, ay, az, hx, hy, hz);
 
-            printf("Latitude  : %2.7f %2.7f\n", gps_data.latitude, ekf.getLatitude_rad()*RAD_TO_DEG);
-            printf("Longitude : %2.7f %2.7f\n", gps_data.longitude, ekf.getLongitude_rad()*RAD_TO_DEG);
-            printf("Altitude  : %2.3f %2.3f\n", gps_data.height*1e-3, ekf.getAltitude_m());
-            printf("Speed (N) : %2.3f %2.3f\n", gps_data.velocityNorth*1e-3, ekf.getVelNorth_ms());
-            printf("Speed (E) : %2.3f %2.3f\n", gps_data.velocityEast*1e-3, ekf.getVelEast_ms());
-            printf("Speed (D) : %2.3f %2.3f\n", gps_data.velocityDown*1e-3, ekf.getVelDown_ms());
+            // printf("Latitude  : %2.7f %2.7f\n", gps_data.latitude, ekf.getLatitude_rad()*RAD_TO_DEG);
+            // printf("Longitude : %2.7f %2.7f\n", gps_data.longitude, ekf.getLongitude_rad()*RAD_TO_DEG);
+            // printf("Altitude  : %2.3f %2.3f\n", gps_data.height*1e-3, ekf.getAltitude_m());
+            // printf("Speed (N) : %2.3f %2.3f\n", gps_data.velocityNorth*1e-3, ekf.getVelNorth_ms());
+            // printf("Speed (E) : %2.3f %2.3f\n", gps_data.velocityEast*1e-3, ekf.getVelEast_ms());
+            // printf("Speed (D) : %2.3f %2.3f\n", gps_data.velocityDown*1e-3, ekf.getVelDown_ms());
             printf("Roll 	  : %2.3f\n", ekf.getRoll_rad());
             printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
             printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
 
-            // Write all the data to a file
-            std::ofstream outfile("tests/kalman_tests/data.txt", std::ios_base::app); // Open in append mode
+            // Write all the data to a file - GPS & IMU
+            // std::ofstream outfile("tests/kalman_tests/data.txt", std::ios_base::app); // Open in append mode
+            // if (outfile.is_open()) {
+            //     outfile << gps_data.latitude << "," << ekf.getLatitude_rad() * RAD_TO_DEG << ","
+            //             << gps_data.longitude << "," << ekf.getLongitude_rad() * RAD_TO_DEG << ","
+            //             << gps_data.height * 1e-3 << "," << ekf.getAltitude_m() << ","
+            //             << gps_data.velocityNorth * 1e-3 << "," << ekf.getVelNorth_ms() << ","
+            //             << gps_data.velocityEast * 1e-3 << "," << ekf.getVelEast_ms() << ","
+            //             << gps_data.velocityDown * 1e-3 << "," << ekf.getVelDown_ms() << ","
+            //             << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad()
+            //             << std::endl;
+            //     outfile.close();
+            // } else {
+            //     std::cerr << "Unable to open file for writing." << std::endl;
+            // }
+
+            // Write only the IMU data to a file
+            std::ofstream outfile("tests/kalman_tests/data.txt");
             if (outfile.is_open()) {
-                outfile << gps_data.latitude << "," << ekf.getLatitude_rad() * RAD_TO_DEG << ","
-                        << gps_data.longitude << "," << ekf.getLongitude_rad() * RAD_TO_DEG << ","
-                        << gps_data.height * 1e-3 << "," << ekf.getAltitude_m() << ","
-                        << gps_data.velocityNorth * 1e-3 << "," << ekf.getVelNorth_ms() << ","
-                        << gps_data.velocityEast * 1e-3 << "," << ekf.getVelEast_ms() << ","
-                        << gps_data.velocityDown * 1e-3 << "," << ekf.getVelDown_ms() << ","
-                        << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad()
-                        << std::endl;
-                outfile.close();
+                outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
+                outfile.flush(); // Flush the stream
+                outfile.close(); // Close the file to save the changes
             } else {
                 std::cerr << "Unable to open file for writing." << std::endl;
             }
 
             printf("\n---------------------\n");
-       } else {
-           printf("No GPS data\n");
-       }
+       } 
+    //    else {
+    //        printf("No GPS data\n");
+    //    }
         sleep(1);
     }
 
