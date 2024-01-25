@@ -62,7 +62,7 @@ def plot_data():
 
 while True:
     try:
-        with open("tests/kalman_tests/data.txt", "r") as file:
+        with open("data.txt", "r") as file:
             for line in file:
                 data = list(map(float, line.strip().split(',')))
                 add_data_to_lists(data)
