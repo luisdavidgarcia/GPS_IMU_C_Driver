@@ -1,7 +1,7 @@
 import mmap
 
 def read_shared_memory():
-    shm_name = "/my_shared_memory"
+    shm_name = "/ekf_shared_memory"
     shm_size = 4096
 
     with open(shm_name, "r+b") as shm:
