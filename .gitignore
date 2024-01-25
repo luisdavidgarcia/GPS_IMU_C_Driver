@@ -8,3 +8,4 @@ test_imu
 .pre-commit-config.yaml
 build/
 .idea/
+*.txt
