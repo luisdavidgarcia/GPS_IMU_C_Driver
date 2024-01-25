@@ -167,7 +167,7 @@ public:
 			// 	badRead = 1;
 			// 	break;
 			// } else {
-				if (accelerometer < 0) {
+				if (accelerometer[i] < 0) {
 					accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD + ACCEL_SCALE;
 				} else {
 					accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD - ACCEL_SCALE;
