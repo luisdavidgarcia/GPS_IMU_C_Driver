@@ -62,6 +62,7 @@ extern "C" {
 #define Z_AXIS 2
 #define BITS_PER_BYTE 8
 #define BYTE_MASK 0xFF
+#define ACCEL_SCALE 0.3
 
 /** I2C Specifics */
 #define IMU_I2C_ADDRESS 0x69
@@ -166,7 +167,11 @@ public:
 			// 	badRead = 1;
 			// 	break;
 			// } else {
-				accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+				if (accelerometer < 0) {
+					accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD + ACCEL_SCALE;
+				} else {
+					accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD - ACCEL_SCALE;
+				}
 			// }
 		}
 
