@@ -31,7 +31,7 @@ int main(void) {
     // Register the signal handler for SIGINT (Ctrl+C)
     signal(SIGINT, signal_handler);
 
-    // Gps gps_module;
+    Gps gps_module;
     Imu imu_module;
     ekfNavINS ekf;
     float ax, ay, az, gx, gy, gz, hx, hy, hz, pitch, roll, yaw;
