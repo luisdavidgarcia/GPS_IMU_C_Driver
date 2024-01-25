@@ -13,7 +13,7 @@ speeds_n_filtered, speeds_e_filtered, speeds_d_filtered = [], [], []
 rolls, pitches, yaws = [], [], []
 
 plt.ion()
-fig, axs = plt.subplots(9, 1, figsize=(10, 15))  # 9 subplots for each metric
+fig, axs = plt.subplots(9, 1, figsize=(15, 9))  # Adjusted figure size to be wider and less tall
 
 def add_data_to_lists(data):
     latitudes.append(data[0])
@@ -58,6 +58,7 @@ def plot_data():
     axs[8].plot(yaws, label='Yaw')
     axs[8].legend()
 
+    plt.tight_layout()  # Adjust layout
     plt.pause(0.1)
 
 while True:
