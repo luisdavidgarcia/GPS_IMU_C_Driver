@@ -28,11 +28,6 @@ def plot_data(roll, pitch, yaw):
     ax[1].plot(pitch_values, label='Pitch')
     ax[2].plot(yaw_values, label='Yaw')
 
-    # Set y-axis limits
-    ax[0].set_ylim(-1.5, 1.5)
-    ax[1].set_ylim(-1.5, 1.5)
-    ax[2].set_ylim(-1.5, 1.5)
-
     ax[0].legend()
     ax[1].legend()
     ax[2].legend()
