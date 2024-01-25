@@ -2,7 +2,7 @@ import serial
 import time
 
 # Set up the serial connection (adjust '/dev/ttyS0' and baud rate as needed)
-uart_port = '/dev/ttyS0'
+uart_port = '/dev/ttyAMA1'
 baud_rate = 115200
 
 # Create a serial object
