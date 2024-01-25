@@ -1,45 +1,47 @@
-import serial
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
+import time
 
-# Initialize serial port
-ser = serial.Serial('/dev/tty1', 115200, timeout=1)
+# Initialize lists to store the roll, pitch, and yaw values
+roll_values = []
+pitch_values = []
+yaw_values = []
 
-# Prepare matplotlib plot
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
-x_data, roll_data, pitch_data, yaw_data = [], [], [], []
+plt.ion()  # Enable interactive mode
+fig, ax = plt.subplots(3, 1, figsize=(10, 8))  # Create three subplots
 
-# Function to update plot
-def update(frame):
-    line = ser.readline().decode('utf-8').strip()
-    if line:
-        data = line.split(',')
-        try:
-            roll, pitch, yaw = map(float, data)
-            x_data.append(frame)
-            roll_data.append(roll)
-            pitch_data.append(pitch)
-            yaw_data.append(yaw)
+def plot_data(roll, pitch, yaw):
+    roll_values.append(roll)
+    pitch_values.append(pitch)
+    yaw_values.append(yaw)
 
-            ax1.clear()
-            ax1.plot(x_data, roll_data)
-            ax1.set_title('Roll')
+    # Clear previous data
+    if len(roll_values) > 50:  # Adjust this value as needed
+        roll_values.pop(0)
+        pitch_values.pop(0)
+        yaw_values.pop(0)
 
-            ax2.clear()
-            ax2.plot(x_data, pitch_data)
-            ax2.set_title('Pitch')
+    ax[0].cla()  # Clear the previous plot
+    ax[1].cla()
+    ax[2].cla()
 
-            ax3.clear()
-            ax3.plot(x_data, yaw_data)
-            ax3.set_title('Yaw')
-        except ValueError:
-            pass
+    ax[0].plot(roll_values, label='Roll')
+    ax[1].plot(pitch_values, label='Pitch')
+    ax[2].plot(yaw_values, label='Yaw')
 
-# Initialize animation with a finite save_count
-ani = FuncAnimation(fig, update, interval=1000, save_count=100)
+    ax[0].legend()
+    ax[1].legend()
+    ax[2].legend()
 
-# Keep a reference to the animation object to prevent it from being garbage collected
-_ = ani
+    plt.pause(0.1)  # Pause to update the plots
 
-# Display the plot
-plt.show()
+while True:
+    try:
+        with open("data.txt", "r") as file:
+            data = file.read().strip()
+            roll, pitch, yaw = map(float, data.split(','))  # Convert string data to float
+            plot_data(roll, pitch, yaw)
+    except IOError:
+        print("File not accessible")
+    except ValueError:
+        print("Error in data format")
+    time.sleep(1)  # Adjust the sleep time as needed
