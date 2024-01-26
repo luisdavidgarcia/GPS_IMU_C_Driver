@@ -129,7 +129,7 @@ int main(void) {
     //    } else {
     //        printf("No GPS data\n");
     //    }
-        sleep(1);
+        sleep(0.5);
     }
 
     return 0;
