@@ -49,8 +49,7 @@ points, edges = create_cube()
 edge_lines = [ax.plot(edge[0][0:1], edge[0][1:2], edge[0][2:3])[0] for edge in edges]
 
 # Animation update function
-def update(frame):
-    global points
+def update(frame, points, edges, edge_lines):
     # Read IMU data from file (replace with your own reading mechanism)
     try:
         with open("data.txt", "r") as file:
@@ -59,24 +58,26 @@ def update(frame):
     except IOError:
         print("File not accessible")
         return
-    
-    # Clear axes
-    ax.cla()
-    ax.set_xlim([-2, 2])
-    ax.set_ylim([-2, 2])
-    ax.set_zlim([-2, 2])
-    
+    except ValueError:
+        print("Error in data format")
+        return
+
     # Rotate cube
     rotated_points = rotate_cube(points, roll, pitch, yaw)
     
     # Update the edges of the cube
-    for edge_line, edge in zip(edge_lines, edges):
-        edge_line.set_data([rotated_points[edge[0]][0], rotated_points[edge[1]][0]], 
-                           [rotated_points[edge[0]][1], rotated_points[edge[1]][1]])
-        edge_line.set_3d_properties([rotated_points[edge[0]][2], rotated_points[edge[1]][2]])
+    for edge_line, (start, end) in zip(edge_lines, edges):
+        # Extract the points for the start and end of the edge
+        xs, ys, zs = zip(start, end)
+        # Update the edge line with the new rotated points
+        edge_line.set_data(np.array([rotated_points[xs, 0], rotated_points[ys, 1]]))
+        edge_line.set_3d_properties(rotated_points[zs, 2])
         
-        ax.add_line(edge_line)
-    
+    # Set the limits of the axes
+    ax.set_xlim([-2, 2])
+    ax.set_ylim([-2, 2])
+    ax.set_zlim([-2, 2])
+
     return edge_lines
 
 # Create the animation
