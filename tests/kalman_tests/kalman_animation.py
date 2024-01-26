@@ -1,22 +1,23 @@
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.animation as animation
 import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Line3D
+import matplotlib.animation as animation
 
 # Define a function to create a 3D cube
 def create_cube():
     # Define the vertices of the cube
     points = np.array([[-1, -1, -1],
-                       [1, -1, -1 ],
+                       [1, -1, -1],
                        [1, 1, -1],
                        [-1, 1, -1],
                        [-1, -1, 1],
-                       [1, -1, 1 ],
+                       [1, -1, 1],
                        [1, 1, 1],
                        [-1, 1, 1]])
     
     # Define the edges connecting the vertices
-    edges = [[points[i], points[j]] for i in range(len(points)) for j in range(i+1, len(points))]
+    edges = [(0, 1), (1, 2), (2, 3), (3, 0), (4, 5), (5, 6),
+             (6, 7), (7, 4), (0, 4), (1, 5), (2, 6), (3, 7)]
     
     return points, edges
 
@@ -46,7 +47,9 @@ ax = fig.add_subplot(111, projection='3d')
 
 # Create the cube
 points, edges = create_cube()
-edge_lines = [ax.plot(edge[0][0:1], edge[0][1:2], edge[0][2:3])[0] for edge in edges]
+edge_lines = [Line3D([], [], [], color="b", marker="o") for _ in edges]
+for edge_line in edge_lines:
+    ax.add_line(edge_line)
 
 # Animation update function
 def update(frame, points, edges, edge_lines):
@@ -64,23 +67,24 @@ def update(frame, points, edges, edge_lines):
 
     # Rotate cube
     rotated_points = rotate_cube(points, roll, pitch, yaw)
-    
+
     # Update the edges of the cube
     for edge_line, (start, end) in zip(edge_lines, edges):
-        # Extract the points for the start and end of the edge
-        xs, ys, zs = zip(start, end)
-        # Update the edge line with the new rotated points
-        edge_line.set_data(np.array([rotated_points[xs, 0], rotated_points[ys, 1]]))
-        edge_line.set_3d_properties(rotated_points[zs, 2])
-        
+        edge_line.set_data([rotated_points[start, 0], rotated_points[end, 0]],
+                           [rotated_points[start, 1], rotated_points[end, 1]])
+        edge_line.set_3d_properties([rotated_points[start, 2], rotated_points[end, 2]])
+    
     # Set the limits of the axes
     ax.set_xlim([-2, 2])
     ax.set_ylim([-2, 2])
     ax.set_zlim([-2, 2])
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
 
     return edge_lines
 
 # Create the animation
-ani = animation.FuncAnimation(fig, update, frames=6, interval=1000, blit=False)
+ani = animation.FuncAnimation(fig, update, frames=6, fargs=(points, edges, edge_lines), interval=100, blit=False)
 
 plt.show()
