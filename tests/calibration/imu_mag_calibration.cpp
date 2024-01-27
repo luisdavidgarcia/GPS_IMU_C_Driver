@@ -40,7 +40,7 @@ int main(void) {
   }
 
   // Write CSV header
-  mag_data_file << "MagX,MagY,MagZ\n";
+  // mag_data_file << "MagX,MagY,MagZ\n";
 
   while (!exit_flag) {
     imu_module.readSensorData();
