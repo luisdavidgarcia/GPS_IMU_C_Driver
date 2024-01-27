@@ -1,11 +1,10 @@
 #include "gps.h"
 #include "imu.h"
 #include "ekfNavINS.h"
-#include <fstream> // Include fstream for file operations
+#include <fstream> 
 #include <stdio.h>
 #include <csignal>
 #include <iostream>
-#include <libserialport.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream>
