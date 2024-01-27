@@ -32,7 +32,7 @@ int main(void) {
   signal(SIGINT, signal_handler);
 
   Imu imu_module;
-  std::ofstream mag_data_file("raw_mag_data.csv");
+  std::ofstream mag_data_file("tests/calibration/raw_mag_data.csv");
 
   // Check if the file is open
   if (!mag_data_file.is_open()) {
