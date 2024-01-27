@@ -192,7 +192,7 @@ public:
 			// 	badRead = 1;
 			// 	break;
 			// } else {
-				magnetometer[i] = magnetometer[i]; * MAG_UT_LSB;
+				magnetometer[i] = magnetometer[i];// * MAG_UT_LSB;
 			// }
 		}
 
