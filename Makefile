@@ -1,7 +1,7 @@
 CXX=g++
 CXX1FLAGS=-ggdb -I include/
 CXX2FLAGS=-ggdb -I /usr/include/eigen3 -I include/
-LDFLAGS=-li2c -lserialport
+LDFLAGS=-li2c
 LIBS=-lmatplot -lcurl
 OBJ_DIR=obj
 CROSS_COMPILE_CXX=aarch64-linux-gnu-g++
@@ -35,6 +35,9 @@ $(EKF_OBJ): $(EKF_SRC)
 
 imu_test: $(IMU_OBJ)
 	$(CXX) $^ tests/imu_tests/test_imu.cpp -o test_imu $(CXX1FLAGS) $(LDFLAGS)
+
+imu_calibrate: $(IMU_OBJ)
+	$(CXX) $^ tests/imu_tests/imu_mag_calibrate.cpp -o imu_calibrate $(CXX1FLAGS) $(LDFLAGS)
 
 gps_test: $(GPS_OBJ) $(UBX_OBJ)
 	$(CXX) $^ tests/gps_tests/test_gps.cpp -o test_gps $(CXX1FLAGS) $(LDFLAGS)
