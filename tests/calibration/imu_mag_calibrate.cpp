@@ -12,6 +12,7 @@
 #include <csignal>
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
 
 extern "C" {
 #include <i2c/smbus.h>
@@ -50,7 +51,7 @@ int main(void) {
       mag_data_file << mag_data[0] << "," << mag_data[1] << "," << mag_data[2] << std::endl;
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(0.1));
+    sleep(0.1);
   }
 
   mag_data_file.close();
