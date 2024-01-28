@@ -71,9 +71,9 @@ float EKF_IMU::normalizeAngle(float angle) {
 }
 
 std::tuple<float, float, float> EKF_IMU::GetPitchRollYaw() {
-    float roll = normalizeAngle(state(0));
-    float pitch = normalizeAngle(state(1));
-    float yaw = normalizeAngle(state(2));
+    float roll = state(0);
+    float pitch = state(1);
+    float yaw = state(2);
 
     return std::make_tuple(pitch, roll, yaw);
 }
