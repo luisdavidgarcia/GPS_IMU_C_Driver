@@ -88,7 +88,7 @@ void Imu::begin() {
  *          magnetometer[1] = <read magnetometer Y value>;
  *          magnetometer[2] = <read magnetometer Z value>;
  */
-void Imu::readSensorData(void) {
+void Imu::ReadSensorData(void) {
     /* Reset bank to 0 on every read */
     i2c_smbus_write_byte_data(i2c_fd, BANK_SEL, BANK_REG_0); //set bank
 
@@ -134,28 +134,3 @@ void Imu::readSensorData(void) {
     magnetometer[1] = (mag_y_l << BITS_PER_BYTE) | (mag_y_h & BYTE_MASK);
     magnetometer[2] = (mag_z_l << BITS_PER_BYTE) | (mag_z_h & BYTE_MASK);
 }
-
-/**
- * @brief   Print accelerometer data to console.
- */
-void Imu::printAccel(void) {
-  	printf("Acceleration (m/s^2): (X: %d, Y: %d, Z: %d)\n", accelerometer[0],
-        accelerometer[1], accelerometer[2]);
-}
-
-/**
- * @brief   Print magnetometer data to console.
- */
-void Imu::printMag(void) {
-  	printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", magnetometer[0],
-        magnetometer[1], magnetometer[2]);
-}
-
-/**
- * @brief   Print gyroscope data to console.
- */
-void Imu::printGyro(void) {
-  	printf("Gyroscope (radians/s): (X: %d, Y: %d, Z: %d)\n", gyroscope[0],
-    	gyroscope[1], gyroscope[2]);
-}
-

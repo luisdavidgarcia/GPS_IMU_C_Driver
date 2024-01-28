@@ -42,21 +42,21 @@ int main(void) {
     while(!exit_flag) {
         // PVTData gps_data = gps_module.GetPvt(true, 1);
         // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
-        imu_module.readSensorData();
+        imu_module.ReadSensorData();
         // if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
-        const int16_t *accel_data = imu_module.getAccelerometerData();
+        const int16_t *accel_data = imu_module.GetAccelerometerData();
         if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
             printf("Accelerometer data is invalid.\n");
             continue;
         }
 
-        const int16_t *gyro_data = imu_module.getGyroscopeData();
+        const int16_t *gyro_data = imu_module.GetGyroscopeData();
         if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
             printf("Gyroscope data is invalid.\n");
             continue;
         }
 
-        const int16_t *mag_data = imu_module.getMagnetometerData();
+        const int16_t *mag_data = imu_module.GetMagnetometerData();
         if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
             printf("Magnetometer data is invalid.\n");
             continue;

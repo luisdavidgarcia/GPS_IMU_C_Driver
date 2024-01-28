@@ -150,81 +150,12 @@ private:
 public:
 	Imu();
 	~Imu();
-	void printAccel(void);
-	void printMag(void);
-	void printGyro(void);
-	void readSensorData(void);
+	void ReadSensorData(void);
 
 	// Rename function names to GetScaledAccelerometerData, etc.
-    const int16_t* getAccelerometerData() {
-		int8_t badRead = 0;
-		// 0 = x, 1 = y, 2 = z
-		for (int i = 0; i < 3; i++) {
-			// if (accelerometer[i] > ACCEL_MAX_THRESHOLD) {
-			// 	badRead = 1;
-			// 	break;
-			// } else if (accelerometer[i] < -ACCEL_MAX_THRESHOLD) {
-			// 	badRead = 1;
-			// 	break;
-			// } else {
-				// if (accelerometer[i] < 0) {
-				// 	accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD + ACCEL_SCALE;
-				// } else {
-				// 	accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD - ACCEL_SCALE;
-				// }
-			accelerometer[i] = accelerometer[i];// * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-
-			// }
-		}
-
-		if (badRead) {
-			accelerometer[0] = accelerometer[1] = accelerometer[2] = ACCEL_MAX_THRESHOLD;
-		}
-
-        return accelerometer;
-    }
-
-    const int16_t* getMagnetometerData() {
-		int8_t badRead = 0;
-		// for (int i = 0; i < 3; i++) {
-			// if (magnetometer[i] > MAG_MAX_THRESHOLD) {
-			// 	badRead = 1;
-			// 	break;
-			// } else if (magnetometer[i] < -MAG_MAX_THRESHOLD) {
-			// 	badRead = 1;
-			// 	break;
-			// } else {
-				// magnetometer[i] = magnetometer[i] * MAG_UT_LSB;
-			// }
-		// }
-
-		if (badRead) {
-			magnetometer[0] = magnetometer[1] = magnetometer[2] = MAG_MAX_THRESHOLD;
-		}
-
-        return magnetometer;
-    }
-
-    const int16_t* getGyroscopeData() {
-		int8_t badRead = 0;
-		// for (int i = 0; i < 3; i++) {
-			// if (gyroscope[i] > GYRO_MAX_THRESHOLD) {
-			// 	badRead = 1;
-			// 	break;
-			// } else if (gyroscope[i] < -GYRO_MAX_THRESHOLD) {
-			// 	badRead = 1;
-			// 	break;
-			// } else {
-				// gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD;
-			// }
-		// }
-
-		if (badRead) {
-			gyroscope[0] = gyroscope[1] = gyroscope[2] = GYRO_MAX_THRESHOLD;
-		}
-
-        return gyroscope;
-    }
+    const int16_t* GetAccelerometerData() { return accelerometer; }
+    const int16_t* GetMagnetometerData() { return magnetometer; }
+    const int16_t* GetGyroscopeData() { return gyroscope; }
 };
 
 #endif // IMU_H
