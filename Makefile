@@ -5,7 +5,7 @@ LDFLAGS=-li2c
 LIBS=-lmatplot -lcurl
 OBJ_DIR=obj
 CROSS_COMPILE_CXX=aarch64-linux-gnu-g++
-CROSS_COMPILE_FLAGS=-std=c++14 -I /usr/include/eigen3
+CROSS_COMPILE_FLAGS=-std=c++14 -I /usr/include/eigen3 -I include/
 
 # Source files
 IMU_SRC=src/imu.cpp
@@ -25,7 +25,7 @@ all: imu_test gps_test kalman_test graphing gps_map_test
 # Pattern rule for object files
 $(OBJ_DIR)/%.o: src/%.cpp
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CROSS_COMPILE_FLAGS) -c $< -o $@
 
 # # Specific rule for cross-compiled object
 # ekf_obj: $(EKF_OBJ)
