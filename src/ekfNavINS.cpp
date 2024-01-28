@@ -147,8 +147,8 @@ Original Author: Adhika Lie
 std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz)
 {
   // initial attitude and heading
-  theta = asinf(ax / G);
-  phi = -asinf(ay / (G * cosf(theta)));
+  theta = asinf(ax);
+  phi = -asinf(ay / cosf(theta));
   // magnetic heading correction due to roll and pitch angle
   Bxc = hx * cosf(theta) + (hy * sinf(phi) + hz * cosf(phi)) * sinf(theta);
   Byc = hy * cosf(phi) - hz * sinf(phi);
