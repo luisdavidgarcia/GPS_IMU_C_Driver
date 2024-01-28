@@ -46,6 +46,8 @@ void EKF_IMU::predict(float gx, float gy, float gz, float dt) {
     state(2) = q.y();
     state(3) = q.z();
 
+    printf("state: %f, %f, %f, %f, %f, %f, %f\n", state(0), state(1), state(2), state(3), state(4), state(5), state(6));
+
     // State transition matrix F
     Eigen::MatrixXf F = computeF(dt);
 
