@@ -68,6 +68,10 @@ int main(void) {
             continue;
         }
 
+        printf("AccelX: %d, AccelY: %d, AccelZ: %d\n", accel_data[0], accel_data[1], accel_data[2]);
+        printf("GyroX: %d, GyroY: %d, GyroZ: %d\n", gyro_data[0], gyro_data[1], gyro_data[2]);
+        printf("MagX: %d, MagY: %d, MagZ: %d\n", mag_data[0], mag_data[1], mag_data[2]);
+
         // Write the IMU data to the file
         if (imuDataFile.is_open()) {
             imuDataFile << Axyz[0] << "," << Axyz[1] << "," << Axyz[2] << ","
@@ -111,7 +115,7 @@ int main(void) {
         // }
 
         // printf("\n---------------------\n");
-        sleep(0.8);
+        sleep(1);
     }
 
     imuDataFile.close(); // Close the file when done
