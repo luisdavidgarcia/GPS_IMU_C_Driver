@@ -78,7 +78,10 @@ void signal_handler(int signum) {
     }
 }
 
+// Scaling the IMU data
 void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]);
+// Mahony AHRS filter
+void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz, float deltat);
 
 int main(void) {
   // Register the signal handler
@@ -178,9 +181,6 @@ void vector_normalize(float a[3])
 // function to subtract offsets and apply scale/correction matrices to IMU data
 
 void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
-    unint8_t i;
-    float temp[3];
-
     const int16_t *accel_data = imu_module.getAccelerometerData();
     if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
         printf("Accelerometer data is invalid.\n");
@@ -207,9 +207,9 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
         printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", mag_data[0], mag_data[1], mag_data[2]);
     }
 
-    Gxyz[0] = Gscale * (static_cast<float>(gyro_data[0]) - G_offset[0]);
-    Gxyz[1] = Gscale * (static_cast<float>(gyro_data[1]) - G_offset[1]);
-    Gxyz[2] = Gscale * (static_cast<float>(gyro_data[2]) - G_offset[2]);
+    Gxyz[0] = (static_cast<float>(gyro_data[0]) - G_offset[0]);
+    Gxyz[1] = (static_cast<float>(gyro_data[1]) - G_offset[1]);
+    Gxyz[2] = (static_cast<float>(gyro_data[2]) - G_offset[2]);
 
     Axyz[0] = static_cast<float>(accel_data[0]);
     Axyz[1] = static_cast<float>(accel_data[1]);
@@ -219,6 +219,8 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
     Mxyz[2] = static_cast<float>(mag_data[2]);
 
     //apply accel offsets (bias) and scale factors from Magneto
+    uint8_t i;
+    float temp[3];
 
     for (i = 0; i < 3; i++) temp[i] = (Axyz[i] - A_B[i]);
     Axyz[0] = A_Ainv[0][0] * temp[0] + A_Ainv[0][1] * temp[1] + A_Ainv[0][2] * temp[2];
