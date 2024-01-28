@@ -154,6 +154,7 @@ class ekfNavINS {
     // Kalman Gain
     Eigen::Matrix<float,9,6> K = Eigen::Matrix<float,9,6>::Zero();
     Eigen::Matrix<float,6,9> H = Eigen::Matrix<float,6,9>::Zero();
+    Eigen::Matrix<float,6,6> R = Eigen::Matrix<float,6,6>::Zero();
     // skew symmetric
     Eigen::Matrix<float,3,3> sk(Eigen::Matrix<float,3,1> w);
 

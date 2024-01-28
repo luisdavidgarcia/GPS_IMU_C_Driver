@@ -55,6 +55,10 @@ void ekfNavINS::ekf_init(uint64_t time, float p, float q, float r, float ax, flo
   P.block(9, 9, 3, 3) = powf(P_AB_INIT, 2.0f) * Eigen::Matrix<float, 3, 3>::Identity();
   P.block(12, 12, 3, 3) = powf(P_GB_INIT, 2.0f) * Eigen::Matrix<float, 3, 3>::Identity();
   // ... R
+  R.block(0,0,2,2) = powf(SIG_GPS_P_NE,2.0f) * Eigen::Matrix<float,2,2>::Identity();
+  R(2,2) = powf(SIG_GPS_P_D,2.0f);
+  R.block(3,3,2,2) = powf(SIG_GPS_V_NE,2.0f) * Eigen::Matrix<float,2,2>::Identity();
+  R(5,5) = powf(SIG_GPS_V_D,2.0f);
   // specific force
   f_b(0, 0) = ax;
   f_b(1, 0) = ay;
