@@ -87,35 +87,30 @@ int main(void) {
             continue;
         }
 
-        printf("AccelX: %d, AccelY: %d, AccelZ: %d\n", accel_data[0], accel_data[1], accel_data[2]);
-        printf("GyroX: %d, GyroY: %d, GyroZ: %d\n", gyro_data[0], gyro_data[1], gyro_data[2]);
-        printf("MagX: %d, MagY: %d, MagZ: %d\n", mag_data[0], mag_data[1], mag_data[2]);
-
-        // Write the IMU data to the file
-        if (imuDataFile.is_open()) {
-            imuDataFile << accel_data[0] << "," << accel_data[1] << "," << accel_data[2] << ","
-                        << gyro_data[0] << "," << gyro_data[1] << "," << gyro_data[2] << ","
-                        << mag_data[0] << "," << mag_data[1] << "," << mag_data[2] << "\n";
-        }
-
         // Apply accelerometer offsets
         Axyz[0] = (static_cast<float>(accel_data[0]) - accel_x_offset) * ACCEL_MG_LSB_2G;
         Axyz[1] = (-1 * static_cast<float>(accel_data[1]) - accel_y_offset) * ACCEL_MG_LSB_2G;
         Axyz[2] = (static_cast<float>(accel_data[2]) - accel_z_offset) * ACCEL_MG_LSB_2G;
 
         // Apply gyroscope biases
-        Gxyz[0] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0])) - gyro_x_bias);
-        Gxyz[1] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1])) - gyro_y_bias);
-        Gxyz[2] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[2])) - gyro_z_bias);
+        Gxyz[0] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0])));
+        Gxyz[1] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1])));
+        Gxyz[2] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[2])));
 
         Mxyz[0] = static_cast<float>(mag_data[0]) * MAG_UT_LSB;;
         Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
-
         printf("AccelX: %2.3f, AccelY: %2.3f, AccelZ: %2.3f\n", Axyz[0], Axyz[1], Axyz[2]);
         printf("GyroX: %2.3f, GyroY: %2.3f, GyroZ: %2.3f\n", Gxyz[0], Gxyz[1], Gxyz[2]);
         printf("MagX: %2.3f, MagY: %2.3f, MagZ: %2.3f\n", Mxyz[0], Mxyz[1], Mxyz[2]);
+
+        // Write the IMU data to the file
+        if (imuDataFile.is_open()) {
+            imuDataFile << Axyz[0] << "," << Axyz[1] << "," << Axyz[2] << ","
+                        << Gxyz[0] << "," << Gxyz[1] << "," << Gxyz[2] << ","
+                        << Mxyz[0] << "," << Mxyz[1] << "," << Mxyz[2] << "\n";
+        }
 
         // Low-pass filter for accelerometer data
         filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
