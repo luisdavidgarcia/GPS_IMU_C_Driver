@@ -64,31 +64,32 @@ int main(void) {
         Gxyz[1] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1]));// - G_offset[1]);
         Gxyz[2] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[2]));// - G_offset[2]);
         Axyz[0] = static_cast<float>(accel_data[0]) * ACCEL_MG_LSB_2G; //* SENSORS_GRAVITY_STD;
-        Axyz[1] = static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G; //* SENSORS_GRAVITY_STD;
+        Axyz[1] = -1 * static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G; //* SENSORS_GRAVITY_STD;
         Axyz[2] = static_cast<float>(accel_data[2]) * ACCEL_MG_LSB_2G; //* SENSORS_GRAVITY_STD;
         Mxyz[0] = static_cast<float>(mag_data[0]) * MAG_UT_LSB;;
         Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
-        // Low-pass filter for accelerometer data
-        float filteredAx = alpha * prevFilteredAx + (1 - alpha) * Axyz[0];
-        float filteredAy = alpha * prevFilteredAy + (1 - alpha) * Axyz[1];
-        float filteredAz = alpha * prevFilteredAz + (1 - alpha) * Axyz[2];
+        // // Low-pass filter for accelerometer data
+        // float filteredAx = alpha * prevFilteredAx + (1 - alpha) * Axyz[0];
+        // float filteredAy = alpha * prevFilteredAy + (1 - alpha) * Axyz[1];
+        // float filteredAz = alpha * prevFilteredAz + (1 - alpha) * Axyz[2];
 
-        // Low-pass filter for magnetometer data
-        float filteredMx = alpha * prevFilteredMx + (1 - alpha) * Mxyz[0];
-        float filteredMy = alpha * prevFilteredMy + (1 - alpha) * Mxyz[1];
-        float filteredMz = alpha * prevFilteredMz + (1 - alpha) * Mxyz[2];
+        // // Low-pass filter for magnetometer data
+        // float filteredMx = alpha * prevFilteredMx + (1 - alpha) * Mxyz[0];
+        // float filteredMy = alpha * prevFilteredMy + (1 - alpha) * Mxyz[1];
+        // float filteredMz = alpha * prevFilteredMz + (1 - alpha) * Mxyz[2];
 
-        // Update previous values for next iteration
-        prevFilteredAx = filteredAx;
-        prevFilteredAy = filteredAy;
-        prevFilteredAz = filteredAz;
-        prevFilteredMx = filteredMx;
-        prevFilteredMy = filteredMy;
-        prevFilteredMz = filteredMz;
+        // // Update previous values for next iteration
+        // prevFilteredAx = filteredAx;
+        // prevFilteredAy = filteredAy;
+        // prevFilteredAz = filteredAz;
+        // prevFilteredMx = filteredMx;
+        // prevFilteredMy = filteredMy;
+        // prevFilteredMz = filteredMz;
 
-        std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
+        // std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
+        std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(Axyz[0], Axyz[1], Axyz[2], Mxyz[0], Mxyz[1], Mxyz[2]);
         printf("Roll 	  : %2.3f\n", ekf.getRoll_rad());
         printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
         printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
