@@ -128,9 +128,9 @@ int main(void) {
         lowPassFilter(Axyz, filteredAxyz);
         lowPassFilter(Mxyz, filteredMxyz);
 
-      // printf("Gyro (rad/s): (X: %f, Y: %f, Z: %f)\n", Gxyz[0], Gxyz[1], Gxyz[2]);
-      // printf("Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", Axyz[0], Axyz[1], Axyz[2]);
-      // printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
+      printf("Gyro (rad/s): (X: %f, Y: %f, Z: %f)\n", Gxyz[0], Gxyz[1], Gxyz[2]);
+      printf("Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", Axyz[0], Axyz[1], Axyz[2]);
+      printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
 
       printf("Filtered Gyroscope (rad/s): (X: %f, Y: %f, Z: %f)\n", filteredGxyz[0], filteredGxyz[1], filteredGxyz[2]);
       printf("Filtered Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", filteredAxyz[0], filteredAxyz[1], filteredAxyz[2]);
