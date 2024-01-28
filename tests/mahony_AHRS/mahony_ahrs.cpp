@@ -199,7 +199,7 @@ int main(void) {
     }
 
    // Clean up and close the file
-    outfile.close();
+    // outfile.close();
     return 0;
 }
 
