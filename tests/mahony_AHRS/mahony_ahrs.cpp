@@ -24,6 +24,7 @@
 #include <string.h>
 #include <chrono>
 #include <thread>
+#include <math.h>
 
 Imu imu_module;
 
@@ -65,6 +66,7 @@ static float yaw, pitch, roll; //Euler angle output
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
+std::ofstream outfile;
 
 // Signal handler function for Ctrl+C (SIGINT)
 void signal_handler(int signum) {
@@ -75,6 +77,8 @@ void signal_handler(int signum) {
         exit_flag = true;
     }
 }
+
+void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]);
 
 int main(void) {
   // Register the signal handler
@@ -143,7 +147,7 @@ int main(void) {
 
       printf("yaw: %f, pitch: %f, roll: %f\n", yaw, pitch, roll);
 	   // Log the data to the file
-        outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
+        outfile << yaw << "," << pitch << "," << roll << std::endl;
 
       
       // Sleep for a bit to limit the update rate
@@ -174,7 +178,7 @@ void vector_normalize(float a[3])
 // function to subtract offsets and apply scale/correction matrices to IMU data
 
 void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
-    byte i;
+    unint8_t i;
     float temp[3];
 
     const int16_t *accel_data = imu_module.getAccelerometerData();
