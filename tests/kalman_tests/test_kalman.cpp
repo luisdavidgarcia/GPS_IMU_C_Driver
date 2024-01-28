@@ -34,6 +34,7 @@ int main(void) {
     Imu imu_module;
     ekfNavINS ekf;
     float pitch, roll, yaw;
+    float Gxyz[3], Axyz[3], Mxyz[3];
 
     while(!exit_flag) {
         // PVTData gps_data = gps_module.GetPvt(true, 1);
