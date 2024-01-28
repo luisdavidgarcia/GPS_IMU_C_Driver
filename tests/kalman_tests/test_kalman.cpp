@@ -48,9 +48,12 @@ int main(void) {
     const float accel_x_offset = 0;
     const float accel_y_offset = 0;
     const float accel_z_offset = 0;
-    const float gyro_x_bias = -71.33680661967514;
-    const float gyro_y_bias = 64.12810297272449; 
-    const float gyro_z_bias = -190.70119521912352;
+    const float gyro_x_bias = 0;
+    const float gyro_y_bias = 0;
+    const float gyro_z_bias = 0;
+    // const float gyro_x_bias = -71.33680661967514;
+    // const float gyro_y_bias = 64.12810297272449; 
+    // const float gyro_z_bias = -190.70119521912352;
 
 
     // Open a file in write mode to log data
@@ -95,9 +98,6 @@ int main(void) {
                         << mag_data[0] << "," << mag_data[1] << "," << mag_data[2] << "\n";
         }
 
-        // New gyro
-        printf("GyroX: %d, GyroY: %d, GyroZ: %d\n", gyro_data[0], gyro_data[1], gyro_data[2]);
-
         // Apply accelerometer offsets
         Axyz[0] = (static_cast<float>(accel_data[0]) - accel_x_offset) * ACCEL_MG_LSB_2G;
         Axyz[1] = (-1 * static_cast<float>(accel_data[1]) - accel_y_offset) * ACCEL_MG_LSB_2G;
@@ -111,6 +111,11 @@ int main(void) {
         Mxyz[0] = static_cast<float>(mag_data[0]) * MAG_UT_LSB;;
         Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
+
+
+        printf("AccelX: %2.3f, AccelY: %2.3f, AccelZ: %2.3f\n", Axyz[0], Axyz[1], Axyz[2]);
+        printf("GyroX: %2.3f, GyroY: %2.3f, GyroZ: %2.3f\n", Gxyz[0], Gxyz[1], Gxyz[2]);
+        printf("MagX: %2.3f, MagY: %2.3f, MagZ: %2.3f\n", Mxyz[0], Mxyz[1], Mxyz[2]);
 
         // Low-pass filter for accelerometer data
         filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
