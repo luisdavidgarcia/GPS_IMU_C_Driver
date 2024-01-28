@@ -37,6 +37,7 @@ int main(void) {
     ekfNavINS ekf;
     float pitch, roll, yaw;
     float Gxyz[3], Axyz[3], Mxyz[3];
+    const float alpha = 0.5; // Adjust this parameter to tweak the filter (range: 0-1)
 
     while(!exit_flag) {
         // PVTData gps_data = gps_module.GetPvt(true, 1);
