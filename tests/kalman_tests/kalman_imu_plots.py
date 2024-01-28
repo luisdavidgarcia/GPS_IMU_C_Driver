@@ -38,7 +38,7 @@ while True:
     try:
         with open("rpy_data.txt", "r") as file:
             data = file.read().strip()
-            roll, pitch, yaw = map(float, data.split(','))  # Convert string data to float
+            pitch, roll, yaw = map(float, data.split(','))  # Convert string data to float
             plot_data(roll, pitch, yaw)
     except IOError:
         print("File not accessible")
