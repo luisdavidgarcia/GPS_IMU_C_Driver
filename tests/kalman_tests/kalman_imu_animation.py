@@ -51,13 +51,9 @@ def update(num, ax, faces):
 
     # Read IMU data from file
     try:
-        with open("rpy_data.txt", "r") as file:
-            lines = file.readlines()
-            if num < len(lines):
-                line = lines[num]
-                roll, pitch, yaw = map(float, line.strip().split(","))
-            else:
-                roll, pitch, yaw = 0, 0, 0
+       with open("rpy_data.txt", "r") as file:
+            data = file.read().strip().split(',')
+            pitch, roll, yaw = map(float, data)
     except Exception as e:
         print(f"Error: {e}")
         roll, pitch, yaw = 0, 0, 0
