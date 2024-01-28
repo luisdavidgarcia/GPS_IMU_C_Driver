@@ -36,7 +36,7 @@ def plot_data(roll, pitch, yaw):
 
 while True:
     try:
-        with open("data.txt", "r") as file:
+        with open("rpy_data.txt", "r") as file:
             data = file.read().strip()
             roll, pitch, yaw = map(float, data.split(','))  # Convert string data to float
             plot_data(roll, pitch, yaw)
