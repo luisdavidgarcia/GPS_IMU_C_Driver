@@ -115,7 +115,7 @@ int main(void) {
         // }
 
         // printf("\n---------------------\n");
-        sleep(1);
+        sleep(0.5);
     }
 
     imuDataFile.close(); // Close the file when done
