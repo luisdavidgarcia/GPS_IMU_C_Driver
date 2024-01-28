@@ -38,12 +38,20 @@ int main(void) {
     // const float alpha = 0.5; // Adjust this parameter to tweak the filter (range: 0-1)
 
     // Define the accelerometer offsets and gyroscope biases
-    const float accel_x_offset = 4472.898166403786;
-    const float accel_y_offset = -936.4657925867508;
-    const float accel_z_offset = 996.033714511041;
-    const float gyro_x_bias = -527.8627760252366;
-    const float gyro_y_bias = -286.20908911671927;
-    const float gyro_z_bias = 30.305599369085172;
+    // const float accel_x_offset = 4472.898166403786;
+    // const float accel_y_offset = -936.4657925867508;
+    // const float accel_z_offset = 996.033714511041;
+    // const float gyro_x_bias = -527.8627760252366;
+    // const float gyro_y_bias = -286.20908911671927;
+    // const float gyro_z_bias = 30.305599369085172;
+
+    const float accel_x_offset = 0;
+    const float accel_y_offset = 0;
+    const float accel_z_offset = 0;
+    const float gyro_x_bias = 0;
+    const float gyro_y_bias = 0; 
+    const float gyro_z_bias = 0;
+
 
     // // Open a file in write mode to log data
     // std::ofstream imuDataFile("tests/kalman_tests/accel_gyro_imu_data.csv");
@@ -102,14 +110,14 @@ int main(void) {
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
         // // Low-pass filter for accelerometer data
-        // filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
-        // filteredAy = alpha * filteredAy + (1 - alpha) * Axyz[1];
-        // filteredAz = alpha * filteredAz + (1 - alpha) * Axyz[2];
+        filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
+        filteredAy = alpha * filteredAy + (1 - alpha) * Axyz[1];
+        filteredAz = alpha * filteredAz + (1 - alpha) * Axyz[2];
 
-        // // Low-pass filter for magnetometer data
-        // filteredMx = alpha * filteredMx + (1 - alpha) * Mxyz[0];
-        // filteredMy = alpha * filteredMy + (1 - alpha) * Mxyz[1];
-        // filteredMz = alpha * filteredMz + (1 - alpha) * Mxyz[2];
+        // Low-pass filter for magnetometer data
+        filteredMx = alpha * filteredMx + (1 - alpha) * Mxyz[0];
+        filteredMy = alpha * filteredMy + (1 - alpha) * Mxyz[1];
+        filteredMz = alpha * filteredMz + (1 - alpha) * Mxyz[2];
 
         // std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
         std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(Axyz[0], Axyz[1], Axyz[2], Mxyz[0], Mxyz[1], Mxyz[2]);
