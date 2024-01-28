@@ -172,7 +172,7 @@ public:
 				// } else {
 				// 	accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD - ACCEL_SCALE;
 				// }
-			accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G; // * SENSORS_GRAVITY_STD;
+			accelerometer[i] = accelerometer[i];// * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
 
 			// }
 		}
@@ -186,7 +186,7 @@ public:
 
     const int16_t* getMagnetometerData() {
 		int8_t badRead = 0;
-		for (int i = 0; i < 3; i++) {
+		// for (int i = 0; i < 3; i++) {
 			// if (magnetometer[i] > MAG_MAX_THRESHOLD) {
 			// 	badRead = 1;
 			// 	break;
@@ -194,9 +194,9 @@ public:
 			// 	badRead = 1;
 			// 	break;
 			// } else {
-				magnetometer[i] = magnetometer[i] * MAG_UT_LSB;
+				// magnetometer[i] = magnetometer[i] * MAG_UT_LSB;
 			// }
-		}
+		// }
 
 		if (badRead) {
 			magnetometer[0] = magnetometer[1] = magnetometer[2] = MAG_MAX_THRESHOLD;
@@ -207,7 +207,7 @@ public:
 
     const int16_t* getGyroscopeData() {
 		int8_t badRead = 0;
-		for (int i = 0; i < 3; i++) {
+		// for (int i = 0; i < 3; i++) {
 			// if (gyroscope[i] > GYRO_MAX_THRESHOLD) {
 			// 	badRead = 1;
 			// 	break;
@@ -215,9 +215,9 @@ public:
 			// 	badRead = 1;
 			// 	break;
 			// } else {
-				gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD;
+				// gyroscope[i] = gyroscope[i] * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD;
 			// }
-		}
+		// }
 
 		if (badRead) {
 			gyroscope[0] = gyroscope[1] = gyroscope[2] = GYRO_MAX_THRESHOLD;
