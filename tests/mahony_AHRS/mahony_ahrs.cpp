@@ -118,6 +118,10 @@ int main(void) {
       imu_module.ReadSensorData();
       get_scaled_IMU(Gxyz, Axyz, Mxyz);
 
+      printf("Gyro (rad/s): (X: %f, Y: %f, Z: %f)\n", Gxyz[0], Gxyz[1], Gxyz[2]);
+      printf("Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", Axyz[0], Axyz[1], Axyz[2]);
+      printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
+
         // Apply low-pass filter
         lowPassFilter(Gxyz, filteredGxyz);
         lowPassFilter(Axyz, filteredAxyz);
