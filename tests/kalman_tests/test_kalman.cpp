@@ -112,7 +112,7 @@ int main(void) {
             // }
 
             // Write only the IMU data to a file
-            std::ofstream outfile("tests/kalman_tests/data.txt");
+            std::ofstream outfile("tests/kalman_tests/rpy_data.txt");
             if (outfile.is_open()) {
                 outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
                 outfile.flush(); // Flush the stream

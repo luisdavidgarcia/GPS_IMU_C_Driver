@@ -67,7 +67,7 @@ static float yaw, pitch, roll; //Euler angle output
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
-std::ofstream outfile;
+// std::ofstream outfile;
 
 // Signal handler function for Ctrl+C (SIGINT)
 void signal_handler(int signum) {
@@ -99,11 +99,11 @@ int main(void) {
     static float Gxyz[3], Axyz[3], Mxyz[3]; //centered and scaled gyro/accel/mag data 
 
 	// Open the file in write mode (this will truncate the existing file)
-    outfile.open("tests/mahony_AHRS/ypr_data.txt", std::ios::out);
-    if (!outfile.is_open()) {
-        std::cerr << "Unable to open file for writing." << std::endl;
-        return -1;
-    }
+    // outfile.open("tests/mahony_AHRS/ypr_data.txt", std::ios::out);
+    // if (!outfile.is_open()) {
+    //     std::cerr << "Unable to open file for writing." << std::endl;
+    //     return -1;
+    // }
 
     float filteredGxyz[3] = {0, 0, 0}; // Initialize filtered values
     float filteredAxyz[3] = {0, 0, 0};
@@ -168,24 +168,33 @@ int main(void) {
       pitch = asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
       yaw   = atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - ( q[2] * q[2] + q[3] * q[3]));
       // to degrees
-      yaw   *= 180.0 / PI;
-      pitch *= 180.0 / PI;
-      roll *= 180.0 / PI;
+      // yaw   *= 180.0 / PI;
+      // pitch *= 180.0 / PI;
+      // roll *= 180.0 / PI;
 
       // http://www.ngdc.noaa.gov/geomag-web/#declination
       //conventional nav, yaw increases CW from North, corrected for local magnetic declination
 
-      yaw = -(yaw + declination);
-      if (yaw < 0) yaw += 360.0;
-      if (yaw >= 360.0) yaw -= 360.0;
+      // yaw = -(yaw + declination);
+      // if (yaw < 0) yaw += 360.0;
+      // if (yaw >= 360.0) yaw -= 360.0;
 
       printf("yaw: %f, pitch: %f, roll: %f\n", yaw, pitch, roll);
 	   // Log the data to the file
-        outfile << yaw << "," << pitch << "," << roll << std::endl;
+        // outfile << yaw << "," << pitch << "," << roll << std::endl;
 
       
       // Sleep for a bit to limit the update rate
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+          std::ofstream outfile("tests/mahony_AHRS/rpy_data.txt");
+          if (outfile.is_open()) {
+              outfile << roll << "," << pitch << "," << yaw << std::endl;
+              outfile.flush(); // Flush the stream
+              outfile.close(); // Close the file to save the changes
+          } else {
+              std::cerr << "Unable to open file for writing." << std::endl;
+          }
+
       printf("--------------------\n");
     }
 
