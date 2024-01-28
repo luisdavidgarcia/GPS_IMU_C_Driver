@@ -11,7 +11,6 @@
 #include <string.h>
 
 #define CURRENT_YEAR 2024
-// Might help: https://teslabs.com/articles/magnetometer-calibration/
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
