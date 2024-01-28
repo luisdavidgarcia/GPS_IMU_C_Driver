@@ -25,10 +25,6 @@ void signal_handler(int signum) {
     }
 }
 
-// Add variables to store previous filtered values
-float prevFilteredAx = 0, prevFilteredAy = 0, prevFilteredAz = 0;
-float prevFilteredMx = 0, prevFilteredMy = 0, prevFilteredMz = 0;
-
 int main(void) {
     // Register the signal handler for SIGINT (Ctrl+C)
     signal(SIGINT, signal_handler);
@@ -70,26 +66,18 @@ int main(void) {
         Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
-        // // Low-pass filter for accelerometer data
-        // float filteredAx = alpha * prevFilteredAx + (1 - alpha) * Axyz[0];
-        // float filteredAy = alpha * prevFilteredAy + (1 - alpha) * Axyz[1];
-        // float filteredAz = alpha * prevFilteredAz + (1 - alpha) * Axyz[2];
+        // Low-pass filter for accelerometer data
+        float filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
+        float filteredAy = alpha * filteredAy + (1 - alpha) * Axyz[1];
+        float filteredAz = alpha * filteredAz + (1 - alpha) * Axyz[2];
 
-        // // Low-pass filter for magnetometer data
-        // float filteredMx = alpha * prevFilteredMx + (1 - alpha) * Mxyz[0];
-        // float filteredMy = alpha * prevFilteredMy + (1 - alpha) * Mxyz[1];
-        // float filteredMz = alpha * prevFilteredMz + (1 - alpha) * Mxyz[2];
+        // Low-pass filter for magnetometer data
+        float filteredMx = alpha * filteredMx + (1 - alpha) * Mxyz[0];
+        float filteredMy = alpha * filteredMy + (1 - alpha) * Mxyz[1];
+        float filteredMz = alpha * filteredMz + (1 - alpha) * Mxyz[2];
 
-        // // Update previous values for next iteration
-        // prevFilteredAx = filteredAx;
-        // prevFilteredAy = filteredAy;
-        // prevFilteredAz = filteredAz;
-        // prevFilteredMx = filteredMx;
-        // prevFilteredMy = filteredMy;
-        // prevFilteredMz = filteredMz;
-
-        // std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
-        std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(Axyz[0], Axyz[1], Axyz[2], Mxyz[0], Mxyz[1], Mxyz[2]);
+        std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
+        // std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(Axyz[0], Axyz[1], Axyz[2], Mxyz[0], Mxyz[1], Mxyz[2]);
         printf("Roll 	  : %2.3f\n", ekf.getRoll_rad());
         printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
         printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
