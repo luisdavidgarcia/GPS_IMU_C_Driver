@@ -12,7 +12,7 @@ IMU_SRC=src/imu.cpp
 GPS_SRC=src/gps.cpp
 UBX_SRC=src/ubx_msg.cpp
 EKF_SRC=src/ekfNavINS.cpp
-MAHONY_SRC=tests/mahony_AHRS/mahony_AHRS.cpp
+MAHONY_SRC=tests/mahony_AHRS/mahony_ahrs.cpp
 
 # Object files
 IMU_OBJ=$(OBJ_DIR)/imu.o
