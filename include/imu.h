@@ -159,7 +159,7 @@ public:
     const int16_t* getAccelerometerData() {
 		int8_t badRead = 0;
 		// 0 = x, 1 = y, 2 = z
-		// for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) {
 			// if (accelerometer[i] > ACCEL_MAX_THRESHOLD) {
 			// 	badRead = 1;
 			// 	break;
@@ -172,9 +172,10 @@ public:
 				// } else {
 				// 	accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD - ACCEL_SCALE;
 				// }
+			accelerometer[i] = accelerometer[i] * ACCEL_MG_LSB_2G; // * SENSORS_GRAVITY_STD;
 
 			// }
-		// }
+		}
 
 		if (badRead) {
 			accelerometer[0] = accelerometer[1] = accelerometer[2] = ACCEL_MAX_THRESHOLD;
@@ -193,7 +194,7 @@ public:
 			// 	badRead = 1;
 			// 	break;
 			// } else {
-				magnetometer[i] = magnetometer[i];// * MAG_UT_LSB;
+				magnetometer[i] = magnetometer[i] * MAG_UT_LSB;
 			// }
 		}
 
