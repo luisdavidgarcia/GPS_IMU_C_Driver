@@ -63,9 +63,14 @@ float declination = -14.84;
 #define Kp 50.0
 #define Ki 0.0
 
+// Vector to hold integral error for Mahony method
+static float eInt[3] = {0.0f, 0.0f, 0.0f};
+
 // Vector to hold quaternion
-static float q[4] = {1.0, 0.0, 0.0, 0.0};
-static float yaw, pitch, roll; //Euler angle output
+static float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
+
+// Euler angles
+static float yaw, pitch, roll; 
 
 // Define a flag to indicate if the program should exit gracefully.
 volatile bool exit_flag = false;
@@ -117,10 +122,6 @@ int main(void) {
       // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
       imu_module.ReadSensorData();
       get_scaled_IMU(Gxyz, Axyz, Mxyz);
-
-      printf("Gyro (rad/s): (X: %f, Y: %f, Z: %f)\n", Gxyz[0], Gxyz[1], Gxyz[2]);
-      printf("Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", Axyz[0], Axyz[1], Axyz[2]);
-      printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
 
         // Apply low-pass filter
         lowPassFilter(Gxyz, filteredGxyz);
@@ -254,9 +255,9 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
     Gxyz[0] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[0]); //- G_offset[0]);
     Gxyz[1] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[1]); //- G_offset[1]);
     Gxyz[2] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[2]); //- G_offset[2]);
-    Axyz[0] = static_cast<float>(accel_data[0]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-    Axyz[1] = static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-    Axyz[2] = static_cast<float>(accel_data[2]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+    Axyz[0] = static_cast<float>(accel_data[0]) * ACCEL_MG_LSB_2G; //* SENSORS_GRAVITY_STD;
+    Axyz[1] = static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G; //* SENSORS_GRAVITY_STD;
+    Axyz[2] = static_cast<float>(accel_data[2]) * ACCEL_MG_LSB_2G; //* SENSORS_GRAVITY_STD;
     Mxyz[0] = static_cast<float>(mag_data[0]) * MAG_UT_LSB;;
     Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
     Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
@@ -280,22 +281,14 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
     vector_normalize(Mxyz);
 }
 
-// Mahony orientation filter, assumed World Frame NWU (xNorth, yWest, zUp)
-// Modified from Madgwick version to remove Z component of magnetometer:
-// The two reference vectors are now Up (Z, Acc) and West (Acc cross Mag)
-// sjr 3/2021
-// input vectors ax, ay, az and mx, my, mz MUST be normalized!
-// gx, gy, gz must be in units of radians/second
-//
+// the error between estimated reference vectors and measured ones.
 void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz, float deltat)
 {
-  // Vector to hold integral error for Mahony method
-  static float eInt[3] = {0.0, 0.0, 0.0};
   // short name local variable for readability
   float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];
   float norm;
-  float hx, hy, hz;  //observed West horizon vector W = AxM
-  float ux, uy, uz, wx, wy, wz; //calculated A (Up) and W in body frame
+  float hx, hy, bx, bz;
+  float vx, vy, vz, wx, wy, wz;
   float ex, ey, ez;
   float pa, pb, pc;
 
@@ -311,66 +304,66 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
   float q3q4 = q3 * q4;
   float q4q4 = q4 * q4;
 
-  // Measured horizon vector = a x m (in body frame)
-  hx = ay * mz - az * my;
-  hy = az * mx - ax * mz;
-  hz = ax * my - ay * mx;
-  // Normalise horizon vector
-  norm = sqrt(hx * hx + hy * hy + hz * hz);
-  if (norm == 0.0f) return; // Handle div by zero
+  // Normalise accelerometer measurement
+  norm = sqrt(ax * ax + ay * ay + az * az);
+  if (norm == 0.0f) return; // Handle NaN
+  norm = 1.0f / norm;       // Use reciprocal for division
+  ax *= norm;
+  ay *= norm;
+  az *= norm;
 
-  norm = 1.0f / norm;
-  hx *= norm;
-  hy *= norm;
-  hz *= norm;
+  // Normalise magnetometer measurement
+  norm = sqrt(mx * mx + my * my + mz * mz);
+  if (norm == 0.0f) return; // Handle NaN
+  norm = 1.0f / norm;       // Use reciprocal for division
+  mx *= norm;
+  my *= norm;
+  mz *= norm;
 
-  // Estimated direction of Up reference vector
-  ux = 2.0f * (q2q4 - q1q3);
-  uy = 2.0f * (q1q2 + q3q4);
-  uz = q1q1 - q2q2 - q3q3 + q4q4;
+  // Reference direction of Earth's magnetic field
+  hx = 2.0f * mx * (0.5f - q3q3 - q4q4) + 2.0f * my * (q2q3 - q1q4) + 2.0f * mz * (q2q4 + q1q3);
+  hy = 2.0f * mx * (q2q3 + q1q4) + 2.0f * my * (0.5f - q2q2 - q4q4) + 2.0f * mz * (q3q4 - q1q2);
+  bx = sqrt((hx * hx) + (hy * hy));
+  bz = 2.0f * mx * (q2q4 - q1q3) + 2.0f * my * (q3q4 + q1q2) + 2.0f * mz * (0.5f - q2q2 - q3q3);
 
-  // estimated direction of horizon (West) reference vector
-  wx = 2.0f * (q2q3 + q1q4);
-  wy = q1q1 - q2q2 + q3q3 - q4q4;
-  wz = 2.0f * (q3q4 - q1q2);
+  // Estimated direction of gravity and magnetic field
+  vx = 2.0f * (q2q4 - q1q3);
+  vy = 2.0f * (q1q2 + q3q4);
+  vz = q1q1 - q2q2 - q3q3 + q4q4;
+  wx = 2.0f * bx * (0.5f - q3q3 - q4q4) + 2.0f * bz * (q2q4 - q1q3);
+  wy = 2.0f * bx * (q2q3 - q1q4) + 2.0f * bz * (q1q2 + q3q4);
+  wz = 2.0f * bx * (q1q3 + q2q4) + 2.0f * bz * (0.5f - q2q2 - q3q3);
 
-  // Error is the summed cross products of estimated and measured directions of the reference vectors
-  // It is assumed small, so sin(theta) ~ theta IS the angle required to correct the orientation error.
-
-  ex = (ay * uz - az * uy) + (hy * wz - hz * wy);
-  ey = (az * ux - ax * uz) + (hz * wx - hx * wz);
-  ez = (ax * uy - ay * ux) + (hx * wy - hy * wx);
-
+  // Error is cross product between estimated direction and measured direction of gravity
+  ex = (ay * vz - az * vy) + (my * wz - mz * wy);
+  ey = (az * vx - ax * vz) + (mz * wx - mx * wz);
+  ez = (ax * vy - ay * vx) + (mx * wy - my * wx);
   if (Ki > 0.0f)
   {
     eInt[0] += ex;      // accumulate integral error
     eInt[1] += ey;
     eInt[2] += ez;
-    // Apply I feedback
-    gx += Ki * eInt[0];
-    gy += Ki * eInt[1];
-    gz += Ki * eInt[2];
+  }
+  else
+  {
+    eInt[0] = 0.0f;     // prevent integral wind up
+    eInt[1] = 0.0f;
+    eInt[2] = 0.0f;
   }
 
-
-  // Apply P feedback
-  gx = gx + Kp * ex;
-  gy = gy + Kp * ey;
-  gz = gz + Kp * ez;
-
-
- //update quaternion with integrated contribution
- // small correction 1/11/2022, see https://github.com/kriswiner/MPU9250/issues/447
-gx = gx * (0.5*deltat); // pre-multiply common factors
-gy = gy * (0.5*deltat);
-gz = gz * (0.5*deltat);
-float qa = q1;
-float qb = q2;
-float qc = q3;
-q1 += (-qb * gx - qc * gy - q4 * gz);
-q2 += (qa * gx + qc * gz - q4 * gy);
-q3 += (qa * gy - qb * gz + q4 * gx);
-q4 += (qa * gz + qb * gy - qc * gx);
+  // Apply feedback terms
+  gx = gx + Kp * ex + Ki * eInt[0];
+  gy = gy + Kp * ey + Ki * eInt[1];
+  gz = gz + Kp * ez + Ki * eInt[2];
+ 
+  // Integrate rate of change of quaternion
+  pa = q2;
+  pb = q3;
+  pc = q4;
+  q1 = q1 + (-q2 * gx - q3 * gy - q4 * gz) * (0.5f * deltat);
+  q2 = pa + (q1 * gx + pb * gz - pc * gy) * (0.5f * deltat);
+  q3 = pb + (q1 * gy - pa * gz + pc * gx) * (0.5f * deltat);
+  q4 = pc + (q1 * gz + pa * gy - pb * gx) * (0.5f * deltat);
 
   // Normalise quaternion
   norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
