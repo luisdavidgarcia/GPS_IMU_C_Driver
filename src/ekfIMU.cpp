@@ -64,12 +64,16 @@ void EKF_IMU::Update(const Eigen::Vector3f &accel, const Eigen::Vector3f &mag)
     P = (Eigen::MatrixXf::Identity(6, 6) - K * H) * P;
 }
 
-std::tuple<float, float, float> EKF_IMU::GetPitchRollYaw() 
-{
-    // Since the state vector is assumed to be in the format: [roll, pitch, yaw, gyro_bias_x, gyro_bias_y, gyro_bias_z]
-    float roll = state(0);  // Roll
-    float pitch = state(1); // Pitch
-    float yaw = state(2);   // Yaw
+float EKF_IMU::normalizeAngle(float angle) {
+    while (angle > M_PI) angle -= 2 * M_PI;
+    while (angle < -M_PI) angle += 2 * M_PI;
+    return angle;
+}
+
+std::tuple<float, float, float> EKF_IMU::GetPitchRollYaw() {
+    float roll = normalizeAngle(state(0));
+    float pitch = normalizeAngle(state(1));
+    float yaw = normalizeAngle(state(2));
 
     return std::make_tuple(pitch, roll, yaw);
 }

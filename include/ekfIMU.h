@@ -11,6 +11,7 @@ class EKF_IMU
         Eigen::MatrixXf P;     // Error covariance matrix
         Eigen::MatrixXf Q;     // Process noise covariance matrix
         Eigen::MatrixXf R;     // Measurement noise covariance matrix
+        float EKF_IMU::normalizeAngle(float angle); 
 
     public:
         EKF_IMU();
