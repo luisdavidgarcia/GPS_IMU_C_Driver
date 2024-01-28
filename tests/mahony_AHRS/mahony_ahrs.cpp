@@ -100,7 +100,6 @@ int main(void) {
     
     while(!exit_flag) {
       // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
-      printf("--------------------\n");
       imu_module.readSensorData();
       get_scaled_IMU(Gxyz, Axyz, Mxyz);
 
