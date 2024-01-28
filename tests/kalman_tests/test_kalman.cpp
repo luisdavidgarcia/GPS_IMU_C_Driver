@@ -33,6 +33,8 @@ int main(void) {
     ekfNavINS ekf;
     float pitch, roll, yaw;
     float Gxyz[3], Axyz[3], Mxyz[3];
+    float filteredAx = 0, filteredAy = 0, filteredAz = 0;
+    float filteredMx = 0, filteredMy = 0, filteredMz = 0;
     const float alpha = 0.5; // Adjust this parameter to tweak the filter (range: 0-1)
 
     while(!exit_flag) {
@@ -67,17 +69,16 @@ int main(void) {
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
         // Low-pass filter for accelerometer data
-        float filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
-        float filteredAy = alpha * filteredAy + (1 - alpha) * Axyz[1];
-        float filteredAz = alpha * filteredAz + (1 - alpha) * Axyz[2];
+        filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
+        filteredAy = alpha * filteredAy + (1 - alpha) * Axyz[1];
+        filteredAz = alpha * filteredAz + (1 - alpha) * Axyz[2];
 
         // Low-pass filter for magnetometer data
-        float filteredMx = alpha * filteredMx + (1 - alpha) * Mxyz[0];
-        float filteredMy = alpha * filteredMy + (1 - alpha) * Mxyz[1];
-        float filteredMz = alpha * filteredMz + (1 - alpha) * Mxyz[2];
+        filteredMx = alpha * filteredMx + (1 - alpha) * Mxyz[0];
+        filteredMy = alpha * filteredMy + (1 - alpha) * Mxyz[1];
+        filteredMz = alpha * filteredMz + (1 - alpha) * Mxyz[2];
 
         std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
-        // std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(Axyz[0], Axyz[1], Axyz[2], Mxyz[0], Mxyz[1], Mxyz[2]);
         printf("Roll 	  : %2.3f\n", ekf.getRoll_rad());
         printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
         printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
