@@ -116,8 +116,8 @@ int main(void) {
       printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
 
       // reconcile magnetometer and accelerometer axes. X axis points magnetic North for yaw = 0
-      Mxyz[1] = -Mxyz[1]; //reflect Y and Z
-      Mxyz[2] = -Mxyz[2]; //must be done after offsets & scales applied to raw data
+      // Mxyz[1] = -Mxyz[1]; //reflect Y and Z
+      // Mxyz[2] = -Mxyz[2]; //must be done after offsets & scales applied to raw data
 
        auto now = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> elapsed = now - last;
