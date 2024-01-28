@@ -125,7 +125,7 @@ int main(void) {
       // printf("Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", Axyz[0], Axyz[1], Axyz[2]);
       // printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
 
-      printf("Filtered Gyro (rad/s): (X: %f, Y: %f, Z: %f)\n", filteredGxyz[0], filteredGxyz[1], filteredGxyz[2]);
+      printf("Filtered Gyroscope (rad/s): (X: %f, Y: %f, Z: %f)\n", filteredGxyz[0], filteredGxyz[1], filteredGxyz[2]);
       printf("Filtered Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", filteredAxyz[0], filteredAxyz[1], filteredAxyz[2]);
       printf("Filtered Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", filteredMxyz[0], filteredMxyz[1], filteredMxyz[2]);
 
@@ -239,7 +239,6 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
     Gxyz[0] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0]) - G_offset[0]);
     Gxyz[1] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1]) - G_offset[1]);
     Gxyz[2] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[2]) - G_offset[2]);
-
     Axyz[0] = static_cast<float>(accel_data[0]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
     Axyz[1] = static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
     Axyz[2] = static_cast<float>(accel_data[2]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
