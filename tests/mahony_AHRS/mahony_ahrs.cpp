@@ -224,14 +224,14 @@ void vector_normalize(float a[3])
 // function to subtract offsets and apply scale/correction matrices to IMU data
 
 void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
-    const int16_t *accel_data = imu_module.GetAccelerometerData();
+    const int16_t *accel_data = imu_module.GetRawAccelerometerData();
     if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
         printf("Accelerometer data is invalid.\n");
     }
     // else {
     //     printf("Acceleration (m/s^2): (X: %d, Y: %d, Z: %d)\n", accel_data[0], accel_data[1], accel_data[2]);
     // }
-    const int16_t *gyro_data = imu_module.GetGyroscopeData();
+    const int16_t *gyro_data = imu_module.GetRawGyroscopeData();
     if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
         printf("Gyroscope data is invalid.\n");
     }
@@ -239,7 +239,7 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
     //     printf("Gyroscope (radians/s): (X: %d, Y: %d, Z: %d)\n", gyro_data[0], gyro_data[1], gyro_data[2]);
     // }
 
-    const int16_t *mag_data = imu_module.GetMagnetometerData();
+    const int16_t *mag_data = imu_module.GetRawMagnetometerData();
     if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
         printf("Magnetometer data is invalid.\n");
     }
