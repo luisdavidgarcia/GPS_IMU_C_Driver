@@ -91,14 +91,6 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]);
 // Mahony AHRS filter
 void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz, float deltat);
 
-const float alpha = 0.5; // Alpha value for the filter, between 0 and 1.
-
-void lowPassFilter(float input[], float output[]) {
-    for (int i = 0; i < 3; i++) {
-        output[i] = output[i] + alpha * (input[i] - output[i]);
-    }
-}
-
 int main(void) {
   // Register the signal handler
     signal(SIGINT, signal_handler);
@@ -112,10 +104,6 @@ int main(void) {
     //     return -1;
     // }
 
-    float filteredGxyz[3] = {0, 0, 0}; // Initialize filtered values
-    float filteredAxyz[3] = {0, 0, 0};
-    float filteredMxyz[3] = {0, 0, 0};
-
     auto last = std::chrono::high_resolution_clock::now();
     
     while(!exit_flag) {
@@ -123,36 +111,21 @@ int main(void) {
       imu_module.ReadSensorData();
       get_scaled_IMU(Gxyz, Axyz, Mxyz);
 
-        // Apply low-pass filter
-        lowPassFilter(Gxyz, filteredGxyz);
-        lowPassFilter(Axyz, filteredAxyz);
-        lowPassFilter(Mxyz, filteredMxyz);
-
       printf("Gyro (rad/s): (X: %f, Y: %f, Z: %f)\n", Gxyz[0], Gxyz[1], Gxyz[2]);
       printf("Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", Axyz[0], Axyz[1], Axyz[2]);
       printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
 
-      printf("Filtered Gyroscope (rad/s): (X: %f, Y: %f, Z: %f)\n", filteredGxyz[0], filteredGxyz[1], filteredGxyz[2]);
-      printf("Filtered Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", filteredAxyz[0], filteredAxyz[1], filteredAxyz[2]);
-      printf("Filtered Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", filteredMxyz[0], filteredMxyz[1], filteredMxyz[2]);
-
       // reconcile magnetometer and accelerometer axes. X axis points magnetic North for yaw = 0
-
-      // Mxyz[1] = -Mxyz[1]; //reflect Y and Z
-      // Mxyz[2] = -Mxyz[2]; //must be done after offsets & scales applied to raw data
-
-      filteredMxyz[1] = -filteredMxyz[1]; //reflect Y and Z
-      filteredMxyz[2] = -filteredMxyz[2]; //must be done after offsets & scales applied to raw data
+      Mxyz[1] = -Mxyz[1]; //reflect Y and Z
+      Mxyz[2] = -Mxyz[2]; //must be done after offsets & scales applied to raw data
 
        auto now = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> elapsed = now - last;
         float deltat = elapsed.count();
         last = now;
 
-      //MahonyQuaternionUpdate(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2],
-      //                      Mxyz[0], Mxyz[1], Mxyz[2], deltat);
-      MahonyQuaternionUpdate(filteredAxyz[0], filteredAxyz[1], filteredAxyz[2], filteredGxyz[0], filteredGxyz[1], filteredGxyz[2],
-                            filteredMxyz[0], filteredMxyz[1], filteredMxyz[2], deltat);
+      MahonyQuaternionUpdate(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2],
+                            Mxyz[0], Mxyz[1], Mxyz[2], deltat);
 
       // Define Tait-Bryan angles. Strictly valid only for approximately level movement
       
