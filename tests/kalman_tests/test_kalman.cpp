@@ -95,6 +95,9 @@ int main(void) {
                         << mag_data[0] << "," << mag_data[1] << "," << mag_data[2] << "\n";
         }
 
+        // New gyro
+        printf("GyroX: %2.3f, GyroY: %2.3f, GyroZ: %2.3f\n", Gxyz[0], Gxyz[1], Gxyz[2]);
+
         // Apply accelerometer offsets
         Axyz[0] = (static_cast<float>(accel_data[0]) - accel_x_offset) * ACCEL_MG_LSB_2G;
         Axyz[1] = (-1 * static_cast<float>(accel_data[1]) - accel_y_offset) * ACCEL_MG_LSB_2G;
