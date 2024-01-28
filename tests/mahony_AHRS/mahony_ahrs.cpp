@@ -247,9 +247,9 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
     //     printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", mag_data[0], mag_data[1], mag_data[2]);
     // }
 
-    Gxyz[0] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0]) - G_offset[0]);
-    Gxyz[1] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1]) - G_offset[1]);
-    Gxyz[2] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[2]) - G_offset[2]);
+    Gxyz[0] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[0]); //- G_offset[0]);
+    Gxyz[1] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[1]); //- G_offset[1]);
+    Gxyz[2] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[2]); //- G_offset[2]);
     Axyz[0] = static_cast<float>(accel_data[0]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
     Axyz[1] = static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
     Axyz[2] = static_cast<float>(accel_data[2]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
