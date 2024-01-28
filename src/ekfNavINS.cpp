@@ -130,16 +130,6 @@ void ekfNavINS::imuUpdateEKF(uint64_t time, imuData imu) {
   ekf_update(time);
 }
 
-void ekfNavINS::updateINS() {
-  // Update lat, lng, alt, velocity INS values to matrix
-  lla_ins(0,0) = lat_ins;
-  lla_ins(1,0) = lon_ins;
-  lla_ins(2,0) = alt_ins;
-  V_ins(0,0) = vn_ins;
-  V_ins(1,0) = ve_ins;
-  V_ins(2,0) = vd_ins;
-}
-
 std::tuple<float,float,float> ekfNavINS::getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz) {
   // initial attitude and heading
   theta = asinf(ax/G);
@@ -151,20 +141,6 @@ std::tuple<float,float,float> ekfNavINS::getPitchRollYaw(float ax, float ay, flo
   //psi = -atan2f(Byc,Bxc); // this was original
   psi = atan2f(Byc,Bxc); // this was modification
   return (std::make_tuple(theta,phi,psi));
-}
-
-void ekfNavINS::updateCalculatedVsPredicted() {
-      // Position, converted to NED
-      pos_ecef_ins = lla2ecef(lla_ins);
-      pos_ecef_gps = lla2ecef(lla_gps);
-      pos_ned_gps = ecef2ned(pos_ecef_gps - pos_ecef_ins, lla_ins);
-      // Update the difference between calculated and predicted
-      y(0,0) = (float)(pos_ned_gps(0,0));
-      y(1,0) = (float)(pos_ned_gps(1,0));
-      y(2,0) = (float)(pos_ned_gps(2,0));
-      y(3,0) = (float)(V_gps(0,0) - V_ins(0,0));
-      y(4,0) = (float)(V_gps(1,0) - V_ins(1,0));
-      y(5,0) = (float)(V_gps(2,0) - V_ins(2,0));
 }
 
 void ekfNavINS::update15statesAfterKF() {

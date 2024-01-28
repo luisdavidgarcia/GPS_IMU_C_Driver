@@ -86,8 +86,6 @@ class ekfNavINS {
     // returns the heading angle, rad
     float getHeadingConstrainAngle180_rad()      { return constrainAngle180(psi); }
     float getHeading_rad()      { return psi; }
-    // returns the INS ground track, rad
-    float getGroundTrack_rad()  { return atan2f((float)ve_ins,(float)vn_ins); }
     // returns the gyro bias estimate in the x direction, rad/s
     float getGyroBiasX_rads()   { return gbx; }
     // returns the gyro bias estimate in the y direction, rad/s
