@@ -98,23 +98,23 @@ class ekfNavINS {
     // float getAccelBiasZ_mss()   { return abz; }
     // return pitch, roll and yaw
     std::tuple<float,float,float> getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz);
-    void imuUpdateEKF(uint64_t time, imuData imu);
+    // void imuUpdateEKF(uint64_t time, imuData imu);
 
   private:
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////// member variables /////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-    imuData       imuDat;
+    // imuData       imuDat;
     // // initialized
     // bool initialized_ = false;
     // // timing
     // uint64_t _tprev;
     // //float _dt;
     // unsigned long previousTOW;
-    // // estimated attitude
-    // float phi, theta, psi;
-    // // magnetic heading corrected for roll and pitch angle
-    // float Bxc, Byc;
+    // estimated attitude
+    float phi, theta, psi;
+    // magnetic heading corrected for roll and pitch angle
+    float Bxc, Byc;
     // // accelerometer bias
     // float abx = 0.0, aby = 0.0, abz = 0.0;
     // // gyro bias
