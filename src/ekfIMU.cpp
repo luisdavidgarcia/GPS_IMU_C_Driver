@@ -27,7 +27,7 @@ void EKF_IMU::predict(float gx, float gy, float gz, float dt) {
 
     // Quaternion derivative
     Eigen::Quaternionf q(state(0), state(1), state(2), state(3));
-   Eigen::Quaternionf qDot = Eigen::Quaternionf(0, omega.x(), omega.y(), omega.z()) * q;
+    Eigen::Quaternionf qDot = Eigen::Quaternionf(0, omega.x(), omega.y(), omega.z()) * q;
     qDot.w() *= 0.5f * dt;
     qDot.x() *= 0.5f * dt;
     qDot.y() *= 0.5f * dt;
