@@ -36,26 +36,13 @@ int main(void) {
     float filteredAx = 0, filteredAy = 0, filteredAz = 0;
     float filteredMx = 0, filteredMy = 0, filteredMz = 0;
     const float alpha = 0.5; // Adjust this parameter to tweak the filter (range: 0-1)
-
-    // Define the accelerometer offsets and gyroscope biases
-    // const float accel_x_offset = 4472.898166403786;
-    // const float accel_y_offset = -936.4657925867508;
-    // const float accel_z_offset = 996.033714511041;
-    // const float gyro_x_bias = -527.8627760252366;
-    // const float gyro_y_bias = -286.20908911671927;
-    // const float gyro_z_bias = 30.305599369085172;
-
     const float accel_x_offset = -0.05673657500210876;
     const float accel_y_offset = -0.014051752249833504;
     const float accel_z_offset = -0.700553398935738;
     const float gyro_x_bias = -0.008447830282040561;
     const float gyro_y_bias = 0.0064697791963203004;
     const float gyro_z_bias = -0.009548081446790717;
-    // const float gyro_x_bias = -71.33680661967514;
-    // const float gyro_y_bias = 64.12810297272449; 
-    // const float gyro_z_bias = -190.70119521912352;
-
-
+ 
     // Open a file in write mode to log data
     std::ofstream imuDataFile("tests/kalman_tests/accel_gyro_imu_data.csv");
     if (imuDataFile.is_open()) {
@@ -101,12 +88,6 @@ int main(void) {
         Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
-        // Accel with offsets
-        printf("AccelX: %2.3f, AccelY: %2.3f, AccelZ: %2.3f\n", Axyz[0] + accel_x_offset, Axyz[1] + accel_y_offset, Axyz[2] + accel_z_offset);
-        printf("AccelX: %2.3f, AccelY: %2.3f, AccelZ: %2.3f\n", Axyz[0], Axyz[1], Axyz[2]);
-        printf("GyroX: %2.3f, GyroY: %2.3f, GyroZ: %2.3f\n", Gxyz[0], Gxyz[1], Gxyz[2]);
-        printf("MagX: %2.3f, MagY: %2.3f, MagZ: %2.3f\n", Mxyz[0], Mxyz[1], Mxyz[2]);
-
         // Write the IMU data to the file
         if (imuDataFile.is_open()) {
             imuDataFile << Axyz[0] << "," << Axyz[1] << "," << Axyz[2] << ","
@@ -118,8 +99,6 @@ int main(void) {
         filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
         filteredAy = alpha * filteredAy + (1 - alpha) * Axyz[1];
         filteredAz = alpha * filteredAz + (1 - alpha) * Axyz[2];
-
-        printf("Filtered AccelX: %2.3f, Filtered AccelY: %2.3f, Filtered AccelZ: %2.3f\n", filteredAx, filteredAy, filteredAz);
 
         // Low-pass filter for magnetometer data
         filteredMx = alpha * filteredMx + (1 - alpha) * Mxyz[0];
