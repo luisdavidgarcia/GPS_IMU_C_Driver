@@ -100,6 +100,7 @@ int main(void) {
     
     while(!exit_flag) {
       // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
+      printf("--------------------\n")
       imu_module.readSensorData();
       get_scaled_IMU(Gxyz, Axyz, Mxyz);
 
@@ -155,6 +156,7 @@ int main(void) {
       
       // Sleep for a bit to limit the update rate
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      printf("--------------------\n")
     }
 
    // Clean up and close the file
