@@ -78,12 +78,12 @@ class ekfNavINS {
     // // returns whether the INS has been initialized
     // bool initialized()          { return initialized_; }
     // // returns the pitch angle, rad
-    // float getPitch_rad()        { return theta; }
-    // // returns the roll angle, rad
-    // float getRoll_rad()         { return phi; }
+    float getPitch_rad()        { return theta; }
+    // returns the roll angle, rad
+    float getRoll_rad()         { return phi; }
     // // returns the heading angle, rad
     // float getHeadingConstrainAngle180_rad()      { return constrainAngle180(psi); }
-    // float getHeading_rad()      { return psi; }
+    float getHeading_rad()      { return psi; }
     // // returns the gyro bias estimate in the x direction, rad/s
     // float getGyroBiasX_rads()   { return gbx; }
     // // returns the gyro bias estimate in the y direction, rad/s
