@@ -84,9 +84,9 @@ int main(void) {
             continue;
         }
 
-        // printf("AccelX: %d, AccelY: %d, AccelZ: %d\n", accel_data[0], accel_data[1], accel_data[2]);
-        // printf("GyroX: %d, GyroY: %d, GyroZ: %d\n", gyro_data[0], gyro_data[1], gyro_data[2]);
-        // printf("MagX: %d, MagY: %d, MagZ: %d\n", mag_data[0], mag_data[1], mag_data[2]);
+        printf("AccelX: %d, AccelY: %d, AccelZ: %d\n", accel_data[0], accel_data[1], accel_data[2]);
+        printf("GyroX: %d, GyroY: %d, GyroZ: %d\n", gyro_data[0], gyro_data[1], gyro_data[2]);
+        printf("MagX: %d, MagY: %d, MagZ: %d\n", mag_data[0], mag_data[1], mag_data[2]);
 
         // Write the IMU data to the file
         if (imuDataFile.is_open()) {
@@ -94,12 +94,6 @@ int main(void) {
                         << gyro_data[0] << "," << gyro_data[1] << "," << gyro_data[2] << ","
                         << mag_data[0] << "," << mag_data[1] << "," << mag_data[2] << "\n";
         }
-
-        // Gyro without offsets
-        printf("GyroX: %2.3f, GyroY: %2.3f, GyroZ: %2.3f\n", gyro_data[0], gyro_data[1], gyro_data[2]);
-        // Gyro with offsets
-        printf("GyroX: %2.3f, GyroY: %2.3f, GyroZ: %2.3f\n", gyro_data[0] - gyro_x_bias, gyro_data[1] - gyro_y_bias, gyro_data[2] - gyro_z_bias);   
-
 
         // Apply accelerometer offsets
         Axyz[0] = (static_cast<float>(accel_data[0]) - accel_x_offset) * ACCEL_MG_LSB_2G;
