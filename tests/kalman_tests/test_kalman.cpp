@@ -48,9 +48,9 @@ int main(void) {
     const float accel_x_offset = 0;
     const float accel_y_offset = 0;
     const float accel_z_offset = 0;
-    const float gyro_x_bias = 0;
-    const float gyro_y_bias = 0;
-    const float gyro_z_bias = 0;
+    const float gyro_x_bias = -0.008447830282040561;
+    const float gyro_y_bias = 0.0064697791963203004;
+    const float gyro_z_bias = -0.009548081446790717;
     // const float gyro_x_bias = -71.33680661967514;
     // const float gyro_y_bias = 64.12810297272449; 
     // const float gyro_z_bias = -190.70119521912352;
@@ -93,9 +93,9 @@ int main(void) {
         Axyz[2] = (static_cast<float>(accel_data[2]) - accel_z_offset) * ACCEL_MG_LSB_2G;
 
         // Apply gyroscope biases
-        Gxyz[0] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0])));
-        Gxyz[1] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1])));
-        Gxyz[2] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[2])));
+        Gxyz[0] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[0]) - gyro_x_bias);
+        Gxyz[1] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[1]) - gyro_y_bias);
+        Gxyz[2] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[2]) - gyro_z_bias );
 
         Mxyz[0] = static_cast<float>(mag_data[0]) * MAG_UT_LSB;;
         Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
