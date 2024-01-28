@@ -111,7 +111,7 @@ int main(void) {
             std::cerr << "Unable to open file for writing." << std::endl;
         }
 
-        sleep(1);
+        sleep(0.6);
     }
 
     return 0;
