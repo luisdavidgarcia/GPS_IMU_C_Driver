@@ -104,7 +104,7 @@ int main(void) {
         }
 
         printf("\n---------------------\n");
-        sleep(0.5);
+        sleep(1);
     }
 
     return 0;
