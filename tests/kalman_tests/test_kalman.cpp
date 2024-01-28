@@ -45,9 +45,9 @@ int main(void) {
     // const float gyro_y_bias = -286.20908911671927;
     // const float gyro_z_bias = 30.305599369085172;
 
-    const float accel_x_offset = 0;
-    const float accel_y_offset = 0;
-    const float accel_z_offset = 0;
+    const float accel_x_offset = -0.05673657500210876;
+    const float accel_y_offset = -0.014051752249833504;
+    const float accel_z_offset = -0.700553398935738;
     const float gyro_x_bias = -0.008447830282040561;
     const float gyro_y_bias = 0.0064697791963203004;
     const float gyro_z_bias = -0.009548081446790717;
@@ -88,9 +88,9 @@ int main(void) {
         }
 
         // Apply accelerometer offsets
-        Axyz[0] = (static_cast<float>(accel_data[0]) - accel_x_offset) * ACCEL_MG_LSB_2G;
-        Axyz[1] = (-1 * static_cast<float>(accel_data[1]) - accel_y_offset) * ACCEL_MG_LSB_2G;
-        Axyz[2] = (static_cast<float>(accel_data[2]) - accel_z_offset) * ACCEL_MG_LSB_2G;
+        Axyz[0] = static_cast<float>(accel_data[0]) * ACCEL_MG_LSB_2G - accel_x_offset;
+        Axyz[1] = -1 * static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G - accel_y_offset;
+        Axyz[2] = static_cast<float>(accel_data[2]) * ACCEL_MG_LSB_2G - accel_z_offset;
 
         // Apply gyroscope biases
         Gxyz[0] = (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyro_data[0]) - gyro_x_bias);
@@ -123,7 +123,6 @@ int main(void) {
         filteredMz = alpha * filteredMz + (1 - alpha) * Mxyz[2];
 
         std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
-        // std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(Axyz[0], Axyz[1], Axyz[2], Mxyz[0], Mxyz[1], Mxyz[2]);
         printf("Pitch: %2.3f, Roll: %2.3f, Yaw: %2.3f\n", pitch, roll, yaw);
 
         // Write only the IMU data to a file
