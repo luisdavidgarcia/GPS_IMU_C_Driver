@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <tuple>
+#include <iostream>
 
 // Constants
 constexpr float PI = 3.14159265358979323846f;
