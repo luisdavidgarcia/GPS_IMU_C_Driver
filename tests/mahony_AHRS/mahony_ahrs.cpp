@@ -105,6 +105,10 @@ int main(void) {
         return -1;
     }
 
+    float filteredGxyz[3] = {0, 0, 0}; // Initialize filtered values
+    float filteredAxyz[3] = {0, 0, 0};
+    float filteredMxyz[3] = {0, 0, 0};
+
     auto last = std::chrono::high_resolution_clock::now();
     
     while(!exit_flag) {
