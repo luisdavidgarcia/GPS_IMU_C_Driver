@@ -50,7 +50,6 @@ extern "C" {
 /** IMU Constants */
 #define TIME_DELAY_MS 1000
 #define ACCEL_MAG_DATA_SIZE 12
-#define PI 3.14159265359F
 #define DEG_TO_RAD PI / 180.0
 #define RAD_TO_DEG 180.0 / PI
 #define SENSORS_GRAVITY_STD 9.807F

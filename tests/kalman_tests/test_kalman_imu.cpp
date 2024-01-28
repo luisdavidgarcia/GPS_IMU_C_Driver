@@ -22,6 +22,7 @@ int main(void) {
 
     Imu imu_module;
     EKF_IMU ekf;
+    float Gxyz[3], Axyz[3], Mxyz[3];
     float filteredAx, filteredAy, filteredAz;
     float filteredMx, filteredMy, filteredMz;
     const float alpha = 0.5; // Low-pass filter constant
