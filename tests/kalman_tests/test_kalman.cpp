@@ -101,6 +101,8 @@ int main(void) {
         Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
+        // Accel with offsets
+        printf("AccelX: %2.3f, AccelY: %2.3f, AccelZ: %2.3f\n", Axyz[0] + accel_x_offset, Axyz[1] + accel_y_offset, Axyz[2] + accel_z_offset);
         printf("AccelX: %2.3f, AccelY: %2.3f, AccelZ: %2.3f\n", Axyz[0], Axyz[1], Axyz[2]);
         printf("GyroX: %2.3f, GyroY: %2.3f, GyroZ: %2.3f\n", Gxyz[0], Gxyz[1], Gxyz[2]);
         printf("MagX: %2.3f, MagY: %2.3f, MagZ: %2.3f\n", Mxyz[0], Mxyz[1], Mxyz[2]);
@@ -136,7 +138,7 @@ int main(void) {
         }
 
         printf("\n---------------------\n");
-        sleep(0.5);
+        sleep(0.8);
     }
 
     imuDataFile.close(); // Close the file when done
