@@ -48,7 +48,6 @@ void EKF_IMU::predict(float gx, float gy, float gz, float dt) {
 
     // State transition matrix F
     Eigen::MatrixXf F = computeF(dt);
-    printf("F: %f %f %f %f %f %f %f %f %f\n", F(0,0), F(0,1), F(0,2), F(0,3), F(0,4), F(0,5), F(0,6), F(0,7), F(0,8));
 
     // Update covariance matrix
     P = F * P * F.transpose() + Q;
