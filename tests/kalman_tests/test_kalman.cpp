@@ -119,6 +119,8 @@ int main(void) {
         filteredAy = alpha * filteredAy + (1 - alpha) * Axyz[1];
         filteredAz = alpha * filteredAz + (1 - alpha) * Axyz[2];
 
+        printf("Filtered AccelX: %2.3f, Filtered AccelY: %2.3f, Filtered AccelZ: %2.3f\n", filteredAx, filteredAy, filteredAz);
+
         // Low-pass filter for magnetometer data
         filteredMx = alpha * filteredMx + (1 - alpha) * Mxyz[0];
         filteredMy = alpha * filteredMy + (1 - alpha) * Mxyz[1];
