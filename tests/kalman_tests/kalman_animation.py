@@ -57,7 +57,7 @@ def update(frame, points, edges, edge_lines):
     try:
         with open("rpy_data.txt", "r") as file:
             data = file.read().strip().split(',')
-            roll, pitch, yaw = map(float, data)
+            pitch, roll, yaw = map(float, data)
     except IOError:
         print("File not accessible")
         return
