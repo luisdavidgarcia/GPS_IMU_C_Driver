@@ -101,11 +101,12 @@ int main(void) {
         std::tie(pitch, roll, yaw) = ekf.GetPitchRollYaw();
         printf("Pitch: %2.3f, Roll: %2.3f, Yaw: %2.3f\n", pitch, roll, yaw);
 
-        // Write to file
-        std::ofstream outfile("tests/kalman_tests/rpy_data.txt", std::ios::app);
+        // Write only the IMU data to a file
+        std::ofstream outfile("tests/kalman_tests/rpy_data.txt");
         if (outfile.is_open()) {
-            outfile << roll << "," << pitch << "," << yaw << std::endl;
-            outfile.close();
+            outfile << pitch << "," << roll << "," << yaw << std::endl;
+            outfile.flush(); // Flush the stream
+            outfile.close(); // Close the file to save the changes
         } else {
             std::cerr << "Unable to open file for writing." << std::endl;
         }
