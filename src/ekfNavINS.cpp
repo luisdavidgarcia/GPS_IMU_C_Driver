@@ -146,15 +146,32 @@ Original Author: Adhika Lie
 
 std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz)
 {
-  // initial attitude and heading
+  // Ensure ax is within [-1, 1] for asinf
+  ax = std::max(-1.0f, std::min(1.0f, ax));
+
+  // initial attitude
   theta = asinf(ax);
-  phi = -asinf(ay / cosf(theta));
+
+  // Avoid division by a very small number
+  float cos_theta = cosf(theta);
+  if (fabs(cos_theta) < 1e-6) {
+    cos_theta = cos_theta < 0 ? -1e-6 : 1e-6; // Handle both negative and positive cases
+  }
+
+  // Correct ay value for asinf
+  float corrected_ay = ay / cos_theta;
+  corrected_ay = std::max(-1.0f, std::min(1.0f, corrected_ay));
+
+  phi = -asinf(corrected_ay);
+
   // magnetic heading correction due to roll and pitch angle
   Bxc = hx * cosf(theta) + (hy * sinf(phi) + hz * cosf(phi)) * sinf(theta);
   Byc = hy * cosf(phi) - hz * sinf(phi);
+
   // finding initial heading
-  psi = -atan2f(Byc, Bxc); // this was original
-  return (std::make_tuple(theta, phi, psi));
+  psi = -atan2f(Byc, Bxc);
+  
+  return std::make_tuple(theta, phi, psi);
 }
 
 // void ekfNavINS::update9statesAfterKF()
