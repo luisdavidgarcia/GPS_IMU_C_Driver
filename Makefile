@@ -19,6 +19,7 @@ IMU_OBJ=$(OBJ_DIR)/imu.o
 GPS_OBJ=$(OBJ_DIR)/gps.o
 UBX_OBJ=$(OBJ_DIR)/ubx_msg.o
 EKF_OBJ=$(OBJ_DIR)/ekfNavINS.o
+EKF_IMU_OBJ=$(OBJ_DIR)/ekfIMU.o
 
 all: imu_test gps_test kalman_test graphing gps_map_test
 
@@ -46,6 +47,9 @@ gps_test: $(GPS_OBJ) $(UBX_OBJ)
 # Exclude EKF object file and hardcode since it is cross-compiled
 kalman_test: $(IMU_OBJ) $(GPS_OBJ) $(UBX_OBJ) $(EKF_OBJ)
 	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o test_ekf $(EKF_OBJ) $(CXX2FLAGS) $(LDFLAGS)
+
+kalman_imu_test: $(IMU_OBJ) $(EKF_IMU_OBJ)
+	$(CXX) $^ tests/kalman_tests/test_kalman_imu.cpp -o test_ekf_imu $(CXX2FLAGS) $(LDFLAGS)
 
 mahony_AHRS: $(IMU_OBJ)
 	$(CXX) $^ $(MAHONY_SRC) -o mahony_AHRS $(CXX1FLAGS) $(LDFLAGS)
