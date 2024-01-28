@@ -43,12 +43,6 @@ constexpr float TAU_A = 100.0f;
 constexpr float SIG_G_D = 0.00025;
 // Correlati1on time or time constant
 constexpr float TAU_G = 50.0f;
-// GPS measurement noise std dev (m)
-constexpr float SIG_GPS_P_NE = 3.0f;
-constexpr float SIG_GPS_P_D = 6.0f;
-// GPS measurement noise std dev (m/s)
-constexpr float SIG_GPS_V_NE = 0.5f;
-constexpr float SIG_GPS_V_D = 1.0f;
 // Initial set of covariance
 constexpr float P_P_INIT = 10.0f;
 constexpr float P_V_INIT = 1.0f;
@@ -62,20 +56,6 @@ constexpr float G = 9.807f;
 constexpr double ECC2 = 0.0066943799901;
 // earth semi-major axis radius (m)
 constexpr double EARTH_RADIUS = 6378137.0;
-
-class gpsCoordinate {
-    public:
-        double lat;
-        double lon;
-        double alt;
-};
-
-class gpsVelocity {
-    public:
-        double vN;
-        double vE;
-        double vD;
-};
 
 class imuData {
     public:
@@ -93,9 +73,7 @@ class imuData {
 class ekfNavINS {
   public:
     // ekf_update
-    void ekf_update( uint64_t time/*, unsigned long TOW*/,   /* Time, Time of the week from GPS */
-                    double vn, double ve, double vd,    /* Velocity North, Velocity East, Velocity Down */
-                    double lat, double lon, double alt, /* GPS latitude, GPS longitude, GPS/Barometer altitude */
+    void ekf_update( uint64_t time,
                     float p, float q, float r,          /* Gyro P, Q and R  */
                     float ax, float ay, float az,       /* Accelarometer X, Y and Z */
                     float hx, float hy, float hz        /* Magnetometer HX, HY, HZ */ );
@@ -108,18 +86,6 @@ class ekfNavINS {
     // returns the heading angle, rad
     float getHeadingConstrainAngle180_rad()      { return constrainAngle180(psi); }
     float getHeading_rad()      { return psi; }
-    // returns the INS latitude, rad
-    double getLatitude_rad()    { return lat_ins; }
-    // returns the INS longitude, rad
-    double getLongitude_rad()   { return lon_ins; }
-    // returns the INS altitude, m
-    double getAltitude_m()      { return alt_ins; }
-    // returns the INS north velocity, m/s
-    double getVelNorth_ms()     { return vn_ins; }
-    // returns the INS east velocity, m/s
-    double getVelEast_ms()      { return ve_ins; }
-    // returns the INS down velocity, m/s
-    double getVelDown_ms()      { return vd_ins; }
     // returns the INS ground track, rad
     float getGroundTrack_rad()  { return atan2f((float)ve_ins,(float)vn_ins); }
     // returns the gyro bias estimate in the x direction, rad/s
@@ -137,15 +103,11 @@ class ekfNavINS {
     // return pitch, roll and yaw
     std::tuple<float,float,float> getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz);
     void imuUpdateEKF(uint64_t time, imuData imu);
-    void gpsCoordinateUpdateEKF(gpsCoordinate coor);
-    void gpsVelocityUpdateEKF(gpsVelocity vel);
 
   private:
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////// member variables /////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-    gpsCoordinate gpsCoor;
-    gpsVelocity   gpsVel;
     imuData       imuDat;
 //    mutable std::shared_mutex shMutex;
     // initialized
@@ -156,10 +118,6 @@ class ekfNavINS {
     unsigned long previousTOW;
     // estimated attitude
     float phi, theta, psi;
-    // estimated NED velocity
-    double vn_ins, ve_ins, vd_ins;
-    // estimated location
-    double lat_ins, lon_ins, alt_ins;
     // magnetic heading corrected for roll and pitch angle
     float Bxc, Byc;
     // accelerometer bias
@@ -230,16 +188,9 @@ class ekfNavINS {
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     // ekf_init
     void ekf_init(uint64_t time, 
-                 double vn,double ve,double vd, 
-                 double lat,double lon,double alt,
                  float p,float q,float r,
                  float ax,float ay,float az,
                  float hx,float hy, float hz);
-    // lla rate
-    Eigen::Matrix<double,3,1> llarate(Eigen::Matrix<double,3,1> V, Eigen::Matrix<double,3,1> lla);
-    Eigen::Matrix<double,3,1> llarate(Eigen::Matrix<double,3,1> V, double lat, double alt);
-    // lla to ecef
-    Eigen::Matrix<double,3,1> lla2ecef(Eigen::Matrix<double,3,1> lla);
     // ecef to ned
     Eigen::Matrix<double,3,1> ecef2ned(Eigen::Matrix<double,3,1> ecef, Eigen::Matrix<double,3,1> pos_ref);
     // quaternion to dcm
@@ -250,8 +201,6 @@ class ekfNavINS {
     float constrainAngle180(float dta);
     // maps angle to 0-360
     float constrainAngle360(float dta);
-    // Returns Radius - East West and Radius - North South
-    constexpr std::pair<double, double> earthradius(double lat);
     // Yaw, Pitch, Roll to Quarternion
     Eigen::Matrix<float,4,1> toQuaternion(float yaw, float pitch, float roll);
     // Quarternion to Yaw, Pitch, Roll

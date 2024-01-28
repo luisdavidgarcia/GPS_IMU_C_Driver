@@ -27,12 +27,12 @@ $(OBJ_DIR)/%.o: src/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Specific rule for cross-compiled object
-ekf_obj: $(EKF_OBJ)
+# # Specific rule for cross-compiled object
+# ekf_obj: $(EKF_OBJ)
 
-$(EKF_OBJ): $(EKF_SRC)
-	@mkdir -p $(@D)
-	$(CROSS_COMPILE_CXX) $(CROSS_COMPILE_FLAGS) -c $< -o $@
+# $(EKF_OBJ): $(EKF_SRC)
+# 	@mkdir -p $(@D)
+# 	$(CROSS_COMPILE_CXX) $(CROSS_COMPILE_FLAGS) -c $< -o $@
 
 imu_test: $(IMU_OBJ)
 	$(CXX) $^ tests/imu_tests/test_imu.cpp -o test_imu $(CXX1FLAGS) $(LDFLAGS)
