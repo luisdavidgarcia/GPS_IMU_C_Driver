@@ -74,9 +74,9 @@ int main(void) {
 
         // Write the IMU data to the file
         if (imuDataFile.is_open()) {
-            imuDataFile << Axyz[0] << "," << Axyz[1] << "," << Axyz[2] << ","
-                        << Gxyz[0] << "," << Gxyz[1] << "," << Gxyz[2] << ","
-                        << Mxyz[0] << "," << Mxyz[1] << "," << Mxyz[2] << "\n";
+            imuDataFile << accel_data[0] << "," << accel_data[1] << "," << accel_data[2] << ","
+                        << gyro_data[0] << "," << gyro_data[1] << "," << gyro_data[2] << ","
+                        << mag_data[0] << "," << mag_data[1] << "," << mag_data[2] << "\n";
         }
 
         // Gxyz[0] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0]));// - G_offset[0]);
