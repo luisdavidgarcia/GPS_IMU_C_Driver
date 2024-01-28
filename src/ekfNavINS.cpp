@@ -136,13 +136,13 @@ Original Author: Adhika Lie
 //              imuDat.hX, imuDat.hY, imuDat.hZ);
 // }
 
-void ekfNavINS::imuUpdateEKF(uint64_t time, imuData imu)
-{
-  {
-    imuDat = imu;
-  }
-  ekf_update(time);
-}
+// void ekfNavINS::imuUpdateEKF(uint64_t time, imuData imu)
+// {
+//   {
+//     imuDat = imu;
+//   }
+//   ekf_update(time);
+// }
 
 std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz)
 {
