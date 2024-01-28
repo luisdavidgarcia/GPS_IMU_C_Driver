@@ -99,6 +99,7 @@ int main(void) {
 
         // Get the estimated orientation (pitch, roll, yaw)
         std::tie(pitch, roll, yaw) = ekf.GetPitchRollYaw();
+        printf("Pitch: %2.3f, Roll: %2.3f, Yaw: %2.3f\n", pitch, roll, yaw);
 
         // Write to file
         std::ofstream outfile("tests/kalman_tests/rpy_data.txt", std::ios::app);
