@@ -25,11 +25,14 @@ void signal_handler(int signum) {
     }
 }
 
+// Add variables to store previous filtered values
+float prevFilteredAx = 0, prevFilteredAy = 0, prevFilteredAz = 0;
+float prevFilteredMx = 0, prevFilteredMy = 0, prevFilteredMz = 0;
+
 int main(void) {
     // Register the signal handler for SIGINT (Ctrl+C)
     signal(SIGINT, signal_handler);
 
-    // Gps gps_module;
     Imu imu_module;
     ekfNavINS ekf;
     float pitch, roll, yaw;
@@ -40,91 +43,68 @@ int main(void) {
         // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
         imu_module.readSensorData();
         // if (gps_data.year == CURRENT_YEAR && gps_data.numberOfSatellites > 0) {
-            const int16_t *accel_data = imu_module.getAccelerometerData();
-            if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
-                printf("Accelerometer data is invalid.\n");
-                continue;
-            }
+        const int16_t *accel_data = imu_module.getAccelerometerData();
+        if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
+            printf("Accelerometer data is invalid.\n");
+            continue;
+        }
 
-            const int16_t *gyro_data = imu_module.getGyroscopeData();
-            if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
-                printf("Gyroscope data is invalid.\n");
-                continue;
-            }
+        const int16_t *gyro_data = imu_module.getGyroscopeData();
+        if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
+            printf("Gyroscope data is invalid.\n");
+            continue;
+        }
 
-            const int16_t *mag_data = imu_module.getMagnetometerData();
-            if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
-                printf("Magnetometer data is invalid.\n");
-                continue;
-            }
+        const int16_t *mag_data = imu_module.getMagnetometerData();
+        if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
+            printf("Magnetometer data is invalid.\n");
+            continue;
+        }
 
-            Gxyz[0] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0]));// - G_offset[0]);
-            Gxyz[1] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1]));// - G_offset[1]);
-            Gxyz[2] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[2]));// - G_offset[2]);
-            Axyz[0] = static_cast<float>(accel_data[0]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-            Axyz[1] = static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-            Axyz[2] = static_cast<float>(accel_data[2]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
-            Mxyz[0] = static_cast<float>(mag_data[0]) * MAG_UT_LSB;;
-            Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
-            Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
+        Gxyz[0] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0]));// - G_offset[0]);
+        Gxyz[1] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1]));// - G_offset[1]);
+        Gxyz[2] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[2]));// - G_offset[2]);
+        Axyz[0] = static_cast<float>(accel_data[0]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+        Axyz[1] = static_cast<float>(accel_data[1]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+        Axyz[2] = static_cast<float>(accel_data[2]) * ACCEL_MG_LSB_2G * SENSORS_GRAVITY_STD;
+        Mxyz[0] = static_cast<float>(mag_data[0]) * MAG_UT_LSB;;
+        Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
+        Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
-            // printf("Filtered Gyroscope (rad/s): (X: %f, Y: %f, Z: %f)\n", filteredGxyz[0], filteredGxyz[1], filteredGxyz[2]);
-            // printf("Filtered Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", filteredAxyz[0], filteredAxyz[1], filteredAxyz[2]);
-            // printf("Filtered Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", filteredMxyz[0], filteredMxyz[1], filteredMxyz[2]);
+        // Low-pass filter for accelerometer data
+        float filteredAx = alpha * prevFilteredAx + (1 - alpha) * Axyz[0];
+        float filteredAy = alpha * prevFilteredAy + (1 - alpha) * Axyz[1];
+        float filteredAz = alpha * prevFilteredAz + (1 - alpha) * Axyz[2];
 
-            printf("Gyroscope (rad/s): (X: %f, Y: %f, Z: %f)\n", Gxyz[0], Gxyz[1], Gxyz[2]);
-            printf("Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", Axyz[0], Axyz[1], Axyz[2]);
-            printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
+        // Low-pass filter for magnetometer data
+        float filteredMx = alpha * prevFilteredMx + (1 - alpha) * Mxyz[0];
+        float filteredMy = alpha * prevFilteredMy + (1 - alpha) * Mxyz[1];
+        float filteredMz = alpha * prevFilteredMz + (1 - alpha) * Mxyz[2];
 
-            std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(Axyz[0], Axyz[1], Axyz[2], Mxyz[0], Mxyz[1], Mxyz[2]);
-            // std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAxyz[0], filteredAxyz[1], filteredAxyz[2], filteredMxyz[0], filteredMxyz[1], filteredMxyz[2]);
+        // Update previous values for next iteration
+        prevFilteredAx = filteredAx;
+        prevFilteredAy = filteredAy;
+        prevFilteredAz = filteredAz;
+        prevFilteredMx = filteredMx;
+        prevFilteredMy = filteredMy;
+        prevFilteredMz = filteredMz;
 
-            // ekf.ekf_update(time(NULL) /*,gps.getTimeOfWeek()*/, gps_data.velocityNorth*1e-3, gps_data.velocityEast*1e-3,
-            //               gps_data.velocityDown*1e-3, gps_data.latitude*DEG_TO_RAD,
-            //               gps_data.longitude*DEG_TO_RAD, (gps_data.height*1e-3),
-            //               gx, gy, gz,
-            //               ax, ay, az, hx, hy, hz);
+        std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
+        printf("Roll 	  : %2.3f\n", ekf.getRoll_rad());
+        printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
+        printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
 
-            // printf("Latitude  : %2.7f %2.7f\n", gps_data.latitude, ekf.getLatitude_rad()*RAD_TO_DEG);
-            // printf("Longitude : %2.7f %2.7f\n", gps_data.longitude, ekf.getLongitude_rad()*RAD_TO_DEG);
-            // printf("Altitude  : %2.3f %2.3f\n", gps_data.height*1e-3, ekf.getAltitude_m());
-            // printf("Speed (N) : %2.3f %2.3f\n", gps_data.velocityNorth*1e-3, ekf.getVelNorth_ms());
-            // printf("Speed (E) : %2.3f %2.3f\n", gps_data.velocityEast*1e-3, ekf.getVelEast_ms());
-            // printf("Speed (D) : %2.3f %2.3f\n", gps_data.velocityDown*1e-3, ekf.getVelDown_ms());
-            printf("Roll 	  : %2.3f\n", ekf.getRoll_rad());
-            printf("Pitch     : %2.3f\n", ekf.getPitch_rad());
-            printf("Yaw       : %2.3f\n", ekf.getHeading_rad());
+        // Write only the IMU data to a file
+        std::ofstream outfile("tests/kalman_tests/rpy_data.txt");
+        if (outfile.is_open()) {
+            outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
+            outfile.flush(); // Flush the stream
+            outfile.close(); // Close the file to save the changes
+        } else {
+            std::cerr << "Unable to open file for writing." << std::endl;
+        }
 
-            // Write all the data to a file - GPS & IMU
-            // std::ofstream outfile("tests/kalman_tests/data.txt", std::ios_base::app); // Open in append mode
-            // if (outfile.is_open()) {
-            //     outfile << gps_data.latitude << "," << ekf.getLatitude_rad() * RAD_TO_DEG << ","
-            //             << gps_data.longitude << "," << ekf.getLongitude_rad() * RAD_TO_DEG << ","
-            //             << gps_data.height * 1e-3 << "," << ekf.getAltitude_m() << ","
-            //             << gps_data.velocityNorth * 1e-3 << "," << ekf.getVelNorth_ms() << ","
-            //             << gps_data.velocityEast * 1e-3 << "," << ekf.getVelEast_ms() << ","
-            //             << gps_data.velocityDown * 1e-3 << "," << ekf.getVelDown_ms() << ","
-            //             << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad()
-            //             << std::endl;
-            //     outfile.close();
-            // } else {
-            //     std::cerr << "Unable to open file for writing." << std::endl;
-            // }
-
-            // Write only the IMU data to a file
-            std::ofstream outfile("tests/kalman_tests/rpy_data.txt");
-            if (outfile.is_open()) {
-                outfile << ekf.getRoll_rad() << "," << ekf.getPitch_rad() << "," << ekf.getHeading_rad() << std::endl;
-                outfile.flush(); // Flush the stream
-                outfile.close(); // Close the file to save the changes
-            } else {
-                std::cerr << "Unable to open file for writing." << std::endl;
-            }
-
-            printf("\n---------------------\n");
-    //    } else {
-    //        printf("No GPS data\n");
-    //    }
+        printf("\n---------------------\n");
         sleep(0.5);
     }
 
