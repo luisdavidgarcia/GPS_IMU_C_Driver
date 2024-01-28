@@ -53,15 +53,15 @@ int main(void) {
     const float gyro_z_bias = 0;
 
 
-    // // Open a file in write mode to log data
-    // std::ofstream imuDataFile("tests/kalman_tests/accel_gyro_imu_data.csv");
-    // if (imuDataFile.is_open()) {
-    //     // Write headers to the CSV file
-    //     imuDataFile << "AccelX,AccelY,AccelZ,GyroX,GyroY,GyroZ,MagX,MagY,MagZ\n";
-    // } else {
-    //     std::cerr << "Unable to open file for writing IMU data." << std::endl;
-    //     return 1; // Exit if file cannot be opened
-    // }
+    // Open a file in write mode to log data
+    std::ofstream imuDataFile("tests/kalman_tests/accel_gyro_imu_data.csv");
+    if (imuDataFile.is_open()) {
+        // Write headers to the CSV file
+        imuDataFile << "AccelX,AccelY,AccelZ,GyroX,GyroY,GyroZ,MagX,MagY,MagZ\n";
+    } else {
+        std::cerr << "Unable to open file for writing IMU data." << std::endl;
+        return 1; // Exit if file cannot be opened
+    }
 
     while(!exit_flag) {
         // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
@@ -88,12 +88,12 @@ int main(void) {
         // printf("GyroX: %d, GyroY: %d, GyroZ: %d\n", gyro_data[0], gyro_data[1], gyro_data[2]);
         // printf("MagX: %d, MagY: %d, MagZ: %d\n", mag_data[0], mag_data[1], mag_data[2]);
 
-        // Write the IMU data to the file
-        // if (imuDataFile.is_open()) {
-        //     imuDataFile << accel_data[0] << "," << accel_data[1] << "," << accel_data[2] << ","
-        //                 << gyro_data[0] << "," << gyro_data[1] << "," << gyro_data[2] << ","
-        //                 << mag_data[0] << "," << mag_data[1] << "," << mag_data[2] << "\n";
-        // }
+        Write the IMU data to the file
+        if (imuDataFile.is_open()) {
+            imuDataFile << accel_data[0] << "," << accel_data[1] << "," << accel_data[2] << ","
+                        << gyro_data[0] << "," << gyro_data[1] << "," << gyro_data[2] << ","
+                        << mag_data[0] << "," << mag_data[1] << "," << mag_data[2] << "\n";
+        }
 
         // Apply accelerometer offsets
         Axyz[0] = (static_cast<float>(accel_data[0]) - accel_x_offset) * ACCEL_MG_LSB_2G;
@@ -137,6 +137,6 @@ int main(void) {
         sleep(0.5);
     }
 
-    // imuDataFile.close(); // Close the file when done
+    imuDataFile.close(); // Close the file when done
     return 0;
 }
