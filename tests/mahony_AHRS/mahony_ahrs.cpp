@@ -101,6 +101,9 @@ int main(void) {
       // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
       imu_module.readSensorData();
       get_scaled_IMU(Gxyz, Axyz, Mxyz);
+      printf("Gyro (rad/s): (X: %f, Y: %f, Z: %f)\n", Gxyz[0], Gxyz[1], Gxyz[2]);
+      printf("Acceleration (m/s^2): (X: %f, Y: %f, Z: %f)\n", Axyz[0], Axyz[1], Axyz[2]);
+      printf("Magnetometer (uTesla): (X: %f, Y: %f, Z: %f)\n", Mxyz[0], Mxyz[1], Mxyz[2]);
 
       // reconcile magnetometer and accelerometer axes. X axis points magnetic North for yaw = 0
 
@@ -185,24 +188,24 @@ void get_scaled_IMU(float Gxyz[3], float Axyz[3], float Mxyz[3]) {
     if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
         printf("Accelerometer data is invalid.\n");
     }
-    else {
-        printf("Acceleration (m/s^2): (X: %d, Y: %d, Z: %d)\n", accel_data[0], accel_data[1], accel_data[2]);
-    }
+    // else {
+    //     printf("Acceleration (m/s^2): (X: %d, Y: %d, Z: %d)\n", accel_data[0], accel_data[1], accel_data[2]);
+    // }
     const int16_t *gyro_data = imu_module.getGyroscopeData();
     if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
         printf("Gyroscope data is invalid.\n");
     }
-    else {
-        printf("Gyroscope (radians/s): (X: %d, Y: %d, Z: %d)\n", gyro_data[0], gyro_data[1], gyro_data[2]);
-    }
+    // else {
+    //     printf("Gyroscope (radians/s): (X: %d, Y: %d, Z: %d)\n", gyro_data[0], gyro_data[1], gyro_data[2]);
+    // }
 
     const int16_t *mag_data = imu_module.getMagnetometerData();
     if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
         printf("Magnetometer data is invalid.\n");
     }
-    else {
-        printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", mag_data[0], mag_data[1], mag_data[2]);
-    }
+    // else {
+    //     printf("Magnetometer (uTesla): (X: %d, Y: %d, Z: %d)\n", mag_data[0], mag_data[1], mag_data[2]);
+    // }
 
     Gxyz[0] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[0]) - G_offset[0]);
     Gxyz[1] = GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * (static_cast<float>(gyro_data[1]) - G_offset[1]);
