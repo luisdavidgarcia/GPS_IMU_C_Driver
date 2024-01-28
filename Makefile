@@ -18,7 +18,7 @@ MAHONY_SRC=tests/mahony_AHRS/mahony_ahrs.cpp
 IMU_OBJ=$(OBJ_DIR)/imu.o
 GPS_OBJ=$(OBJ_DIR)/gps.o
 UBX_OBJ=$(OBJ_DIR)/ubx_msg.o
-# EKF_OBJ=$(OBJ_DIR)/ekfNavINS.o
+EKF_OBJ=$(OBJ_DIR)/ekfNavINS.o
 EKF_IMU_OBJ=$(OBJ_DIR)/ekfIMU.o
 
 all: imu_test gps_test kalman_test graphing gps_map_test
