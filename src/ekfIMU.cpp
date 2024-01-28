@@ -33,8 +33,11 @@ void EKF_IMU::predict(float gx, float gy, float gz, float dt) {
     qDot.y() *= 0.5f * dt;
     qDot.z() *= 0.5f * dt;
 
-    // State update
-    q = q + qDot * dt;
+    // State update (add quaternion components individually)
+    q.w() += qDot.w();
+    q.x() += qDot.x();
+    q.y() += qDot.y();
+    q.z() += qDot.z();
     q.normalize(); // Normalize quaternion
 
     // Update state
