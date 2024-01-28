@@ -153,9 +153,9 @@ public:
 	void ReadSensorData(void);
 
 	// Rename function names to GetScaledAccelerometerData, etc.
-    const int16_t* GetAccelerometerData() { return accelerometer; }
-    const int16_t* GetMagnetometerData() { return magnetometer; }
-    const int16_t* GetGyroscopeData() { return gyroscope; }
+    const int16_t* GetRawAccelerometerData() { return accelerometer; }
+    const int16_t* GetRawMagnetometerData() { return magnetometer; }
+    const int16_t* GetRawGyroscopeData() { return gyroscope; }
 };
 
 #endif // IMU_H
