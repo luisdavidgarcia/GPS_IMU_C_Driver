@@ -70,6 +70,12 @@ class imuData {
 
 class ekfNavINS {
   public:
+    // constructor
+    ekfNavINS() {
+      theta = 0.0f;
+      phi = 0.0f;
+      psi = 0.0f;
+    }
     // // ekf_update
     // void ekf_update( uint64_t time,
     //                 float p, float q, float r,          /* Gyro P, Q and R  */
