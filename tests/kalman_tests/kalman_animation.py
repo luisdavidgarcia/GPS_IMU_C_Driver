@@ -23,6 +23,7 @@ def create_cube():
 
 # Function to apply rotations to the cube
 def rotate_cube(points, roll, pitch, yaw):
+    # Rotation matrices
     Rx = np.array([[1, 0, 0],
                    [0, np.cos(roll), -np.sin(roll)],
                    [0, np.sin(roll), np.cos(roll)]])
@@ -47,7 +48,12 @@ ax = fig.add_subplot(111, projection='3d')
 
 # Create the cube
 points, edges = create_cube()
-edge_lines = [Line3D([], [], [], color="b", marker="o") for _ in edges]
+
+# Define a list of colors
+colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink', 'brown', 'grey', 'cyan', 'magenta', 'olive']
+
+# Create lines with different colors for each edge
+edge_lines = [Line3D([], [], [], color=colors[i % len(colors)], marker='o', markersize=5, markeredgecolor='black') for i, _ in enumerate(edges)]
 for edge_line in edge_lines:
     ax.add_line(edge_line)
 
