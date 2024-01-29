@@ -148,37 +148,38 @@ std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(
     float ax, float ay, float az,
     float gx, float gy, float gz,
     float hx, float hy, float hz,
-    float dt) 
+    float dt)
 {
-    // Previous attitude (from the last call)
-    float prevTheta = theta;
-    float prevPhi = phi;
-    float prevPsi = psi;
+  // Previous attitude (from the last call)
+  float prevTheta = theta;
+  float prevPhi = phi;
+  float prevPsi = psi;
 
-    // Update the attitude from accelerometer
-    theta = asinf(std::max(-1.0f, std::min(1.0f, ax)));
-    float cos_theta = cosf(theta);
-    if (fabs(cos_theta) < 1e-6) cos_theta = cos_theta < 0 ? -1e-6 : 1e-6;
-    float corrected_ay = std::max(-1.0f, std::min(1.0f, ay / cos_theta));
-    phi = -asinf(corrected_ay);
+  // Update the attitude from accelerometer
+  theta = asinf(std::max(-1.0f, std::min(1.0f, ax)));
+  float cos_theta = cosf(theta);
+  if (fabs(cos_theta) < 1e-6)
+    cos_theta = cos_theta < 0 ? -1e-6 : 1e-6;
+  float corrected_ay = std::max(-1.0f, std::min(1.0f, ay / cos_theta));
+  phi = -asinf(corrected_ay);
 
-    // Update heading from magnetometer
-    Bxc = hx * cosf(theta) + (hy * sinf(phi) + hz * cosf(phi)) * sinf(theta);
-    Byc = hy * cosf(phi) - hz * sinf(phi);
-    psi = -atan2f(Byc, Bxc);
+  // Update heading from magnetometer
+  Bxc = hx * cosf(theta) + (hy * sinf(phi) + hz * cosf(phi)) * sinf(theta);
+  Byc = hy * cosf(phi) - hz * sinf(phi);
+  psi = -atan2f(Byc, Bxc);
 
-    // Integrate gyroscope data over time to estimate angle change
-    float deltaTheta = gx * dt;
-    float deltaPhi = gy * dt;
-    float deltaPsi = gz * dt;
+  // Integrate gyroscope data over time to estimate angle change
+  float deltaTheta = gx * dt;
+  float deltaPhi = gy * dt;
+  float deltaPsi = gz * dt;
 
-    // Complementary filter
-    float alpha = 0.98;
-    theta = alpha * (prevTheta + deltaTheta) + (1 - alpha) * theta;
-    phi = alpha * (prevPhi + deltaPhi) + (1 - alpha) * phi;
-    psi = alpha * (prevPsi + deltaPsi) + (1 - alpha) * psi;
+  // Complementary filter
+  float alpha = 0.98;
+  theta = alpha * (prevTheta + deltaTheta) + (1 - alpha) * theta;
+  phi = alpha * (prevPhi + deltaPhi) + (1 - alpha) * phi;
+  psi = alpha * (prevPsi + deltaPsi) + (1 - alpha) * psi;
 
-    return std::make_tuple(theta, phi, psi);
+  return std::make_tuple(theta, phi, psi);
 }
 
 // void ekfNavINS::update9statesAfterKF()
