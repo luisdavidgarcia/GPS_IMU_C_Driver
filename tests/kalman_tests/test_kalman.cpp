@@ -129,6 +129,6 @@ int main(void) {
         sleep(0.8);
     }
 
-    imuDataFile.close(); // Close the file when done
+    // imuDataFile.close(); // Close the file when done
     return 0;
 }
