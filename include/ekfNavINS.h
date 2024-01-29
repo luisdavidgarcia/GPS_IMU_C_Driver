@@ -101,7 +101,7 @@ class ekfNavINS {
       float ax, float ay, float az,
       float gx, float gy, float gz,
       float hx, float hy, float hz,
-      float dt) 
+      float dt);
     // void imuUpdateEKF(uint64_t time, imuData imu);
 
   private:
