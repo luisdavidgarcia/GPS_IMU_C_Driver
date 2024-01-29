@@ -97,7 +97,7 @@ class ekfNavINS {
     // // returns the accel bias estimate in the z direction, m/s/s
     // float getAccelBiasZ_mss()   { return abz; }
     // return pitch, roll and yaw
-    std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(
+    std::tuple<float, float, float> getPitchRollYaw(
       float ax, float ay, float az,
       float gx, float gy, float gz,
       float hx, float hy, float hz,
