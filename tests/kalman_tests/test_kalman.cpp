@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <iostream>
 #include <string.h>
+#include <chrono>
 
 #define CURRENT_YEAR 2024
 
@@ -43,17 +44,23 @@ int main(void) {
     const float gyro_y_bias = 0.0064697791963203004;
     const float gyro_z_bias = -0.009548081446790717;
  
-    // Open a file in write mode to log data
-    std::ofstream imuDataFile("tests/kalman_tests/accel_gyro_imu_data.csv");
-    if (imuDataFile.is_open()) {
-        // Write headers to the CSV file
-        imuDataFile << "AccelX,AccelY,AccelZ,GyroX,GyroY,GyroZ,MagX,MagY,MagZ\n";
-    } else {
-        std::cerr << "Unable to open file for writing IMU data." << std::endl;
-        return 1; // Exit if file cannot be opened
-    }
+    // // Open a file in write mode to log data
+    // std::ofstream imuDataFile("tests/kalman_tests/accel_gyro_imu_data.csv");
+    // if (imuDataFile.is_open()) {
+    //     // Write headers to the CSV file
+    //     imuDataFile << "AccelX,AccelY,AccelZ,GyroX,GyroY,GyroZ,MagX,MagY,MagZ\n";
+    // } else {
+    //     std::cerr << "Unable to open file for writing IMU data." << std::endl;
+    //     return 1; // Exit if file cannot be opened
+    // }
+
+    auto lastTime = std::chrono::steady_clock::now();
 
     while(!exit_flag) {
+        auto currentTime = std::chrono::steady_clock::now();
+        float dt = std::chrono::duration<float>(currentTime - lastTime).count();
+        lastTime = currentTime;
+
         // All data for IMU is normalized already for 250dps, 2g, and 4 gauss
         imu_module.ReadSensorData();
         const int16_t *accel_data = imu_module.GetRawAccelerometerData();
@@ -88,12 +95,12 @@ int main(void) {
         Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
         Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
-        // Write the IMU data to the file
-        if (imuDataFile.is_open()) {
-            imuDataFile << Axyz[0] << "," << Axyz[1] << "," << Axyz[2] << ","
-                        << Gxyz[0] << "," << Gxyz[1] << "," << Gxyz[2] << ","
-                        << Mxyz[0] << "," << Mxyz[1] << "," << Mxyz[2] << "\n";
-        }
+        // // Write the IMU data to the file
+        // if (imuDataFile.is_open()) {
+        //     imuDataFile << Axyz[0] << "," << Axyz[1] << "," << Axyz[2] << ","
+        //                 << Gxyz[0] << "," << Gxyz[1] << "," << Gxyz[2] << ","
+        //                 << Mxyz[0] << "," << Mxyz[1] << "," << Mxyz[2] << "\n";
+        // }
 
         // Low-pass filter for accelerometer data
         filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
@@ -105,8 +112,8 @@ int main(void) {
         filteredMy = alpha * filteredMy + (1 - alpha) * Mxyz[1];
         filteredMz = alpha * filteredMz + (1 - alpha) * Mxyz[2];
 
-        std::tie(pitch,roll,yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, filteredMx, filteredMy, filteredMz);
-        printf("Pitch: %2.3f, Roll: %2.3f, Yaw: %2.3f\n", pitch, roll, yaw);
+        std::tie(pitch, roll, yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, Gxyz[0], Gxyz[1], Gxyz[2], filteredMx, filteredMy, filteredMz, dt);
+        printf("Pitch: %2.3f, Roll: %2.3f, Yaw: %2.3f, dt: %2.3f\n", pitch, roll, yaw, dt);
 
         // Write only the IMU data to a file
         std::ofstream outfile("tests/kalman_tests/rpy_data.txt");

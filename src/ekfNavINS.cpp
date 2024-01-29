@@ -144,34 +144,41 @@ Original Author: Adhika Lie
 //   ekf_update(time);
 // }
 
-std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(float ax, float ay, float az, float hx, float hy, float hz)
+std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(
+    float ax, float ay, float az,
+    float gx, float gy, float gz,
+    float hx, float hy, float hz,
+    float dt) 
 {
-  // Ensure ax is within [-1, 1] for asinf
-  ax = std::max(-1.0f, std::min(1.0f, ax));
+    // Previous attitude (from the last call)
+    float prevTheta = theta;
+    float prevPhi = phi;
+    float prevPsi = psi;
 
-  // initial attitude
-  theta = asinf(ax);
+    // Update the attitude from accelerometer
+    theta = asinf(std::max(-1.0f, std::min(1.0f, ax)));
+    float cos_theta = cosf(theta);
+    if (fabs(cos_theta) < 1e-6) cos_theta = cos_theta < 0 ? -1e-6 : 1e-6;
+    float corrected_ay = std::max(-1.0f, std::min(1.0f, ay / cos_theta));
+    phi = -asinf(corrected_ay);
 
-  // Avoid division by a very small number
-  float cos_theta = cosf(theta);
-  if (fabs(cos_theta) < 1e-6) {
-    cos_theta = cos_theta < 0 ? -1e-6 : 1e-6; // Handle both negative and positive cases
-  }
+    // Update heading from magnetometer
+    Bxc = hx * cosf(theta) + (hy * sinf(phi) + hz * cosf(phi)) * sinf(theta);
+    Byc = hy * cosf(phi) - hz * sinf(phi);
+    psi = -atan2f(Byc, Bxc);
 
-  // Correct ay value for asinf
-  float corrected_ay = ay / cos_theta;
-  corrected_ay = std::max(-1.0f, std::min(1.0f, corrected_ay));
+    // Integrate gyroscope data over time to estimate angle change
+    float deltaTheta = gx * dt;
+    float deltaPhi = gy * dt;
+    float deltaPsi = gz * dt;
 
-  phi = -asinf(corrected_ay);
+    // Complementary filter
+    float alpha = 0.98;
+    theta = alpha * (prevTheta + deltaTheta) + (1 - alpha) * theta;
+    phi = alpha * (prevPhi + deltaPhi) + (1 - alpha) * phi;
+    psi = alpha * (prevPsi + deltaPsi) + (1 - alpha) * psi;
 
-  // magnetic heading correction due to roll and pitch angle
-  Bxc = hx * cosf(theta) + (hy * sinf(phi) + hz * cosf(phi)) * sinf(theta);
-  Byc = hy * cosf(phi) - hz * sinf(phi);
-
-  // finding initial heading
-  psi = -atan2f(Byc, Bxc);
-  
-  return std::make_tuple(theta, phi, psi);
+    return std::make_tuple(theta, phi, psi);
 }
 
 // void ekfNavINS::update9statesAfterKF()
