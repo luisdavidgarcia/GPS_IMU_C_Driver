@@ -101,7 +101,6 @@ def update(frame, path_line):
         with open("rpy_data.txt", "r") as file:
             data = file.readline().strip().split(',')
             _, _, _, lat, lon, _ = map(float, data)
-            print(lat, lon)
     except (IOError, ValueError):
         print("Error reading data")
         return [path_line]
@@ -115,7 +114,6 @@ def update(frame, path_line):
 
     ax.set_xlim([min(xdata)-0.01, max(xdata)+0.01])
     ax.set_ylim([min(ydata)-0.01, max(ydata)+0.01])
-    print(xdata, ydata)
     ax.set_xlabel('Longitude')
     ax.set_ylabel('Latitude')
 
