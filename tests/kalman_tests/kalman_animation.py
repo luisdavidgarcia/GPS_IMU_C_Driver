@@ -91,6 +91,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 # Maximum number of points in the path
 MAX_POINTS = 7
@@ -136,6 +137,6 @@ def update(frame):
 
     return [dots]
 
-# Create the animation
-ani = plt.FuncAnimation(fig, update, interval=100, blit=True)
+# Create the animation using FuncAnimation
+ani = animation.FuncAnimation(fig, update, interval=100, blit=True)
 plt.show()
