@@ -94,10 +94,18 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 # Maximum number of points in the path
-MAX_POINTS = 40 
+MAX_POINTS = 7
 
 fig, ax = plt.subplots()
 path_line, = ax.plot([], [], 'r-', linewidth=2)  # Path line
+
+# Set initial axis limits (adjust these values based on your expected data range)
+initial_lon = 120.0004
+initial_lat = [Your initial latitude value]
+lon_range = 0.1  # Adjust the range based on expected variation
+lat_range = 0.1  # Adjust the range based on expected variation
+ax.set_xlim(initial_lon - lon_range/2, initial_lon + lon_range/2)
+ax.set_ylim(initial_lat - lat_range/2, initial_lat + lat_range/2)
 
 def update(frame, path_line):
     try:
@@ -123,9 +131,13 @@ def update(frame, path_line):
 
     path_line.set_data(xdata, ydata)
 
-    # Adjust the axes limits dynamically
-    ax.set_xlim([min(xdata)-0.01, max(xdata)+0.01])
-    ax.set_ylim([min(ydata)-0.01, max(ydata)+0.01])
+    # Update the axes limits if needed
+    current_x_min, current_x_max = ax.get_xlim()
+    current_y_min, current_y_max = ax.get_ylim()
+    if lon < current_x_min or lon > current_x_max or lat < current_y_min or lat > current_y_max:
+        ax.set_xlim(min(xdata) - lon_range/2, max(xdata) + lon_range/2)
+        ax.set_ylim(min(ydata) - lat_range/2, max(ydata) + lat_range/2)
+
     ax.set_xlabel('Longitude')
     ax.set_ylabel('Latitude')
 
