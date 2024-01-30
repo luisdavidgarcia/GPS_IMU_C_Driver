@@ -93,6 +93,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+# Maximum number of points in the path
+MAX_POINTS = 40 
+
 fig, ax = plt.subplots()
 path_line, = ax.plot([], [], 'r-', linewidth=2)  # Path line
 
@@ -108,10 +111,19 @@ def update(frame, path_line):
     # Update the path trace
     xdata = list(path_line.get_xdata())
     ydata = list(path_line.get_ydata())
+
+    # Append new data
     xdata.append(lon)
     ydata.append(lat)
+
+    # Keep only the last MAX_POINTS points
+    if len(xdata) > MAX_POINTS:
+        xdata = xdata[-MAX_POINTS:]
+        ydata = ydata[-MAX_POINTS:]
+
     path_line.set_data(xdata, ydata)
 
+    # Adjust the axes limits dynamically
     ax.set_xlim([min(xdata)-0.01, max(xdata)+0.01])
     ax.set_ylim([min(ydata)-0.01, max(ydata)+0.01])
     ax.set_xlabel('Longitude')
