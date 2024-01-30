@@ -114,6 +114,7 @@ def update(frame, path_line):
 
     ax.set_xlim([min(xdata)-0.01, max(xdata)+0.01])
     ax.set_ylim([min(ydata)-0.01, max(ydata)+0.01])
+    print(xdata, ydata)
     ax.set_xlabel('Longitude')
     ax.set_ylabel('Latitude')
 
