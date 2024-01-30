@@ -91,26 +91,25 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 
 # Maximum number of points in the path
 MAX_POINTS = 7
 
 fig, ax = plt.subplots()
-path_line, = ax.plot([], [], 'r-', linewidth=2)  # Path line
+dots, = ax.plot([], [], 'ro')  # Plotting dots
 
-def update(frame, path_line):
+def update(frame):
     try:
         with open("rpy_data.txt", "r") as file:
             data = file.readline().strip().split(',')
             _, _, _, lat, lon, _ = map(float, data)
     except (IOError, ValueError):
         print("Error reading data")
-        return [path_line]
+        return [dots]
 
     # Update the path trace
-    xdata = list(path_line.get_xdata())
-    ydata = list(path_line.get_ydata())
+    xdata = list(dots.get_xdata())
+    ydata = list(dots.get_ydata())
 
     # Append new data
     xdata.append(lon)
@@ -121,7 +120,7 @@ def update(frame, path_line):
         xdata = xdata[-MAX_POINTS:]
         ydata = ydata[-MAX_POINTS:]
 
-    path_line.set_data(xdata, ydata)
+    dots.set_data(xdata, ydata)
 
     # Dynamically adjust axes limits
     if len(xdata) > 1:
@@ -135,7 +134,8 @@ def update(frame, path_line):
     ax.set_xlabel('Longitude')
     ax.set_ylabel('Latitude')
 
-    return [path_line]
+    return [dots]
 
-ani = animation.FuncAnimation(fig, update, fargs=(path_line,), interval=100, blit=True)
+# Create the animation
+ani = plt.FuncAnimation(fig, update, interval=100, blit=True)
 plt.show()
