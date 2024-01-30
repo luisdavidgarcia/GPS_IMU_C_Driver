@@ -106,7 +106,8 @@ def update(frame, path_line):
         return [path_line]
 
     # Update the path trace
-    xdata, ydata = path_line.get_xdata(), path_line.get_ydata()
+    xdata = list(path_line.get_xdata())
+    ydata = list(path_line.get_ydata())
     xdata.append(lon)
     ydata.append(lat)
     path_line.set_data(xdata, ydata)
