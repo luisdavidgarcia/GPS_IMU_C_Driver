@@ -83,12 +83,12 @@ clean: CMakeFiles/imu_graph.dir/clean
 CMakeFiles/gps_graph.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles --progress-num=1,2 "Built target gps_graph"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles --progress-num=1,2,3,4 "Built target gps_graph"
 .PHONY : CMakeFiles/gps_graph.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/gps_graph.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/gps_graph.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles 0
 .PHONY : CMakeFiles/gps_graph.dir/rule
@@ -109,12 +109,12 @@ CMakeFiles/gps_graph.dir/clean:
 CMakeFiles/imu_graph.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_graph.dir/build.make CMakeFiles/imu_graph.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_graph.dir/build.make CMakeFiles/imu_graph.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles --progress-num=3,4 "Built target imu_graph"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles --progress-num=5,6,7 "Built target imu_graph"
 .PHONY : CMakeFiles/imu_graph.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/imu_graph.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/imu_graph.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles 0
 .PHONY : CMakeFiles/imu_graph.dir/rule

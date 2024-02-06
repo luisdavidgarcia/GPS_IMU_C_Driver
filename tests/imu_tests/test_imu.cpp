@@ -1,4 +1,4 @@
-#include "../../imu_module/imu.h"
+#include "imu.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,10 +36,10 @@ int main(void) {
 
   Imu imu_module;
   while (!exit_flag) {
-    imu_module.readSensorData();
+    imu_module.ReadSensorData();
     printf("--------------------\n");
 
-    const int16_t *accel_data = imu_module.getAccelerometerData();
+    const int16_t *accel_data = imu_module.GetRawAccelerometerData();
     if (accel_data[0] == ACCEL_MAX_THRESHOLD && accel_data[1] == ACCEL_MAX_THRESHOLD && accel_data[2] == ACCEL_MAX_THRESHOLD) {
       printf("Accelerometer data is invalid.\n");
       continue;
@@ -47,7 +47,7 @@ int main(void) {
       printf("Acceleration (m/s^2): (X: %d, Y: %d, Z: %d)\n", accel_data[0], accel_data[1], accel_data[2]);
     }
 
-    const int16_t *gyro_data = imu_module.getGyroscopeData();
+    const int16_t *gyro_data = imu_module.GetRawGyroscopeData();
     if (gyro_data[0] == GYRO_MAX_THRESHOLD && gyro_data[1] == GYRO_MAX_THRESHOLD && gyro_data[2] == GYRO_MAX_THRESHOLD) {
       printf("Gyroscope data is invalid.\n");
       continue;
@@ -55,7 +55,7 @@ int main(void) {
       printf("Gyroscope (radians/s): (X: %d, Y: %d, Z: %d)\n", gyro_data[0], gyro_data[1], gyro_data[2]);
     }
 
-    const int16_t *mag_data = imu_module.getMagnetometerData();
+    const int16_t *mag_data = imu_module.GetRawMagnetometerData();
     if (mag_data[0] == MAG_MAX_THRESHOLD && mag_data[1] == MAG_MAX_THRESHOLD && mag_data[2] == MAG_MAX_THRESHOLD) {
       printf("Magnetometer data is invalid.\n");
       continue;

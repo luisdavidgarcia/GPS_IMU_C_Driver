@@ -13,7 +13,7 @@ Follow these steps to get started with this project:
 
 1. **Fork this Repository**: Start by [forking this template repository](https://github.com/Solar-Autonomous-ROACH/GPS_IMU_C_Driver/tree/main) to your own GitHub account. This will allow you to work on your own copy of the project.
 
-2. **Install Git Hooks**: Use the provided `setup.py` script to install Git pre-commit hooks. These hooks ensure that your code adheres to quality standards before committing changes.
+2. **Setup Dependencies**: Use the provided `setup.sh` script to install Git pre-commit hooks. These hooks ensure that your code adheres to quality standards before committing changes. The script also installs the dependencies required to run all the provided libraries and a python virtual environment for convience if deploying python tests.
 
 3. **Programming**: Begin programming your rover using the GPS and IMU modules provided in this repository. You can customize and extend the code to suit your project's specific needs.
 
@@ -36,11 +36,14 @@ The project consists of the following main modules:
 ### Libraries
 
 - **GPS Module Libraries**:
-  - SparkFun Arduino I2C with UBX Library: [GitHub](https://github.com/sparkfun/SparkFun_Ublox_Arduino_Library)
-  - GPS SAM-M8Q Library (Python): [Melopero SAM-M8Q Module GitHub](https://github.com/melopero/Melopero_SAM-M8Q/blob/master/README.md)
+  - SparkFun Arduino I2C with UBX Library Used for Basing C++ Implementation: [GitHub](https://github.com/sparkfun/SparkFun_Ublox_Arduino_Library)
+  - GPS SAM-M8Q Library (Python) Used for Basing C++ Implementation: [Melopero SAM-M8Q Module GitHub](https://github.com/melopero/Melopero_SAM-M8Q/blob/master/README.md)
 - **IMU Module Libraries**:
-  - SparkFun Library for IMU: [GitHub](https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary/blob/main/src/ICM_20948.h#L34)
+  - IMU SparkFun Library Used for Basing C++ Implementation: [GitHub](https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary/blob/main/src/ICM_20948.h#L34)
   - Old Rover Code for IMU: [Rover IMU Code Old](https://github.com/GoScoutOrg/Rover/blob/main/src/rover/imu.py#L23)
+- **Kalman Filter Libraries**
+  - Kalman Filter Library Used: [GitHub](https://github.com/balamuruganky/ekf_nav_ins/tree/fa8c6bcd15344f4155cac6e13f0d9576d70f7074)
+  - Eigen3: [Library](https://eigen.tuxfamily.org/index.php?title=Main_Page)
 - **Plotting Library**:
   - Matplot++: [GitHub](https://github.com/alandefreitas/matplotplusplus)
   - Installation: [Build from Source](https://alandefreitas.github.io/matplotplusplus/integration/install/build-from-source/build-and-install/)
@@ -63,8 +66,13 @@ The project consists of the following main modules:
 
 ### Compiling and Testing
 
-- Compile with: `g++ -O example_i2c_test.cpp -o weak -li2c -ggdb`
-- Replicated Test example for IMU: [Python Example](https://github.com/sparkfun/Qwiic_9DoF_IMU_ICM20948_Py/blob/main/examples/ex1_qwiic_ICM20948.py)
+- Three different tests:
+  - `make gps_test`
+  - `make imu_test`
+     - Replicated Test example for IMU: [Python Example](https://github.com/sparkfun/Qwiic_9DoF_IMU_ICM20948_Py/blob/main/examples/ex1_qwiic_ICM20948.py)
+  - `make kalman_test`
+     - **NOTE:** Must first compile ekfNavINS.o on a machine with at least 2 GB RAM with `make $(EKF_OBJ)`. 
+
 
 ## License
 

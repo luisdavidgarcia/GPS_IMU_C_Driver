@@ -166,6 +166,78 @@ gps_graphs.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/gps_graphs.cpp.s
 .PHONY : gps_graphs.cpp.s
 
+home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.o: home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.o
+
+# target to build an object file
+home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o
+
+home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.i: home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.i
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.i
+
+# target to preprocess a source file
+home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.i
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.i
+
+home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.s: home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.s
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.s
+
+# target to generate assembly for a file
+home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.s
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.s
+
+home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.o: home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.o
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.o
+
+# target to build an object file
+home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_graph.dir/build.make CMakeFiles/imu_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.o
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.o
+
+home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.i: home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.i
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.i
+
+# target to preprocess a source file
+home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_graph.dir/build.make CMakeFiles/imu_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.i
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.i
+
+home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.s: home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.s
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.s
+
+# target to generate assembly for a file
+home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_graph.dir/build.make CMakeFiles/imu_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.s
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.s
+
+home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.o: home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.o
+
+# target to build an object file
+home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o
+
+home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.i: home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.i
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.i
+
+# target to preprocess a source file
+home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.i
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.i
+
+home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.s: home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.s
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.s
+
+# target to generate assembly for a file
+home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gps_graph.dir/build.make CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.s
+.PHONY : home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.s
+
 imu_graphs.o: imu_graphs.cpp.o
 .PHONY : imu_graphs.o
 
@@ -203,6 +275,15 @@ help:
 	@echo "... gps_graphs.o"
 	@echo "... gps_graphs.i"
 	@echo "... gps_graphs.s"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.o"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.i"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.s"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.o"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.i"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.s"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.o"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.i"
+	@echo "... home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.s"
 	@echo "... imu_graphs.o"
 	@echo "... imu_graphs.i"
 	@echo "... imu_graphs.s"

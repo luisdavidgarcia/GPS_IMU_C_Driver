@@ -61,7 +61,7 @@ def runExample():
     while True:
         if IMU.dataReady():
             IMU.getAgmt()  # read all axis and temp from sensor, note this also updates all instance variables
-            # print("\tAcceleration\t\t\tGyroscope\t\t\tMag\t\t\t")
+            print("\tAcceleration\t\t\tGyroscope\t\t\tMag\t\t\t")
             print(
                 "{: 06d}".format(IMU.axRaw),
                 "\t",

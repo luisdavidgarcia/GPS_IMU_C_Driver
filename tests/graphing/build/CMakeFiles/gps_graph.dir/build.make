@@ -83,36 +83,50 @@ CMakeFiles/gps_graph.dir/gps_graphs.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gps_graph.dir/gps_graphs.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/gps_graphs.cpp -o CMakeFiles/gps_graph.dir/gps_graphs.cpp.s
 
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o: CMakeFiles/gps_graph.dir/flags.make
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o: /home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o: CMakeFiles/gps_graph.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o -MF CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o.d -o CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o -c /home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp
+
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp > CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.i
+
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp -o CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.s
+
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o: CMakeFiles/gps_graph.dir/flags.make
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o: /home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o: CMakeFiles/gps_graph.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o -MF CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o.d -o CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o -c /home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp
+
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp > CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.i
+
+CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp -o CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.s
+
 # Object files for target gps_graph
 gps_graph_OBJECTS = \
-"CMakeFiles/gps_graph.dir/gps_graphs.cpp.o"
+"CMakeFiles/gps_graph.dir/gps_graphs.cpp.o" \
+"CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o" \
+"CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o"
 
 # External object files for target gps_graph
 gps_graph_EXTERNAL_OBJECTS =
 
 gps_graph: CMakeFiles/gps_graph.dir/gps_graphs.cpp.o
+gps_graph: CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o
+gps_graph: CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o
 gps_graph: CMakeFiles/gps_graph.dir/build.make
-gps_graph: /usr/local/lib/libmatplot.a
-gps_graph: /usr/lib/aarch64-linux-gnu/libjpeg.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libtiff.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libz.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libpng.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libz.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libpng.so
-gps_graph: /usr/lib/aarch64-linux-gnu/liblapack.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libblas.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3f.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3l.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3_threads.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3f_threads.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3l_threads.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3_omp.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3f_omp.so
-gps_graph: /usr/lib/aarch64-linux-gnu/libfftw3l_omp.so
-gps_graph: /usr/local/lib/Matplot++/libnodesoup.a
+gps_graph: /usr/lib/aarch64-linux-gnu/libpython3.11.so
 gps_graph: CMakeFiles/gps_graph.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable gps_graph"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/simba/Desktop/GPS_IMU_C_Driver/tests/graphing/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable gps_graph"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gps_graph.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
