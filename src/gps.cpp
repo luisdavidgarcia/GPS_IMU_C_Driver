@@ -215,6 +215,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
 	printf("Sync1: %d\n", message.sync1);
 	if (message.sync1 != 255) {
+		printf("In here\n");	
 		pvtData.year = u2_to_int(&message.payload[4]);
 		printf("Year: %d\n", pvtData.year);
 		pvtData.month = message.payload[6];
