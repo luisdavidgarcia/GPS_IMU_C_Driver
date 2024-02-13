@@ -28,6 +28,7 @@ int main(void) {
   while(!exit_flag) {
 
     PVTData data = gps_module.GetPvt(true, 1);
+    print("Year: %d\n", data.year);
     if (data.year == CURRENT_YEAR && data.numberOfSatellites > 0) {
       /* Use these times to plot on x-axis */
       printf("Year: %d\n", data.year);
