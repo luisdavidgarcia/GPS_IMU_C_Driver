@@ -221,31 +221,31 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 			return this->pvtData;
 		}
 		pvtData.day = message.payload[7];
-		if (pvtData.day < MIN_DAY || pvtData.day > MAX_DAY) {
-			pvtData.year = INVALID_YEAR_FLAG;
-			return this->pvtData;
-		}
+		// if (pvtData.day < MIN_DAY || pvtData.day > MAX_DAY) {
+		// 	pvtData.year = INVALID_YEAR_FLAG;
+		// 	return this->pvtData;
+		// }
 		pvtData.hour = message.payload[8];
-		if (pvtData.hour < MIN_HOUR || pvtData.hour > MAX_HOUR) {
-			pvtData.year = INVALID_YEAR_FLAG;
-			return this->pvtData;
-		}
+		// if (pvtData.hour < MIN_HOUR || pvtData.hour > MAX_HOUR) {
+		// 	pvtData.year = INVALID_YEAR_FLAG;
+		// 	return this->pvtData;
+		// }
 		pvtData.min = message.payload[9];
-		if (pvtData.min < MIN_MINUTE || pvtData.min > MAX_MINUTE) {
-			pvtData.year = INVALID_YEAR_FLAG;
-			return this->pvtData;
-		}
+		// if (pvtData.min < MIN_MINUTE || pvtData.min > MAX_MINUTE) {
+		// 	pvtData.year = INVALID_YEAR_FLAG;
+		// 	return this->pvtData;
+		// }
 		pvtData.sec = message.payload[10];
-		if (pvtData.sec < MIN_SECOND || pvtData.sec > MAX_SECOND) {
-			pvtData.year = INVALID_YEAR_FLAG;
-			return this->pvtData;
-		}
+		// if (pvtData.sec < MIN_SECOND || pvtData.sec > MAX_SECOND) {
+		// 	pvtData.year = INVALID_YEAR_FLAG;
+		// 	return this->pvtData;
+		// }
 
 		uint8_t valid_flag = message.payload[11];
-		if (valid_flag == 0) {
-			pvtData.year = INVALID_YEAR_FLAG;
-			return this->pvtData;
-		}
+		// if (valid_flag == 0) {
+		// 	pvtData.year = INVALID_YEAR_FLAG;
+		// 	return this->pvtData;
+		// }
 
 		// Extract and clarify flags
 		pvtData.validDateFlag = (valid_flag & VALID_DATE_FLAG) == VALID_DATE_FLAG ? 1 : 0;
