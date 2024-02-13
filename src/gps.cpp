@@ -24,7 +24,7 @@ Gps::Gps(void) {
 		exit(-1);
 	}
 
-	result = this->setMeasurementFrequency(MEASUREMENT_PERIOD_MILLIS_100_MS, 1, 0);
+	result = this->setMeasurementFrequency(MEASUREMENT_PERIOD_MILLIS_100_MS, 5, 0);
 	if (!result) {
 		printf("Error: Failed to set measurement frequency.\n");
 		exit(-1);
