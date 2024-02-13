@@ -69,8 +69,8 @@ int main(void) {
     }
 
     // Sleep for 10 milliseconds
-    //std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    sleep(0.5);
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    // sleep(0.5);
   }
 
   return 0;
