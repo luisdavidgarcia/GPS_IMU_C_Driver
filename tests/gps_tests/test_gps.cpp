@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <csignal>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 #define CURRENT_YEAR 2024
 
@@ -65,7 +67,10 @@ int main(void) {
     } else {
       printf("No data\n");
     }
-    sleep(1);
+
+    // Sleep for 10 milliseconds
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    // sleep(1);
   }
 
   return 0;
