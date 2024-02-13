@@ -122,6 +122,10 @@ extern "C" {
 #define SENSITIVITY_REACQUISITION_DBM -158 // Sensitivity for reacquisition in dBm
 #define SENSITIVITY_COLD_HOT_START_DBM -146 // Sensitivity for cold and hot starts in dBm
 
+#define MEASUREMENT_PERIOD_MILLIS_1_SEC 1000 // Measurement period in milliseconds
+#define MEASUREMENT_PERIOD_MILLIS_100_MS 10000 // Measurement period in milliseconds
+
+
 
 /** Error Handling */
 #define INVALID_YEAR_FLAG 0xBEEF

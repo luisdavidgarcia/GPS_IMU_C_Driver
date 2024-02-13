@@ -139,6 +139,14 @@ extern "C" {
 #define MAG_UT_LSB (0.15)
 #define MAG_MAX_THRESHOLD 5000 // µT, adjust as needed
 
+const float alpha = 0.5; // Adjust this parameter to tweak the filter (range: 0-1)
+const float accel_x_offset = -0.05673657500210876;
+const float accel_y_offset = -0.014051752249833504;
+const float accel_z_offset = -0.700553398935738;
+const float gyro_x_bias = -0.008447830282040561;
+const float gyro_y_bias = 0.0064697791963203004;
+const float gyro_z_bias = -0.009548081446790717;
+
 class Imu {
 private:
 	int i2c_fd;
@@ -152,10 +160,19 @@ public:
 	~Imu();
 	void ReadSensorData(void);
 
-	// Rename function names to GetScaledAccelerometerData, etc.
     const int16_t* GetRawAccelerometerData() { return accelerometer; }
     const int16_t* GetRawMagnetometerData() { return magnetometer; }
     const int16_t* GetRawGyroscopeData() { return gyroscope; }
+
+	float GetAccelX() { return static_cast<float>(accelerometer[X_AXIS]) * ACCEL_MG_LSB_2G - accel_x_offset; }
+	float GetAccelY() { return -1 * static_cast<float>(accelerometer[Y_AXIS]) * ACCEL_MG_LSB_2G - accel_y_offset; }
+	float GetAccelZ() { return static_cast<float>(accelerometer[Z_AXIS]) * ACCEL_MG_LSB_2G - accel_z_offset; }
+	float GetGyroX() { return (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyroscope[X_AXIS]) - gyro_x_bias); }
+	float GetGyroY() { return (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyroscope[Y_AXIS]) - gyro_y_bias); }
+	float GetGyroZ() { return (GYRO_SENSITIVITY_250DPS * DEG_TO_RAD * static_cast<float>(gyroscope[Z_AXIS]) - gyro_z_bias); }
+	float GetMagX() { return static_cast<float>(magnetometer[X_AXIS]) * MAG_UT_LSB; }
+	float GetMagY() { return static_cast<float>(magnetometer[Y_AXIS]) * MAG_UT_LSB; }
+	float GetMagZ() { return static_cast<float>(magnetometer[Z_AXIS]) * MAG_UT_LSB; }
 };
 
 #endif // IMU_H
