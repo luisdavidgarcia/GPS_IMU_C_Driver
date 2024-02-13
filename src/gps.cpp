@@ -18,13 +18,13 @@ Gps::Gps(void) {
 
 	this->ubxOnly();
 
-	bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
+	bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 5);
 	if (!result) {
 		printf("Error: Failed to set message send rate for NAV_PVT.\n");
 		exit(-1);
 	}
 
-	result = this->setMeasurementFrequency(MEASUREMENT_PERIOD_MILLIS_1_SEC, 1, 0);
+	result = this->setMeasurementFrequency(MEASUREMENT_PERIOD_MILLIS_100_MS, 1, 0);
 	if (!result) {
 		printf("Error: Failed to set measurement frequency.\n");
 		exit(-1);
