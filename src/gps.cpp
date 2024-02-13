@@ -213,6 +213,7 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
 	UbxMessage message = this->readUbxMessage();
 
+	printf("Sync1: %d\n", message.sync1);
 	if (message.sync1 != 255) {
 		pvtData.year = u2_to_int(&message.payload[4]);
 		printf("Year: %d\n", pvtData.year);
