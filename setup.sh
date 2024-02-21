@@ -12,17 +12,17 @@ pip3 install pyserial
 apt update
 
 # Install C++ development tools
-apt install g++ cmake
+apt install -y build-essential cmake
 
 # Install I2C libraries
-apt install libi2c-dev
+apt install -y libi2c-dev
 
 # Install Serial libraries
-apt install libserialport0
-apt install libserialport-dev
+apt install -y libserialport0
+apt install -y libserialport-dev
 
 # Install Eigen Library
-apt install libeigen3-dev
+apt install -y libeigen3-dev
 
 ###############################################
 # ONLY NECESSARY FOR PLOTTING
