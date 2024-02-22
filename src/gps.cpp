@@ -18,7 +18,7 @@ Gps::Gps(void) {
 
 	this->ubxOnly();
 
-	bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 5);
+	bool result = this->setMessageSendRate(NAV_CLASS, NAV_PVT, 1);
 	if (!result) {
 		printf("Error: Failed to set message send rate for NAV_PVT.\n");
 		exit(-1);
