@@ -124,7 +124,7 @@ extern "C" {
 
 #define MEASUREMENT_PERIOD_MILLIS_1_SEC 1000 // Measurement period in milliseconds
 #define MEASUREMENT_PERIOD_MILLIS_100_MS 100 // Measurement period in milliseconds
-#define MEASUREMENT_PERIOD_MILLIS_25_MS 25000 // Measurement period in milliseconds
+#define MEASUREMENT_PERIOD_MILLIS_25_MS 25 // Measurement period in milliseconds
 
 
 
