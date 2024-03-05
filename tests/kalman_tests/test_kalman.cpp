@@ -120,7 +120,7 @@ int main(void) {
             std::tie(pitch, roll, yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, Gxyz[0], Gxyz[1], Gxyz[2], filteredMx, filteredMy, filteredMz, dt);
             printf("Pitch: %2.3f, Roll: %2.3f, Yaw: %2.3f\n", pitch, roll, yaw);
             // Print Lat, Long, and Height
-            printf("Latitude: %f, Longitude: %f\n,", data.latitude, data.longitude);
+            printf("Latitude: %f, Longitude: %f\n", data.latitude, data.longitude);
             //, Height: %d\n", data.latitude, data.longitude, data.height);
 
             // Write only the IMU data to a file
