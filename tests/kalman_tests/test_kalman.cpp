@@ -120,15 +120,16 @@ int main(void) {
             std::tie(pitch, roll, yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, Gxyz[0], Gxyz[1], Gxyz[2], filteredMx, filteredMy, filteredMz, dt);
             printf("Pitch: %2.3f, Roll: %2.3f, Yaw: %2.3f, dt: %2.3f\n", pitch, roll, yaw, dt);
             // Print Lat, Long, and Height
-            printf("Latitude: %f, Longitude: %f, Height: %d\n", data.latitude, data.longitude, data.height);
+            printf("Latitude: %f, Longitude: %f\n,", data.latitude, data.longitude);
+            //, Height: %d\n", data.latitude, data.longitude, data.height);
 
             // Write only the IMU data to a file
             std::ofstream outfile("tests/kalman_tests/rpy_data.txt");
             if (outfile.is_open()) {
                 // Set maximum precision for floating point values
                 outfile << std::fixed << std::setprecision(7); // 7 decimal places
-                outfile << ekf.getPitch_rad() << "," << ekf.getRoll_rad() << "," << ekf.getHeading_rad() << ",";
-                outfile << data.latitude << "," << data.longitude << "," << data.height << std::endl;
+                outfile << ekf.getPitch_rad() << "," << ekf.getRoll_rad() << "," << ekf.getHeading_rad() << "," << std::endl;
+                // outfile << data.latitude << "," << data.longitude << "," << data.height << std::endl;
                 outfile.flush(); // Flush the stream
                 outfile.close(); // Close the file to save the changes
             } else {
