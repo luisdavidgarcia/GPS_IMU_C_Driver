@@ -128,7 +128,7 @@ int main(void) {
             if (outfile.is_open()) {
                 // Set maximum precision for floating point values
                 outfile << std::fixed << std::setprecision(7); // 7 decimal places
-                outfile << ekf.getPitch_rad() << "," << ekf.getRoll_rad() << "," << ekf.getHeading_rad() << "," << std::endl;
+                outfile << ekf.getPitch_rad() << "," << ekf.getRoll_rad() << "," << ekf.getHeading_rad() << std::endl;
                 // outfile << data.latitude << "," << data.longitude << "," << data.height << std::endl;
                 outfile.flush(); // Flush the stream
                 outfile.close(); // Close the file to save the changes
