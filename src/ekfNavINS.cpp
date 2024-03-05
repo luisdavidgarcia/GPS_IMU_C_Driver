@@ -52,16 +52,5 @@ std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(
   Byc = hy * cosf(phi) - hz * sinf(phi);
   psi = -atan2f(Byc, Bxc);
 
-  // // Integrate gyroscope data over time to estimate angle change
-  // float deltaTheta = gx * dt;
-  // float deltaPhi = gy * dt;
-  // float deltaPsi = gz * dt;
-
-  // // Complementary filter
-  // float alpha = 0.98;
-  // theta = alpha * (prevTheta + deltaTheta) + (1 - alpha) * theta;
-  // phi = alpha * (prevPhi + deltaPhi) + (1 - alpha) * phi;
-  // psi = alpha * (prevPsi + deltaPsi) + (1 - alpha) * psi;
-
   return std::make_tuple(theta, phi, psi);
 }
