@@ -1,1 +1,0 @@
-/usr/bin/c++  -g -ggdb -rdynamic CMakeFiles/imu_graph.dir/imu_graphs.cpp.o CMakeFiles/imu_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/imu_module/imu.cpp.o -o imu_graph  -lpython3.11 -li2c 

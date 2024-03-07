@@ -1,1 +1,0 @@
-/usr/bin/c++  -g -ggdb -rdynamic CMakeFiles/gps_graph.dir/gps_graphs.cpp.o CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/gps_module/gps.cpp.o CMakeFiles/gps_graph.dir/home/simba/Desktop/GPS_IMU_C_Driver/ubx_lib/ubx_msg.cpp.o -o gps_graph  -lpython3.11 -li2c 

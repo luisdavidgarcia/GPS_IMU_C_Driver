@@ -5,10 +5,6 @@ import time
 # Raw GPS data
 latitudes, longitudes, altitudes, speeds_n, speeds_e, speeds_d = [], [], [], [], [], []
 
-# Filtered data
-latitudes_filtered, longitudes_filtered, altitudes_filtered = [], [], []
-speeds_n_filtered, speeds_e_filtered, speeds_d_filtered = [], [], []
-
 # Roll, Pitch, Yaw
 rolls, pitches, yaws = [], [], []
 
@@ -22,28 +18,18 @@ def add_data_to_lists(data):
     speeds_n.append(data[3])
     speeds_e.append(data[4])
     speeds_d.append(data[5])
-
-    latitudes_filtered.append(data[6])
-    longitudes_filtered.append(data[7])
-    altitudes_filtered.append(data[8])
-    speeds_n_filtered.append(data[9])
-    speeds_e_filtered.append(data[10])
-    speeds_d_filtered.append(data[11])
-
-    rolls.append(data[12])
-    pitches.append(data[13])
-    yaws.append(data[14])
+    rolls.append(data[6])
+    pitches.append(data[7])
+    yaws.append(data[8])
 
 def plot_data():
     # Clear previous data and plot new data for each metric
-    for i, (data, data_filtered, title) in enumerate(zip(
+    for i, (data, title) in enumerate(zip(
         [latitudes, longitudes, altitudes, speeds_n, speeds_e, speeds_d],
-        [latitudes_filtered, longitudes_filtered, altitudes_filtered, speeds_n_filtered, speeds_e_filtered, speeds_d_filtered],
         ["Latitude", "Longitude", "Altitude", "Speed North", "Speed East", "Speed Down"]
     )):
         axs[i].cla()
         axs[i].plot(data, label=f'{title} Raw')
-        axs[i].plot(data_filtered, label=f'{title} Filtered')
         axs[i].legend()
 
     axs[6].cla()
@@ -63,7 +49,7 @@ def plot_data():
 
 while True:
     try:
-        with open("data.txt", "r") as file:
+        with open("rpy_data.txt", "r") as file:
             for line in file:
                 data = list(map(float, line.strip().split(',')))
                 add_data_to_lists(data)

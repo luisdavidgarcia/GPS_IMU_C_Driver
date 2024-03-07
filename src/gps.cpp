@@ -5,7 +5,7 @@
  *
  * Initializes the GPS module communication, sets message send rates, and measurement frequencies.
  */
-Gps::Gps(void) {
+Gps::Gps(int16_t currentYear=DEFAULT_YEAR) : currentYear(currentYear) {
 	const char *deviceName = GPS_I2C_BUS;
 	i2c_fd = open(deviceName, O_RDWR);
 	if (i2c_fd < 0) {
@@ -27,6 +27,11 @@ Gps::Gps(void) {
 	result = this->setMeasurementFrequency(MEASUREMENT_PERIOD_MILLIS_100_MS, 1, 0);
 	if (!result) {
 		printf("Error: Failed to set measurement frequency.\n");
+		exit(-1);
+	}
+
+	if (currentYear == DEFAULT_YEAR) {
+		printf("Error: Current year is not set.\n");
 		exit(-1);
 	}
 }
@@ -213,39 +218,18 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
 	UbxMessage message = this->readUbxMessage();
 
-	if (message.sync1 != 255) {
+	if (message.sync1 != INVALID_SYNC1_FLAG) {
 		pvtData.year = u2_to_int(&message.payload[4]);
-		pvtData.month = message.payload[6];
-		if (pvtData.month < MIN_MONTH || pvtData.month > MAX_MONTH) {
+		if (pvtData.year != currentYear) {
 			pvtData.year = INVALID_YEAR_FLAG;
 			return this->pvtData;
 		}
+		pvtData.month = message.payload[6];
 		pvtData.day = message.payload[7];
-		// if (pvtData.day < MIN_DAY || pvtData.day > MAX_DAY) {
-		// 	pvtData.year = INVALID_YEAR_FLAG;
-		// 	return this->pvtData;
-		// }
 		pvtData.hour = message.payload[8];
-		// if (pvtData.hour < MIN_HOUR || pvtData.hour > MAX_HOUR) {
-		// 	pvtData.year = INVALID_YEAR_FLAG;
-		// 	return this->pvtData;
-		// }
 		pvtData.min = message.payload[9];
-		// if (pvtData.min < MIN_MINUTE || pvtData.min > MAX_MINUTE) {
-		// 	pvtData.year = INVALID_YEAR_FLAG;
-		// 	return this->pvtData;
-		// }
 		pvtData.sec = message.payload[10];
-		// if (pvtData.sec < MIN_SECOND || pvtData.sec > MAX_SECOND) {
-		// 	pvtData.year = INVALID_YEAR_FLAG;
-		// 	return this->pvtData;
-		// }
-
 		uint8_t valid_flag = message.payload[11];
-		// if (valid_flag == 0) {
-		// 	pvtData.year = INVALID_YEAR_FLAG;
-		// 	return this->pvtData;
-		// }
 
 		// Extract and clarify flags
 		pvtData.validDateFlag = (valid_flag & VALID_DATE_FLAG) == VALID_DATE_FLAG ? 1 : 0;
@@ -260,101 +244,27 @@ PVTData Gps::GetPvt(bool polling = DEFAULT_POLLING_STATE,
 
 		// Extract longitude and latitude in degrees
 		pvtData.longitude = i4_to_int(&message.payload[24])* 1e-07;
-	//        if ((pvtData.longitude < MIN_LONGTITUTE) || (pvtData.longitude > MAX_LONGTITUTE)) {
-	//            pvtData.year = INVALID_YEAR_FLAG;
-	//            return this->pvtData;
-	//        }
 		pvtData.latitude = i4_to_int(&message.payload[28]) * 1e-07;
-	//        if ((pvtData.latitude < MIN_LATITUDE) || (pvtData.latitude > MAX_LATITUDE)) {
-	//            pvtData.year = INVALID_YEAR_FLAG;
-	//            return this->pvtData;
-	//        }
-
-		// Extract height data
 		pvtData.height = i4_to_int(&message.payload[32]);
-		// if ((pvtData.height < MIN_ALTITUDE_METERS) || (pvtData.height > MAX_ALTITUDE_METERS)) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
 		pvtData.heightMSL = i4_to_int(&message.payload[36]);
-		// if ((pvtData.heightMSL < MIN_ALTITUDE_METERS) || (pvtData.heightMSL > MAX_ALTITUDE_METERS)) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
-
 		// Extract horizontal and vertical accuracy in millimeters
 		pvtData.horizontalAccuracy = u4_to_int(&message.payload[40]);
-		// if (pvtData.horizontalAccuracy > HORIZONTAL_ACCURACY_GPS_GLONASS_M) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
-
 		pvtData.verticalAccuracy = u4_to_int(&message.payload[44]);
-		// if (pvtData.verticalAccuracy > HORIZONTAL_ACCURACY_GPS_GLONASS_M) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
-
 		// Extract North East Down velocity in mm/s
 		pvtData.velocityNorth = i4_to_int(&message.payload[48]);
-	//        if ((pvtData.velocityNorth > MAX_VELOCITY_MPS) || (pvtData.velocityNorth < MIN_VELOCITY_MPS)) {
-	//            pvtData.year = INVALID_YEAR_FLAG;
-	//            return this->pvtData;
-	//        }
 		pvtData.velocityEast = i4_to_int(&message.payload[52]);
-	//        if ((pvtData.velocityEast > MAX_VELOCITY_MPS) || (pvtData.velocityEast < MIN_VELOCITY_MPS)) {
-	//            pvtData.year = INVALID_YEAR_FLAG;
-	//            return this->pvtData;
-	//        }
 		pvtData.velocityDown = i4_to_int(&message.payload[56]);
-	//        if ((pvtData.velocityDown > MAX_VELOCITY_MPS) || (pvtData.velocityDown < MIN_VELOCITY_MPS)) {
-	//            printf("Bad Read Velocity Down: %d\n", pvtData.velocityDown);
-	//            pvtData.year = INVALID_YEAR_FLAG;
-	//            return this->pvtData;
-	//        }
-
 		// Extract ground speed in mm/s and motion heading in degrees
 		pvtData.groundSpeed = i4_to_int(&message.payload[60]);
-		// if ((pvtData.groundSpeed > MAX_VELOCITY_MPS) || (pvtData.groundSpeed < MIN_VELOCITY_MPS)) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
 		pvtData.motionHeading = i4_to_int(&message.payload[64]) * 1e-05;
-		// if (pvtData.motionHeading > MAX_DEGREE || pvtData.motionHeading < MIN_DEGREE) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
-
 		// Extract speed accuracy in mm/s and heading accuracy in degrees
 		pvtData.speedAccuracy = u4_to_int(&message.payload[68]);
-		// if (pvtData.speedAccuracy > VELOCITY_ACCURACY_THRESHOLD_MPS) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
 		pvtData.motionHeadingAccuracy = u4_to_int(&message.payload[72]) * 1e-05;
-		// if (pvtData.motionHeadingAccuracy > HEADING_ACCURACY_DEGREES) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
-
 		// Extract vehicle heading in degrees
 		pvtData.vehicalHeading = i4_to_int(&message.payload[84]) * 1e-05;
-		// if ((pvtData.vehicalHeading > MAX_DEGREE) || (pvtData.vehicalHeading < MIN_DEGREE)) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
-
 		// Extract magnetic declination and accuracy in degrees
 		pvtData.magneticDeclination = i2_to_int(&message.payload[88]) * 1e-02;
-		// if ((pvtData.magneticDeclination > MAX_DEGREE) || (pvtData.magneticDeclination < MIN_DEGREE)) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
 		pvtData.magnetDeclinationAccuracy = u2_to_int(&message.payload[90]) * 1e-02;
-		// if (pvtData.magnetDeclinationAccuracy > MAX_MAG_DEGREE_ACCURACY) {
-		//     pvtData.year = INVALID_YEAR_FLAG;
-		//     return this->pvtData;
-		// }
 
 		return this->pvtData;
 	}
@@ -385,14 +295,14 @@ uint16_t Gps::u2_to_int(const uint8_t *little_endian_bytes) {
 		(uint16_t)little_endian_bytes[0]);
 }
 
-// double Gps::bytes_to_double(const uint8_t *little_endian_bytes) {
-//     // Assuming little_endian_bytes is a representation of a double
-//     // If it's not, you'll need to adjust the conversion logic accordingly
-//     double result;
-//     memcpy(&result, little_endian_bytes, sizeof(result));
-//     printf("Result: %f\n", result);
-//     return result * 1e-07;
-// }
+double Gps::bytes_to_double(const uint8_t *little_endian_bytes) {
+    // Assuming little_endian_bytes is a representation of a double
+    // If it's not, you'll need to adjust the conversion logic accordingly
+    double result;
+    memcpy(&result, little_endian_bytes, sizeof(result));
+    printf("Result: %f\n", result);
+    return result * 1e-07;
+}
 
 /**
  * @brief   Convert a little-endian byte array to a signed 32-bit integer.

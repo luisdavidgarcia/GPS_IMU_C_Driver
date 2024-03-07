@@ -22,7 +22,6 @@ void signal_handler(int signum) {
     if (signum == SIGINT) {
         std::cout << "Ctrl+C received. Cleaning up..." << std::endl;
 
-        // Set the exit flag to true to trigger graceful exit.
         exit_flag = true;
     }
 }
@@ -32,13 +31,13 @@ int main(void) {
     signal(SIGINT, signal_handler);
 
     Imu imu_module;
-    Gps gps_module;
+    Gps gps_module(CURRENT_YEAR);
     ekfNavINS ekf;
     float pitch, roll, yaw;
     float Gxyz[3], Axyz[3], Mxyz[3];
     float filteredAx = 0, filteredAy = 0, filteredAz = 0;
     float filteredMx = 0, filteredMy = 0, filteredMz = 0;
-    const float alpha = 0.5; // Adjust this parameter to tweak the filter (range: 0-1)
+    const float alpha = 0.5;  // Adjust this parameter to tweak the filter (range: 0-1)
     const float accel_x_offset = -0.05673657500210876;
     const float accel_y_offset = -0.014051752249833504;
     const float accel_z_offset = -0.700553398935738;
@@ -46,16 +45,6 @@ int main(void) {
     const float gyro_y_bias = 0.0064697791963203004;
     const float gyro_z_bias = -0.009548081446790717;
  
-    // // Open a file in write mode to log data
-    // std::ofstream imuDataFile("tests/kalman_tests/accel_gyro_imu_data.csv");
-    // if (imuDataFile.is_open()) {
-    //     // Write headers to the CSV file
-    //     imuDataFile << "AccelX,AccelY,AccelZ,GyroX,GyroY,GyroZ,MagX,MagY,MagZ\n";
-    // } else {
-    //     std::cerr << "Unable to open file for writing IMU data." << std::endl;
-    //     return 1; // Exit if file cannot be opened
-    // }
-
     auto lastTime = std::chrono::steady_clock::now();
 
     while(!exit_flag) {
@@ -100,13 +89,6 @@ int main(void) {
             Mxyz[1] = static_cast<float>(mag_data[1]) * MAG_UT_LSB;;
             Mxyz[2] = static_cast<float>(mag_data[2]) * MAG_UT_LSB;;
 
-            // // Write the IMU data to the file
-            // if (imuDataFile.is_open()) {
-            //     imuDataFile << Axyz[0] << "," << Axyz[1] << "," << Axyz[2] << ","
-            //                 << Gxyz[0] << "," << Gxyz[1] << "," << Gxyz[2] << ","
-            //                 << Mxyz[0] << "," << Mxyz[1] << "," << Mxyz[2] << "\n";
-            // }
-
             // Low-pass filter for accelerometer data
             filteredAx = alpha * filteredAx + (1 - alpha) * Axyz[0];
             filteredAy = alpha * filteredAy + (1 - alpha) * Axyz[1];
@@ -119,19 +101,16 @@ int main(void) {
 
             std::tie(pitch, roll, yaw) = ekf.getPitchRollYaw(filteredAx, filteredAy, filteredAz, Gxyz[0], Gxyz[1], Gxyz[2], filteredMx, filteredMy, filteredMz, dt);
             printf("Pitch: %2.3f, Roll: %2.3f, Yaw: %2.3f\n", pitch, roll, yaw);
-            // Print Lat, Long, and Height
             printf("Latitude: %f, Longitude: %f\n", data.latitude, data.longitude);
-            //, Height: %d\n", data.latitude, data.longitude, data.height);
 
-            // Write only the IMU data to a file
-            std::ofstream outfile("tests/kalman_tests/rpy_data.txt");
+            std::ofstream outfile("tests/kalman_tests/gps_rpy_data.txt");
             if (outfile.is_open()) {
-                // Set maximum precision for floating point values
-                outfile << std::fixed << std::setprecision(7); // 7 decimal places
-                outfile << ekf.getPitch_rad() << "," << ekf.getRoll_rad() << "," << ekf.getHeading_rad() << std::endl;
-                // outfile << data.latitude << "," << data.longitude << "," << data.height << std::endl;
-                outfile.flush(); // Flush the stream
-                outfile.close(); // Close the file to save the changes
+                outfile << std::fixed << std::setprecision(7); 
+                outfile << data.latitude << "," << data.longitude << "," << data.height << "," << data.speedNorth << "," 
+                    << data.speedEast << "," << data.speedDown << ekf.getPitch_rad() << "," << ekf.getRoll_rad() << "," 
+                    << ekf.getHeading_rad() << std::endl;
+                outfile.flush(); 
+                outfile.close(); 
             } else {
                 std::cerr << "Unable to open file for writing." << std::endl;
             }
@@ -141,6 +120,5 @@ int main(void) {
         }
     }
 
-    // imuDataFile.close(); // Close the file when done
     return 0;
 }

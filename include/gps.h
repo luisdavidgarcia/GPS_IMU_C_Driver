@@ -75,11 +75,13 @@ extern "C" {
 #define DEFAULT_SEND_RATE 0x01
 #define DEFAULT_INTERVAL_MILLS 50
 #define DEFAULT_POLLING_STATE false
+#define DEFAULT_YEAR -1
 
 #define VALID_DATE_FLAG 0x01
 #define VALID_TIME_FLAG 0x02
 #define FULLY_RESOLVED_FLAG 0x04
 #define VALID_MAG_FLAG 0x08
+#define INVALID_SYNC1_FLAG 0xFF
 
 /** SAM-M8Q Limits */
 #define MAX_MONTH 12
@@ -184,6 +186,7 @@ class Gps {
 		UbxMessage ubxmsg;
 		PVTData pvtData;
 		int i2c_fd;
+        int16_t currentYear;
 
 		void ubxOnly(void);
 		bool writeUbxMessage(UbxMessage& msg);
@@ -195,13 +198,13 @@ class Gps {
 		uint8_t navigationRate, uint8_t timeref);
 
 		int16_t i2_to_int(const uint8_t *little_endian_bytes);
-        // double bytes_to_double(const uint8_t *little_endian_bytes);
+        double bytes_to_double(const uint8_t *little_endian_bytes);
 		uint16_t u2_to_int(const uint8_t *little_endian_bytes);
 		int32_t i4_to_int(const uint8_t *little_endian_bytes);
 		uint32_t u4_to_int(const uint8_t *little_endian_bytes);
 
   	public:
-		Gps(void);
+		Gps(int16_t currentYear);
 		~Gps(void);
 		PVTData GetPvt(bool polling, uint16_t timeOutMillis);
 };
