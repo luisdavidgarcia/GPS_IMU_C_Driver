@@ -11,3 +11,5 @@ build/
 *.txt
 *.csv
 .vscode/
+obj/
+*.swp
