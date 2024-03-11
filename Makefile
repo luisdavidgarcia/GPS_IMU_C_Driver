@@ -22,7 +22,7 @@ all: imu_test gps_test kalman_test graphing gps_map_test
 # Pattern rule for object files
 $(OBJ_DIR)/%.o: src/%.cpp
 	@mkdir -p $(@D)
-	$(CXX) $(CROSS_COMPILE_FLAGS) -c $< -o $@
+	$(CXX) $(CXX1FLAGS) -c $< -o $@
 
 imu_test: $(IMU_OBJ)
 	$(CXX) $^ tests/imu_tests/test_imu.cpp -o imu_test $(CXX1FLAGS) $(LDFLAGS)
