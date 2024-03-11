@@ -33,8 +33,9 @@ imu_calibrate: $(IMU_OBJ)
 gps_test: $(GPS_OBJ) $(UBX_OBJ)
 	$(CXX) $^ tests/gps_tests/test_gps.cpp -o gps_test $(CXX1FLAGS) $(LDFLAGS)
 
+# Will eventually need to add eigen3 to the include path
 kalman_test: $(IMU_OBJ) $(GPS_OBJ) $(UBX_OBJ) $(EKF_OBJ)
-	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o kalman_test $(CXX2FLAGS) $(LDFLAGS)
+	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o kalman_test $(CXX1FLAGS) $(LDFLAGS)
 
 gps_map_test: $(GPS_OBJ) $(UBX_OBJ)
 	$(CXX) $^ tests/gps_tests/gps_map.cpp -o gps_map_test $(CXX1FLAGS) $(LDFLAGS) $(LIBS)
