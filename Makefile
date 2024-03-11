@@ -17,7 +17,7 @@ GPS_OBJ=$(OBJ_DIR)/gps.o
 UBX_OBJ=$(OBJ_DIR)/ubx_msg.o
 EKF_OBJ=$(OBJ_DIR)/ekfNavINS.o
 
-all: imu_test gps_test kalman_test graphing gps_map_test
+all: imu_test gps_test kalman_test
 
 # Pattern rule for object files
 $(OBJ_DIR)/%.o: src/%.cpp

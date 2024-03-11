@@ -24,7 +24,7 @@ int main(void) {
   // Register the signal handler for SIGINT (Ctrl+C)
   signal(SIGINT, signal_handler);
 
-  Gps gps_module;
+  Gps gps_module(CURRENT_YEAR);
   while(!exit_flag) {
 
     PVTData data = gps_module.GetPvt(true, 1);
