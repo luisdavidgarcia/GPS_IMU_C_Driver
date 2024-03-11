@@ -25,16 +25,16 @@ $(OBJ_DIR)/%.o: src/%.cpp
 	$(CXX) $(CROSS_COMPILE_FLAGS) -c $< -o $@
 
 imu_test: $(IMU_OBJ)
-	$(CXX) $^ tests/imu_tests/test_imu.cpp -o test_imu $(CXX1FLAGS) $(LDFLAGS)
+	$(CXX) $^ tests/imu_tests/test_imu.cpp -o imu_test $(CXX1FLAGS) $(LDFLAGS)
 
 imu_calibrate: $(IMU_OBJ)
 	$(CXX) $^ tests/calibration/imu_mag_calibrate.cpp -o imu_calibrate $(CXX1FLAGS) $(LDFLAGS)
 
 gps_test: $(GPS_OBJ) $(UBX_OBJ)
-	$(CXX) $^ tests/gps_tests/test_gps.cpp -o test_gps $(CXX1FLAGS) $(LDFLAGS)
+	$(CXX) $^ tests/gps_tests/test_gps.cpp -o gps_test $(CXX1FLAGS) $(LDFLAGS)
 
 kalman_test: $(IMU_OBJ) $(GPS_OBJ) $(UBX_OBJ) $(EKF_OBJ)
-	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o test_ekf $(CXX2FLAGS) $(LDFLAGS)
+	$(CXX) $^ tests/kalman_tests/test_kalman.cpp -o kalman_test $(CXX2FLAGS) $(LDFLAGS)
 
 gps_map_test: $(GPS_OBJ) $(UBX_OBJ)
 	$(CXX) $^ tests/gps_tests/gps_map.cpp -o gps_map_test $(CXX1FLAGS) $(LDFLAGS) $(LIBS)

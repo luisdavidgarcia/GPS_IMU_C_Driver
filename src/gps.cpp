@@ -5,7 +5,7 @@
  *
  * Initializes the GPS module communication, sets message send rates, and measurement frequencies.
  */
-Gps::Gps(int16_t currentYear=DEFAULT_YEAR) : currentYear(currentYear) {
+Gps::Gps(int16_t currentYear=DEFAULT_YEAR) {
 	const char *deviceName = GPS_I2C_BUS;
 	i2c_fd = open(deviceName, O_RDWR);
 	if (i2c_fd < 0) {
@@ -34,6 +34,8 @@ Gps::Gps(int16_t currentYear=DEFAULT_YEAR) : currentYear(currentYear) {
 		printf("Error: Current year is not set.\n");
 		exit(-1);
 	}
+
+	this->currentYear = currentYear;
 }
 
 /**

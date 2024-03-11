@@ -1,29 +1,72 @@
 # GPS and IMU C/C++ Driver for Rover
 
-This project focuses on converting existing GPS and IMU Python code into C++. It provides a comprehensive C/C++ driver for GPS and IMU modules, allowing you to interface with these sensors in your rover project.
+This repository houses a robust C/C++ driver designed for GPS and IMU module interfacing within rover projects. Originally inspired by Python implementations, this project aims to offer high-performance, easy-to-integrate drivers for critical navigation components.
 
 ## Features
 
-- Conversion of Python code to C++ for GPS and IMU functionality.
-- Integration of Git pre-commit hooks to maintain code quality.
+- **High-Performance C++ Drivers**: Conversion of Python GPS and IMU code to C++, optimizing speed and efficiency for real-time applications.
+- **Code Quality Assurance**: Incorporation of Git pre-commit hooks to enforce coding standards and ensure high-quality commits.
+- **Extensive Sensor Support**: Compatibility with popular GPS and IMU modules, facilitating a wide range of rover designs and applications.
 
 ## Getting Started
 
-Follow these steps to get started with this project:
+### Prerequisites (Installed with setup.sh)
 
-1. **Fork this Repository**: Start by [forking this template repository](https://github.com/Solar-Autonomous-ROACH/GPS_IMU_C_Driver/tree/main) to your own GitHub account. This will allow you to work on your own copy of the project.
+Ensure you have the following tools installed:
+- Git
+- g++
+- Eigen3 (for Kalman Filter calculations)
+- I2C tools and libraries (for communication with sensors)
 
-2. **Setup Dependencies**: Use the provided `setup.sh` script to install Git pre-commit hooks. These hooks ensure that your code adheres to quality standards before committing changes. The script also installs the dependencies required to run all the provided libraries and a python virtual environment for convience if deploying python tests.
+### Setup
 
-3. **Programming**: Begin programming your rover using the GPS and IMU modules provided in this repository. You can customize and extend the code to suit your project's specific needs.
+1. **Clone the Repository**: Fork and clone the repository to get your own local copy for development.
+
+    ```bash
+    git clone https://github.com/<your-username>/GPS_IMU_C_Driver.git
+    cd GPS_IMU_C_Driver
+    ```
+
+2. **Install Dependencies**: Run the `setup.sh` script to configure your development environment, including the installation of pre-commit hooks and necessary libraries.
+
+    ```bash
+    ./setup.sh
+    ```
+
+3. **Build the Drivers**: Utilize the Makefile for compiling the drivers and tests.
+
+    ```bash
+    make all
+    ```
+
+### Testing
+
+Execute the tests to verify the correct operation of GPS and IMU modules:
+- `make imu_test` for IMU functionality testing.
+  - Execute with 
+      ```bash
+      ./imu_test
+      ```
+- `make gps_test` for GPS functionality testing.
+  - Execute with 
+      ```bash
+      ./gps_test
+      ```
+- `make kalman_test` for integrating GPS and IMU data using the Kalman Filter.
+  - Execute with 
+      ```bash
+      ./kalman_test
+      ```
+Refer to the `tests/` directory for additional testing and calibration tools.
 
 ## Project Structure
 
-The project consists of the following main modules:
+The project is organized into several key directories and files:
 
-- **GPS Module**: Contains code for interfacing with the GPS sensor.
-- **IMU Module**: Includes code for working with the IMU (Inertial Measurement Unit) sensor.
-- **UBX_Lib**: A library for GPS communication, implementing the UBX protocol for GPS data exchange.
+- `src/`: Source files for the GPS and IMU drivers, and utilities like UBX message parsing and Kalman Filter implementation.
+- `tests/`: Test programs for individual modules and integrated systems.
+- `include/`: Header files for the project, defining interfaces and shared constants.
+- `Makefile`: Scripts for compiling the project and tests, managing dependencies, and cleaning build artifacts.
 
 ## Documentation
 
@@ -44,9 +87,6 @@ The project consists of the following main modules:
 - **Kalman Filter Libraries**
   - Kalman Filter Library Used: [GitHub](https://github.com/balamuruganky/ekf_nav_ins/tree/fa8c6bcd15344f4155cac6e13f0d9576d70f7074)
   - Eigen3: [Library](https://eigen.tuxfamily.org/index.php?title=Main_Page)
-- **Plotting Library**:
-  - Matplot++: [GitHub](https://github.com/alandefreitas/matplotplusplus)
-  - Installation: [Build from Source](https://alandefreitas.github.io/matplotplusplus/integration/install/build-from-source/build-and-install/)
 - **I2C Libraries**:
   - I2C on Raspberry Pi: [I2C on C on Pi](https://raspberrypi.stackexchange.com/questions/33485/using-i2c-in-c-on-raspberry-pi)
   - I2C Library for C/C++/Python: [I2C in C Library](https://www.kernel.org/doc/html/v5.4/i2c/dev-interface.html)
@@ -62,28 +102,34 @@ The project consists of the following main modules:
 
 ### Wiring Instructions
 
-- [Wiring guide and diagrams](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.etechnophiles.com%2Fwp-content%2Fuploads%2F2021%2F01%2FR-Pi-4-GPIO-Pinout.jpg&f=1&nofb=1&ipt=0ca1f8c57d8139e68c3cfa5b652b44c059319ac6829c54b741515728d93f7703&ipo=images)
+![Wiring Diagram](WiringDiagram.png "Wiring Diagram for GPS and IMU with Raspberry Pi")
 
-### Compiling and Testing
+1. Solder the 3.3V pin from the Raspberry Pi to the 3.3V pin on the GPS module to supply power.
+2. Solder a Ground (GND) pin from the Raspberry Pi to the GND pin on the GPS module to establish a common ground.
+3. Solder the Serial Clock Line (SCL) pin from the Raspberry Pi to the SCL pin on the GPS module for I2C clock signal.
+4. Solder the Serial Data Line (SDA) pin from the Raspberry Pi to the SDA pin on the GPS module for I2C data signal.
+5. Use a Qwiic cable to daisy-chain the GPS module to the IMU module:
+    - Connect one end of the Qwiic cable to the Qwiic connector on the GPS module.
+    - Connect the other end of the Qwiic cable to the Qwiic connector on the IMU module.
+    - Ensure that the GPS and IMU modules have different I2C addresses to avoid conflicts.
 
-- Three different tests:
-  - `make gps_test`
-  - `make imu_test`
-     - Replicated Test example for IMU: [Python Example](https://github.com/sparkfun/Qwiic_9DoF_IMU_ICM20948_Py/blob/main/examples/ex1_qwiic_ICM20948.py)
-  - `make kalman_test`
-     - **NOTE:** Must first compile ekfNavINS.o on a machine with at least 2 GB RAM with `make $(EKF_OBJ)`. 
 
+
+### Compiling and Running Tests
+
+To compile and run a specific test, use the corresponding make command outlined in the **Testing** section. Ensure all dependencies are installed and the hardware is correctly connected to your development system.
+
+### Contribution Guidelines
+
+Contributors are encouraged to follow the project's coding standards and submit pull requests for any enhancements, bug fixes, or documentation improvements. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## License
 
-This project is released under the [MIT License](LICENSE).
-
-## Contributing
-
-If you find issues, have suggestions, or would like to contribute to this project, please [open an issue](https://github.com/Solar-Autonomous-ROACH/GPS_IMU_C_Driver/issues) or submit a [pull request](https://github.com/Solar-Autonomous-ROACH/GPS_IMU_C_Driver/pulls). Your contributions are welcome and appreciated!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-This project draws inspiration from the fields of robotics, sensor integration, and C/C++ development.
+- Special thanks to the open-source projects and libraries that provided the foundation and inspiration for this driver suite.
+- Gratitude to the community for contributions, bug reports, and suggestions.
 
-Happy coding and happy rover building!
+We hope this project accelerates your rover development and exploration projects. For any inquiries or contributions, please feel free to reach out or open an issue.
