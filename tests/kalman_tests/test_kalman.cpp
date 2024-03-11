@@ -106,8 +106,8 @@ int main(void) {
             std::ofstream outfile("tests/kalman_tests/gps_rpy_data.txt");
             if (outfile.is_open()) {
                 outfile << std::fixed << std::setprecision(7); 
-                outfile << data.latitude << "," << data.longitude << "," << data.height << "," << data.speedNorth << "," 
-                    << data.speedEast << "," << data.speedDown << ekf.getPitch_rad() << "," << ekf.getRoll_rad() << "," 
+                outfile << data.latitude << "," << data.longitude << "," << data.height << "," << data.velocityNorth << "," 
+                    << data.velocityEast << "," << data.velocityDown << ekf.getPitch_rad() << "," << ekf.getRoll_rad() << "," 
                     << ekf.getHeading_rad() << std::endl;
                 outfile.flush(); 
                 outfile.close(); 
