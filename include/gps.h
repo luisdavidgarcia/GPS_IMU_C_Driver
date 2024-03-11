@@ -50,7 +50,7 @@
 #include <cstring>
 #include <cstdio>
 #include <unistd.h>
-#include <vector>
+#include <stdio.h>
 extern "C" {
 	#include <i2c/smbus.h>
 	#include <linux/i2c-dev.h>

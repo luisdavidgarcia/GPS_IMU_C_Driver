@@ -26,7 +26,6 @@ Original Author: Adhika Lie
 */
 
 #include "ekfNavINS.h"
-#include "stdio.h"
 
 std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(
     float ax, float ay, float az,

@@ -26,8 +26,6 @@ Original Author: Adhika Lie
 
 #include <stdint.h>
 #include <math.h>
-#include <Eigen/Core>
-#include <Eigen/Dense>
 #include <tuple>
 
 constexpr float SIG_W_A = 0.05f;
