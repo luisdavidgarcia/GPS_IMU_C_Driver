@@ -8,6 +8,13 @@ This repository houses a robust C/C++ driver designed for GPS and IMU module int
 - **Code Quality Assurance**: Incorporation of Git pre-commit hooks to enforce coding standards and ensure high-quality commits.
 - **Extensive Sensor Support**: Compatibility with popular GPS and IMU modules, facilitating a wide range of rover designs and applications.
 
+## Kalman Filter Demonstration
+
+A visualization and simulation of the IMU Kalman Filter is available on YouTube.  
+[![Kalman Filter Demo](https://img.youtube.com/vi/vySJalcy1_8/0.jpg)](https://youtu.be/vySJalcy1_8?feature=shared)
+
+*Click the thumbnail above to watch the demo.*
+
 ## Getting Started
 
 ### Prerequisites (Installed with setup.sh)
@@ -112,8 +119,6 @@ The project is organized into several key directories and files:
     - Connect one end of the Qwiic cable to the Qwiic connector on the GPS module.
     - Connect the other end of the Qwiic cable to the Qwiic connector on the IMU module.
     - Ensure that the GPS and IMU modules have different I2C addresses to avoid conflicts.
-
-
 
 ### Compiling and Running Tests
 
