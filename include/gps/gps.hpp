@@ -11,7 +11,7 @@
  * https://github.com/melopero/Melopero_SAM-M8Q_Arduino_Library/tree/master
  *
  * Dependencies:
- * - ubx_lib/ubx_msg.h: Defines UBX message structures for communication with the GPS module.
+ * - ubx/ubx_msg.hpp: Defines UBX message structures for communication with the GPS module.
  * - fcntl.h, unistd.h, i2c/smbus.h, linux/i2c-dev.h, linux/i2c.h: Required for I2C communication.
  * - cstdint, sys/ioctl.h, string, chrono, thread, vector, cstring: Standard C++ libraries.
  *
@@ -38,7 +38,8 @@
 #ifndef GPS_H_INCLUDED
 #define GPS_H_INCLUDED
 
-#include "../include/ubx_msg.h"
+#include "ubx/ubx_msg.hpp"
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdint>
