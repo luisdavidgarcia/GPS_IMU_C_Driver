@@ -19,11 +19,20 @@ A visualization and simulation of the IMU Kalman Filter is available on YouTube.
 
 ### Prerequisites (Installed with setup.sh)
 
-Ensure you have the following tools installed:
-- Git
-- g++
-- Eigen3 (for Kalman Filter calculations)
-- I2C tools and libraries (for communication with sensors)
+1. **Hardware**: Ensure you have the following hardware components:
+   - Raspberry Pi (or compatible microcontroller)
+   - GPS Module (e.g., SAM-M8Q)
+   - IMU Module (e.g., ICM-20948)
+   - Qwiic cable for connecting the modules
+  
+2. **Software**: This project is developed and tested on Ubuntu 22.04 LTS. It 
+may work on other Linux distributions, but compatibility is not guaranteed. The 
+project is designed to be cross-platform, but the primary focus is on 
+Linux-based systems.
+
+3. **Development Environment**: The project and software dependencies are
+contained within a Docker container. This ensures a consistent development
+environment across different machines.
 
 ### Setup
 
