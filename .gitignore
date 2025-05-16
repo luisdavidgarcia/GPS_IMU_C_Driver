@@ -13,3 +13,6 @@ build/
 .vscode/
 obj/
 *.swp
+build/
+.cache/
+.devcontainer/

@@ -17,6 +17,7 @@ RUN apt update && apt install -y \
     gdb \
     valgrind \
     lcov \
+    git \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip && \
