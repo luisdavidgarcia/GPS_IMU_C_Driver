@@ -208,7 +208,7 @@ public:
 	const AccelMPS2& GetRawAcceleration() const { 
 		return accelerometer; 
 	}
-	const GyroRPS& GetRawAngularVelocity() { 
+	const GyroRPS& GetRawAngularVelocity() const { 
 		return gyroscope; 
 	}
 	const MagUT& GetRawMagneticField() const { 
