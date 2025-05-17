@@ -41,173 +41,182 @@
 #include "ubx/ubx_msg.hpp"
 
 #include <fcntl.h>
+#include <span>
 #include <unistd.h>
 #include <cstdint>
 #include <sys/ioctl.h>
 #include <string>
-#include <chrono>
-#include <thread>
 #include <vector>
 #include <cstring>
 #include <cstdio>
-#include <unistd.h>
-#include <stdio.h>
 extern "C" {
 	#include <i2c/smbus.h>
 	#include <linux/i2c-dev.h>
 	#include <linux/i2c.h>
 }
 
-#define GPS_I2C_ADDRESS 0x42
-#define GPS_I2C_BUS "/dev/i2c-1"
+/** I2C Specifics */
+constexpr uint8_t GPS_I2C_ADDRESS = 0x42;
+constexpr const char* GPS_I2C_BUS = "/dev/i2c-1";
 
-#define BYTE_SHIFT_AMOUNT 8
-#define BYTE_MASK 0xFF
-#define HALF_WORD_SHIFT_AMOUNT 16
-#define THREE_BYTE_SHIFT_AMOUNT 24
+constexpr int BYTE_SHIFT_AMOUNT = 8;
+constexpr int BYTE_MASK = 0xFF;
+constexpr int HALF_WORD_SHIFT_AMOUNT = 16;
+constexpr int THREE_BYTE_SHIFT_AMOUNT = 24;
 
-#define DATA_STREAM_REGISTER 0xFF
+constexpr int DATA_STREAM_REGISTER = 0xFF;
 
-#define AVAILABLE_BYTES_MSB 0xFD
-#define AVAILABLE_BYTES_LSB 0xFE
+constexpr int AVAILABLE_BYTES_MSB = 0xFD;
+constexpr int AVAILABLE_BYTES_LSB = 0xFE;
 
-#define DEFAULT_TIMEOUT_MILLS 2000
-#define DEFAULT_UPDATE_MILLS 1000
-#define DEFAULT_SEND_RATE 0x01
-#define DEFAULT_INTERVAL_MILLS 50
-#define DEFAULT_POLLING_STATE false
-#define DEFAULT_YEAR -1
+constexpr int DEFAULT_TIMEOUT_MILLS = 2000;
+constexpr int DEFAULT_UPDATE_MILLS = 1000;
+constexpr int DEFAULT_SEND_RATE = 0x01;
+constexpr int DEFAULT_INTERVAL_MILLS = 50;
+constexpr bool DEFAULT_POLLING_STATE = false;
+constexpr int DEFAULT_YEAR = -1;
 
-#define VALID_DATE_FLAG 0x01
-#define VALID_TIME_FLAG 0x02
-#define FULLY_RESOLVED_FLAG 0x04
-#define VALID_MAG_FLAG 0x08
-#define INVALID_SYNC1_FLAG 0xFF
+constexpr int VALID_DATE_FLAG = 0x01;
+constexpr int VALID_TIME_FLAG = 0x02;
+constexpr int FULLY_RESOLVED_FLAG = 0x04;
+constexpr int VALID_MAG_FLAG = 0x08;
+constexpr int INVALID_SYNC1_FLAG = 0xFF;
 
 /** SAM-M8Q Limits */
-#define MAX_MONTH 12
-#define MIN_MONTH 1
-#define MAX_DAY 31
-#define MIN_DAY 1
-#define MAX_HOUR 23
-#define MIN_HOUR 0
-#define MAX_MINUTE 59
-#define MIN_MINUTE 0
-#define MAX_SECOND 59
-#define MIN_SECOND 0
-#define MAX_LONGTITUTE 180.0
-#define MIN_LONGTITUTE -180.0
-#define MAX_LATITUDE 90.0
-#define MIN_LATITUDE -90.0
-#define MAX_DEGREE 360
-#define MIN_DEGREE 0
-#define MAX_MAG_DEGREE_ACCURACY 180
+constexpr int MAX_MONTH = 12;
+constexpr int MIN_MONTH = 1;
+constexpr int MAX_DAY = 31;
+constexpr int MIN_DAY = 1;
+constexpr int MAX_HOUR = 23;
+constexpr int MIN_HOUR = 0;
+constexpr int MAX_MINUTE = 59;
+constexpr int MIN_MINUTE = 0;
+constexpr int MAX_SECOND = 59;
+constexpr int MIN_SECOND = 0;
+constexpr float MAX_LONGTITUTE = 180.0F;
+constexpr float MIN_LONGTITUTE = -180.0F;
+constexpr float MAX_LATITUDE = 90.0F;
+constexpr float MIN_LATITUDE = -90.0F;
+constexpr int MAX_DEGREE = 360;
+constexpr int MIN_DEGREE = 0;
+constexpr int MAX_MAG_DEGREE_ACCURACY = 180;
 
-#define MAX_DYNAMICS_G 4.0                   // Maximum dynamics in g
-#define MAX_ALTITUDE_METERS 50000            // Maximum altitude in meters
-#define MIN_ALTITUDE_METERS -50000             // Minimum altitude in meters
-#define MAX_VELOCITY_MPS 500                 // Maximum velocity in meters per second
-#define MIN_VELOCITY_MPS -500                // Minimum velocity in meters per second
-#define VELOCITY_ACCURACY_THRESHOLD_MPS 0.05 // Velocity accuracy in meters per second
-#define HEADING_ACCURACY_DEGREES 0.3         // Heading accuracy in degrees
+constexpr float MAX_DYNAMICS_G = 4.0F;                        // Maximum dynamics in g
+constexpr float MAX_ALTITUDE_METERS = 50000.0F;               // Maximum altitude in meters
+constexpr float MIN_ALTITUDE_METERS = -50000.0F;              // Minimum altitude in meters
+constexpr float MAX_VELOCITY_MPS = 500.0F;                    // Maximum velocity in meters per second
+constexpr float MIN_VELOCITY_MPS = -500.0F;                   // Minimum velocity in meters per second
+constexpr float VELOCITY_ACCURACY_THRESHOLD_MPS = 0.05F;      // Velocity accuracy in meters per second
+constexpr float HEADING_ACCURACY_DEGREES = 0.3F;              // Heading accuracy in degrees
 
-#define HORIZONTAL_ACCURACY_GPS_GLONASS_M 2.5 // Horizontal position accuracy for GPS & GLONASS in meters
-#define HORIZONTAL_ACCURACY_GALILEO_M 8.0     // Horizontal position accuracy for Galileo in meters (To be confirmed)
+constexpr float HORIZONTAL_ACCURACY_GPS_GLONASS_M = 2.5F;     // Horizontal position accuracy for GPS & GLONASS in meters
+constexpr float HORIZONTAL_ACCURACY_GALILEO_M = 8.0F;         // Horizontal position accuracy for Galileo in meters (To be confirmed)
 
-#define MAX_NAVIGATION_UPDATE_RATE_HZ_GPS 10  // Max navigation update rate for GPS in Hz
-#define MAX_NAVIGATION_UPDATE_RATE_HZ_OTHER 18 // Max navigation update rate for GLONASS and Galileo in Hz
+constexpr int MAX_NAVIGATION_UPDATE_RATE_HZ_GPS = 10;         // Max navigation update rate for GPS in Hz
+constexpr int MAX_NAVIGATION_UPDATE_RATE_HZ_OTHER = 18;       // Max navigation update rate for GLONASS and Galileo in Hz
 
-#define COLD_START_TTFF_SECONDS 26    // Time-To-First-Fix for cold start in seconds
-#define HOT_START_TTFF_SECONDS 1      // Time-To-First-Fix for hot start in seconds
-#define AIDED_START_TTFF_SECONDS 2    // Time-To-First-Fix for aided starts in seconds
+constexpr int COLD_START_TTFF_SECONDS = 26;                   // Time-To-First-Fix for cold start in seconds
+constexpr int HOT_START_TTFF_SECONDS = 1;                     // Time-To-First-Fix for hot start in seconds
+constexpr int AIDED_START_TTFF_SECONDS = 2;                   // Time-To-First-Fix for aided starts in seconds
 
-#define SENSITIVITY_TRACK_NAV_DBM -165 // Sensitivity for tracking & navigation in dBm
-#define SENSITIVITY_REACQUISITION_DBM -158 // Sensitivity for reacquisition in dBm
-#define SENSITIVITY_COLD_HOT_START_DBM -146 // Sensitivity for cold and hot starts in dBm
+constexpr int SENSITIVITY_TRACK_NAV_DBM = -165;               // Sensitivity for tracking & navigation in dBm
+constexpr int SENSITIVITY_REACQUISITION_DBM = -158;           // Sensitivity for reacquisition in dBm
+constexpr int SENSITIVITY_COLD_HOT_START_DBM = -146;          // Sensitivity for cold and hot starts in dBm
 
-#define MEASUREMENT_PERIOD_MILLIS_1_SEC 1000 // Measurement period in milliseconds
-#define MEASUREMENT_PERIOD_MILLIS_100_MS 100 // Measurement period in milliseconds
-#define MEASUREMENT_PERIOD_MILLIS_25_MS 25 // Measurement period in milliseconds
+constexpr int MEASUREMENT_PERIOD_MILLIS_1_SEC = 1000;         // Measurement period in milliseconds
+constexpr int MEASUREMENT_PERIOD_MILLIS_100_MS = 100;         // Measurement period in milliseconds
+constexpr int MEASUREMENT_PERIOD_MILLIS_25_MS = 25;           // Measurement period in milliseconds
 
+constexpr float LONGTITUDE_SCALE = 1e-07F;
+constexpr float LATTITUDE_SCALE = 1e-07F;
+constexpr float MOTION_HEADING_SCALE = 1e-05F;
+constexpr float MOTION_HEADING_ACCURACY_SCALE = 1e-05F;
+constexpr float VEHICLE_HEADING_SCALE = 1e-05F;
+constexpr float MAGNETIC_DECLINATION_SCALE = 1e-02F;
+constexpr float MAGNETIC_DECLINATION_ACCURACY_SCALE = 1e-02F;
 
+constexpr int DEFAULT_NAVIGATION_RATE = 1;
+constexpr int DEFAULT_TIME_REF = 0;
 
 /** Error Handling */
-#define INVALID_YEAR_FLAG 0xBEEF
-#define INVALID_SYNC_FLAG 255
+constexpr int INVALID_YEAR_FLAG = 0xBEEF;
+constexpr int INVALID_SYNC_FLAG = 255;
 
-typedef struct {
-    // Time Information
-    uint16_t year;               // Year (UTC)
-    uint8_t month;               // Month (UTC)
-    uint8_t day;                 // Day of the month (UTC)
-    uint8_t hour;                // Hour of the day (UTC)
-    uint8_t min;                 // Minute of the hour (UTC)
-    uint8_t sec;                 // Second of the minute (UTC)
+struct alignas(128) PVTData {
+  // Time Information
+  uint16_t year;                        // Year (UTC)
+  uint8_t month;                        // Month (UTC)
+  uint8_t day;                          // Day of the month (UTC)
+  uint8_t hour;                         // Hour of the day (UTC)
+  uint8_t min;                          // Minute of the hour (UTC)
+  uint8_t sec;                          // Second of the minute (UTC)
 
-    // Validity Flags
-    uint8_t validTimeFlag;       // Validity flags for time
-    uint8_t validDateFlag;       // Validity flags for time
-    uint8_t fullyResolved;       // Validity flags for time
-    uint8_t validMagFlag;       // Validity flags for time
+  // Validity Flags
+  uint8_t validTimeFlag;                // Validity flags for time
+  uint8_t validDateFlag;                // Validity flags for time
+  uint8_t fullyResolved;                // Validity flags for time
+  uint8_t validMagFlag;                 // Validity flags for time
 
-    // GNSS
-    uint8_t gnssFix;
-    uint8_t fixStatusFlags;
-    uint8_t numberOfSatellites;
+  // GNSS
+  uint8_t gnssFix;
+  uint8_t fixStatusFlags;
+  uint8_t numberOfSatellites;
 
-    // Coordinates
-    //int32_t longitude;           // Longitude (degrees * 1e7)
-    double longitude;
-    double latitude;            // Latitude (degrees * 1e7)
-    int32_t height;              // Height above ellipsoid (millimeters)
-    int32_t heightMSL;                // Height above mean sea level (millimeters)
+  // Coordinates
+  float longitude;
+  float latitude;                      // Latitude (degrees * 1e7)
+  int32_t height;                       // Height above ellipsoid (millimeters)
+  int32_t heightMSL;                    // Height above mean sea level (millimeters)
 
-    // Accuracy Information
-    uint32_t horizontalAccuracy; // Horizontal accuracy estimate (millimeters)
-    uint32_t verticalAccuracy;   // Vertical accuracy estimate (millimeters)
+  // Accuracy Information
+  uint32_t horizontalAccuracy;          // Horizontal accuracy estimate (millimeters)
+  uint32_t verticalAccuracy;            // Vertical accuracy estimate (millimeters)
 
-    // Velocity and Heading
-    int32_t velocityNorth; // Velocity in the north direction (millimeters/second)
-    int32_t velocityEast;   // Velocity in the east direction (millimeters/second)
-    int32_t velocityDown;   // Velocity in the down direction (millimeters/second)
-    int32_t groundSpeed;      // Ground speed (millimeters/second)
-    int32_t vehicalHeading;
-    int32_t motionHeading;     // Heading of motion (degrees * 1e5)
-    uint32_t speedAccuracy;      // Speed accuracy estimate (millimeters/second)
-    int32_t motionHeadingAccuracy;
+  // Velocity and Heading
+  int32_t velocityNorth;                // Velocity in the north direction (millimeters/second)
+  int32_t velocityEast;                 // Velocity in the east direction (millimeters/second)
+  int32_t velocityDown;                 // Velocity in the down direction (millimeters/second)
+  int32_t groundSpeed;                  // Ground speed (millimeters/second)
+  float vehicalHeading;
+  float motionHeading;                // Heading of motion (degrees * 1e5)
+  uint32_t speedAccuracy;               // Speed accuracy estimate (millimeters/second)
+  float motionHeadingAccuracy;
 
-    // Vehicle Heading and Magnetic Declination
-    int16_t magneticDeclination; // Magnetic declination (degrees * 1e2)
-    uint16_t magnetDeclinationAccuracy; // Declination accuracy (degrees * 1e2)
-} PVTData;
+  // Magnetic Declination
+  float magneticDeclination;          // Magnetic declination (degrees * 1e2)
+  float magnetDeclinationAccuracy;   // Declination accuracy (degrees * 1e2)
+};
 
-class Gps {
+struct alignas(4) MeasurementParams {
+	uint16_t measurementPeriodMillis = DEFAULT_UPDATE_MILLS;
+	uint8_t navigationRate = DEFAULT_NAVIGATION_RATE;
+	uint8_t timeref = DEFAULT_TIME_REF;
+};
 
-	private:
-		UbxMessage ubxmsg;
-		PVTData pvtData;
-		int i2c_fd;
-        int16_t currentYear;
+class GPS {
+private:
+  UBX ubx;
+  PVTData pvtData;
+  int i2c_fd;
+  int16_t currentYear;
 
-		void ubxOnly(void);
-		bool writeUbxMessage(UbxMessage& msg);
-		uint16_t getAvailableBytes(void);
-		UbxMessage readUbxMessage(void);
-		bool setMessageSendRate(uint8_t msgClass, uint8_t msgId,
-		uint8_t sendRate);
-		bool setMeasurementFrequency(uint16_t measurementPeriodMillis,
-		uint8_t navigationRate, uint8_t timeref);
+  void ubxSetup();
+  bool writeUbxMessage() const;
+  uint16_t getAvailableBytes() const;
+  UbxMessage readUbxMessage();
+  bool setMessageSendRate(uint8_t sendRate = DEFAULT_SEND_RATE);
+  bool setMeasurementFrequency(const MeasurementParams& params);
 
-		int16_t i2_to_int(const uint8_t *little_endian_bytes);
-        double bytes_to_double(const uint8_t *little_endian_bytes);
-		uint16_t u2_to_int(const uint8_t *little_endian_bytes);
-		int32_t i4_to_int(const uint8_t *little_endian_bytes);
-		uint32_t u4_to_int(const uint8_t *little_endian_bytes);
+  static double bytes_to_double(const uint8_t *little_endian_bytes);
+  static int16_t i2_to_int(std::span<const uint8_t, 2> bytes);
+  static uint16_t u2_to_int(std::span<const uint8_t, 2> bytes);
+  static int32_t i4_to_int(std::span<const uint8_t, 4> bytes);
+  static uint32_t u4_to_int(std::span<const uint8_t, 4> bytes);
 
-  	public:
-		Gps(int16_t currentYear);
-		~Gps(void);
-		PVTData GetPvt(bool polling, uint16_t timeOutMillis);
+public:
+  explicit GPS(int16_t currentYear);
+  ~GPS();
+  PVTData GetPvt(bool polling);
 };
 
 #endif // GPS_H
