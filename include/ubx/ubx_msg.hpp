@@ -35,70 +35,91 @@ CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 #ifndef UBX_MSG_H
 #define UBX_MSG_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
+#include <vector>
+#include <array>
+#include <algorithm>
 
 //********* MESSAGE CLASS SECTION **********
-#define NAV_CLASS 0x01
-#define RXM_CLASS 0x02
-#define INF_CLASS 0x04
-#define ACK_CLASS 0x05
-#define CFG_CLASS 0x06
-#define UPD_CLASS 0x09
-#define MON_CLASS 0x0A
-#define AID_CLASS 0x0B
-#define TIM_CLASS 0x0D
-#define ESF_CLASS 0x10
-#define MGA_CLASS 0x13
-#define LOG_CLASS 0x21
-#define SEC_CLASS 0x27
-#define HNR_CLASS 0x28
+constexpr int NAV_CLASS = 0x01;
+constexpr int RXM_CLASS = 0x02;
+constexpr int INF_CLASS = 0x04;
+constexpr int ACK_CLASS = 0x05;
+constexpr int CFG_CLASS = 0x06;
+constexpr int UPD_CLASS = 0x09;
+constexpr int MON_CLASS = 0x0A;
+constexpr int AID_CLASS = 0x0B;
+constexpr int TIM_CLASS = 0x0D;
+constexpr int ESF_CLASS = 0x10;
+constexpr int MGA_CLASS = 0x13;
+constexpr int LOG_CLASS = 0x21;
+constexpr int SEC_CLASS = 0x27;
+constexpr int HNR_CLASS = 0x28;
 
 //********* SYNC CHAR SECTION **********
-#define SYNC_CHAR_1 0xB5
-#define SYNC_CHAR_2 0x62
+constexpr int SYNC_CHAR_1 = 0xB5;
+constexpr int SYNC_CHAR_2 = 0x62;
 
 //********* NAV MESSAGE SECTION **********
-#define NAV_PVT 0x07
+constexpr int NAV_PVT = 0x07;
 
 //********* ACK MESSAGE SECTION **********
-#define ACK_ACK 0x01
-#define ACK_NAK 0x00
+constexpr int ACK_ACK = 0x01;
+constexpr int ACK_NAK = 0x00;
 
 //********* CFG MESSAGE SECTION **********
-#define CFG_PRT 0x00
-#define CFG_MSG 0x01
-#define CFG_RATE 0x08
+constexpr int CFG_PRT = 0x00;
+constexpr int CFG_MSG = 0x01;
+constexpr int CFG_RATE = 0x08;
 
 //********* FixTypes SECTION **********
-#define NO_FIX 0
-#define DEAD_RECKONING_ONLY 1
-#define TWO_D_FIX 2
-#define THREE_D_FIX 3
-#define GNSS_DEAD_RECKONING_COMBINED 4
-#define TIME_ONLY_FIX 5
+constexpr int NO_FIX = 0;
+constexpr int DEAD_RECKONING_ONLY = 1;
+constexpr int TWO_D_FIX = 2;
+constexpr int THREE_D_FIX = 3;
+constexpr int GNSS_DEAD_RECKONING_COMBINED = 4;
+constexpr int TIME_ONLY_FIX = 5;
 
 //******* DEBUG/HELPING CONSTANTS ********
-#define MAX_MESSAGE_LENGTH 1000
-#define MAX_PAYLOAD_LENGTH 92
+constexpr int MAX_MESSAGE_LENGTH = 1000;
+constexpr int MAX_PAYLOAD_LENGTH = 92;
 
-typedef struct {
-    uint8_t sync1;
-    uint8_t sync2;
-    uint8_t msgClass;
-    uint8_t msgId;
-    uint16_t payloadLength;
-    uint8_t payload[MAX_MESSAGE_LENGTH];
-    uint8_t checksumA;
-    uint8_t checksumB;
-} UbxMessage;
+struct alignas(128) UbxMessage {
+  uint8_t sync1;
+  uint8_t sync2;
+  uint8_t msgClass;
+  uint8_t msgId;
+  uint16_t payloadLength;
+  std::array<uint8_t, MAX_PAYLOAD_LENGTH> payload;
+  uint8_t checksumA;
+  uint8_t checksumB;
+};
 
-UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLength, const uint8_t* payload);
-void ComputeChecksum(UbxMessage &msg);
-void ResetPayload(UbxMessage &msg);
-std::string MsgClassToString(uint8_t msgClass);
-std::string GetGNSSFixType(uint8_t fixFlag);
-std::string UbxMessageToString(UbxMessage &msg);
+struct alignas(2) MessageInfo {
+  uint8_t msgClass;
+  uint8_t msgId;
+};
+
+class UBX
+{
+private:
+  UbxMessage message;
+
+public:
+  UBX();
+  ~UBX();
+  void ComposeMessage(
+    const MessageInfo& messageInfo,
+    const std::vector<uint8_t>& payload
+  );
+  const UbxMessage& GetUBXMessage() const {return message;} 
+  void ComputeChecksum();
+  void ResetPayload();
+  std::string MsgClassToString(const uint8_t& msgClass);
+  std::string GetGNSSFixType(const uint8_t& fixFlag);
+  std::string UbxMessageToString() const;
+};
 
 #endif // UBX_MSG_H
 

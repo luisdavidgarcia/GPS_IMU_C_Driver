@@ -8,27 +8,27 @@
  * @param   payload     The payload data (default is nullptr).
  * @return  The composed UBX message.
  */
-UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLength = 0, const uint8_t* payload = nullptr) {
-    UbxMessage message;
-    message.sync1 = SYNC_CHAR_1;
-    message.sync2 = SYNC_CHAR_2;
-    message.msgClass = msg_class;
-    message.msgId = msg_id;
-    message.payloadLength = payloadLength;
+void UBX::ComposeMessage(
+  const MessageInfo& messageInfo,
+  const std::vector<uint8_t>& payload) 
+{
+  ResetPayload();
 
-    if (payload != nullptr) {
-        for (int i = 0; i < payloadLength; i++) {
-            message.payload[i] = payload[i];
-        }
-    } else {
-        for (int i = 0; i < MAX_PAYLOAD_LENGTH; i++) {
-            message.payload[i] = 0x00;
-        }
-    }
+  message.sync1 = SYNC_CHAR_1;
+  message.sync2 = SYNC_CHAR_2;
+  message.msgClass = messageInfo.msgClass;
+  message.msgId = messageInfo.msgId;
+  message.payloadLength = std::min(
+    static_cast<uint16_t>(payload.size()), 
+    static_cast<uint16_t>(MAX_PAYLOAD_LENGTH)
+  );
 
-    ComputeChecksum(message);
+  std::copy(
+    payload.begin(), 
+    payload.begin() + message.payloadLength, 
+    std::begin(message.payload));
 
-    return message;
+  ComputeChecksum();
 }
 
 /**
@@ -36,36 +36,52 @@ UbxMessage ComposeMessage(uint8_t msg_class, uint8_t msg_id, uint16_t payloadLen
  * @param   msgClass    The message class to convert.
  * @return  The string representation of the message class.
  */
-std::string MsgClassToString(uint8_t msgClass) {
-    if (msgClass == NAV_CLASS)
-        return "Navigation";
-    else if (msgClass == RXM_CLASS)
-        return "Receiver Manager";
-    else if (msgClass == INF_CLASS)
-        return "Information";
-    else if (msgClass == ACK_CLASS)
-        return "ACK/NAK";
-    else if (msgClass == CFG_CLASS)
-        return "Configuration";
-    else if (msgClass == UPD_CLASS)
-        return "Firmware update";
-    else if (msgClass == MON_CLASS)
-        return "Monitoring";
-    else if (msgClass == AID_CLASS)
-        return "AssistNow messages"; else if (msgClass == TIM_CLASS)
-        return "Timing";
-    else if (msgClass == ESF_CLASS)
-        return "External Sensor Fusion Messages";
-    else if (msgClass == MGA_CLASS)
-        return "Multiple GNSS Assistance Messages";
-    else if (msgClass == LOG_CLASS)
-        return "Logging";
-    else if (msgClass == SEC_CLASS)
-        return "Security";
-    else if (msgClass == HNR_CLASS)
-        return "High rate navigation results";
+std::string MsgClassToString(const uint8_t& msgClass) 
+{
+  if (msgClass == NAV_CLASS) {
+    return "Navigation";
+  }
+  if (msgClass == RXM_CLASS) {
+    return "Receiver Manager";
+  }
+  if (msgClass == INF_CLASS) {
+    return "Information";
+  }
+  if (msgClass == ACK_CLASS) {
+    return "ACK/NAK";
+  }
+  if (msgClass == CFG_CLASS) {
+    return "Configuration";
+  }
+  if (msgClass == UPD_CLASS) {
+    return "Firmware update";
+  }
+  if (msgClass == MON_CLASS) {
+    return "Monitoring";
+  }
+  if (msgClass == AID_CLASS) {
+    return "AssistNow messages";
+  } 
+  if (msgClass == TIM_CLASS) { 
+    return "Timing";
+  }
+  if (msgClass == ESF_CLASS) {
+    return "External Sensor Fusion Messages";
+  }
+  if (msgClass == MGA_CLASS) {
+    return "Multiple GNSS Assistance Messages";
+  }
+  if (msgClass == LOG_CLASS) {
+    return "Logging";
+  }
+  if (msgClass == SEC_CLASS) {
+    return "Security";
+  }
+  if (msgClass == HNR_CLASS) {
+    return "High rate navigation results";
+  }
 
-    return "Couldn't find class";
+  return "Couldn't find class";
 }
 
 /**
@@ -73,53 +89,61 @@ std::string MsgClassToString(uint8_t msgClass) {
  * @param   fixFlag The GNSS fix flag to convert.
  * @return  The string representation of the GNSS fix type.
  */
-std::string GetGNSSFixType(uint8_t fixFlag) {
-    if (fixFlag == NO_FIX)
-        return "no fix";
-    else if (fixFlag == DEAD_RECKONING_ONLY)
-        return "dead reckoning only";
-    else if (fixFlag == TWO_D_FIX)
-        return "2D-fix";
-    else if (fixFlag == THREE_D_FIX)
-        return "3D-fix";
-    else if (fixFlag == GNSS_DEAD_RECKONING_COMBINED)
-        return "GNSS + dead reckoning combined";
-    else if (fixFlag == TIME_ONLY_FIX)
-        return "time only fix";
-    else
-        return "reserved / no fix";
+std::string GetGNSSFixType(const uint8_t& fixFlag) 
+{
+  if (fixFlag == NO_FIX) {
+    return "no fix";
+  }
+  if (fixFlag == DEAD_RECKONING_ONLY) {
+    return "dead reckoning only";
+  }
+  if (fixFlag == TWO_D_FIX) {
+    return "2D-fix";
+  }
+  if (fixFlag == THREE_D_FIX) {
+    return "3D-fix";
+  }
+  if (fixFlag == GNSS_DEAD_RECKONING_COMBINED) {
+    return "GNSS + dead reckoning combined";
+  }
+  if (fixFlag == TIME_ONLY_FIX) {
+    return "time only fix";
+  }
+  
+  return "reserved / no fix";
 }
 
 /**
  * @brief   Calculate the checksum values (checksumA and checksumB) for a UBX message.
  * @param   msg The UbxMessage struct for which to calculate the checksum.
  */
-void ComputeChecksum(UbxMessage &msg) {
-    msg.checksumA = msg.msgClass;
-    msg.checksumB = msg.checksumA;
+void UBX::ComputeChecksum() 
+{
+  message.checksumA = message.msgClass;
+  message.checksumB = message.checksumA;
 
-    msg.checksumA += msg.msgId;
-    msg.checksumB += msg.checksumA;
+  message.checksumA += message.msgId;
+  message.checksumB += message.checksumA;
 
-    msg.checksumA += msg.payloadLength % (1 << 8);
-    msg.checksumB += msg.checksumA;
+  message.checksumA += message.payloadLength % (1 << 8);
+  message.checksumB += message.checksumA;
 
-    msg.checksumA += msg.payloadLength >> 8;
-    msg.checksumB += msg.checksumA;
+  message.checksumA += message.payloadLength >> 8;
+  message.checksumB += message.checksumA;
 
-    for (int i = 0; i < msg.payloadLength; i++) {
-        msg.checksumA += msg.payload[i];
-        msg.checksumB += msg.checksumA;
-    }
+  for (int i = 0; i < message.payloadLength; i++) {
+    message.checksumA += message.payload.at(i);
+    message.checksumB += message.checksumA;
+  }
 }
 
 /**
  * @brief   Reset the payload of a UBX message to all zeros.
  * @param   msg The UbxMessage struct for which to reset the payload.
  */
-void ResetPayload(UbxMessage &msg) {
-    for (int i = 0; i < msg.payloadLength; i++)
-        msg.payload[i] = 0;
+void UBX::ResetPayload() 
+{
+  std::fill(message.payload.begin(), message.payload.end(), 0);
 }
 
 /**
@@ -127,16 +151,16 @@ void ResetPayload(UbxMessage &msg) {
  * @param   msg The UbxMessage struct to convert.
  * @return  The string representation of the UBX message.
  */
-std::string UbxMessageToString(UbxMessage &msg) {
-    std::string result = "Class : " + std::to_string(msg.msgClass) + "\n";
-    result += "ID : " + std::to_string(msg.msgId) + "\n";
-    result += "Length : " + std::to_string(msg.payloadLength) + "\n";
-    result += "Payload : ";
-    for (int i = 0; i < msg.payloadLength; i++) {
-        result += std::to_string(msg.payload[i]) + " ";
-    }
-    result += "\n";
-    result += "checksum : " + std::to_string(msg.checksumA) + " " + std::to_string(msg.checksumB) + "\n";
-    return result;
+std::string UBX::UbxMessageToString() const {
+  std::string result = "Class : " + std::to_string(message.msgClass) + "\n";
+  result += "ID : " + std::to_string(message.msgId) + "\n";
+  result += "Length : " + std::to_string(message.payloadLength) + "\n";
+  result += "Payload : ";
+  for (int i = 0; i < message.payloadLength; i++) {
+    result += std::to_string(message.payload.at(i)) + " ";
+  }
+  result += "\n";
+  result += "checksum : " + std::to_string(message.checksumA) + " " + std::to_string(message.checksumB) + "\n";
+  return result;
 }
 
