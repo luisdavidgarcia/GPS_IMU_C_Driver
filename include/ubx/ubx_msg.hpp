@@ -39,7 +39,6 @@ CREDIT/CODE MODIFIED FROM: https://github.com/melopero/Melopero_UBX/tree/master
 #include <string>
 #include <vector>
 #include <array>
-#include <algorithm>
 
 //********* MESSAGE CLASS SECTION **********
 constexpr int NAV_CLASS = 0x01;
@@ -103,9 +102,6 @@ struct alignas(2) MessageInfo {
 
 class UBX
 {
-private:
-  UbxMessage message;
-
 public:
   UBX();
   ~UBX();
@@ -113,12 +109,15 @@ public:
     const MessageInfo& messageInfo,
     const std::vector<uint8_t>& payload
   );
-  const UbxMessage& GetUBXMessage() const {return message;} 
+  const UbxMessage& GetUBXMessage() const {return message_;} 
   void ComputeChecksum();
   void ResetPayload();
   std::string MsgClassToString(const uint8_t& msgClass);
   std::string GetGNSSFixType(const uint8_t& fixFlag);
-  std::string UbxMessageToString() const;
+  std::string UbxMessageToString() const;  
+
+private:
+  UbxMessage message_;
 };
 
 #endif // UBX_MSG_H
