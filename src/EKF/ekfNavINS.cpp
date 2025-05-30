@@ -25,7 +25,7 @@ Copyright 2011 Regents of the University of Minnesota. All rights reserved.
 Original Author: Adhika Lie
 */
 
-#include "ekfNavINS.h"
+#include "EKF/ekfNavINS.h"
 
 std::tuple<float, float, float> ekfNavINS::getPitchRollYaw(
     float ax, float ay, float az,
