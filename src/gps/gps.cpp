@@ -6,15 +6,15 @@
  *
  * Initializes the GPS module communication, sets message send rates, and measurement frequencies.
  */
-GPS::GPS(int16_t currentYear) : currentYear(currentYear), pvtData{} 
+GPS::GPS(int16_t currentYear) : currentYear_(currentYear), pvtData_{} 
 {
 	const char *deviceName = GPS_I2C_BUS;
-	i2c_fd = open(deviceName, O_RDWR | O_CLOEXEC);
-	if (i2c_fd < 0) {
+	i2c_fd_ = open(deviceName, O_RDWR | O_CLOEXEC);
+	if (i2c_fd_ < 0) {
 		perror("Unable to open I2C GPS device");
 	}
 
-	if (ioctl(i2c_fd, I2C_SLAVE, GPS_I2C_ADDRESS) < 0) {
+	if (ioctl(i2c_fd_, I2C_SLAVE, GPS_I2C_ADDRESS) < 0) {
 		perror("Failed to acquire I2C GPS address");
 	}
 
@@ -47,7 +47,7 @@ GPS::GPS(int16_t currentYear) : currentYear(currentYear), pvtData{}
  *
  * Closes the communication with the GPS module.
  */
-GPS::~GPS() { close(i2c_fd); }
+GPS::~GPS() { close(i2c_fd_); }
 
 /**
  * @brief   Configure the GPS module to use UBX protocol exclusively.
@@ -74,8 +74,6 @@ void GPS::ubxSetup()
 /**
  * @brief   Set the message send rate for a specific UBX message.
  *
- * @param   msgClass    The message class of the UBX message.
- * @param   msgId       The message ID of the UBX message.
  * @param   sendRate    The desired message send rate (default is DEFAULT_SEND_RATE).
  * @return  true if the message send rate was successfully set, false otherwise.
  */
@@ -83,7 +81,7 @@ bool GPS::setMessageSendRate(uint8_t sendRate) {
 	std::vector<uint8_t> payload = { sendRate, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 	MessageInfo classANDFlag = { CFG_CLASS, CFG_MSG };
-	ubx.ComposeMessage(classANDFlag, payload);
+	ubx_.ComposeMessage(classANDFlag, payload);
 
 	return this->writeUbxMessage();
 }
@@ -91,9 +89,9 @@ bool GPS::setMessageSendRate(uint8_t sendRate) {
 /**
  * @brief   Set the measurement frequency of the GPS module.
  *
- * @param   measurementPeriodMillis The measurement period in milliseconds (default is DEFAULT_UPDATE_MILLS).
- * @param   navigationRate          The navigation rate (default is 1).
- * @param   timeref                 The time reference (default is 0).
+ * @param   params  Contains the measurementPeriodMillis (default is DEFAULT_UPDATE_MILLS),
+ *    							navigationRate the navigation rate (default is 1), and
+ *    							timeref the time reference (default is 0).
  * @return  true if the measurement frequency was successfully set, false otherwise.
  */
 bool GPS::setMeasurementFrequency(const MeasurementParams& params)
@@ -110,7 +108,7 @@ bool GPS::setMeasurementFrequency(const MeasurementParams& params)
 	payload[5] = 0x00;
 
 	MessageInfo classANDFlag = { CFG_CLASS, CFG_RATE };
-	ubx.ComposeMessage(classANDFlag, payload);
+	ubx_.ComposeMessage(classANDFlag, payload);
 
 	return this->writeUbxMessage();
 }
@@ -132,12 +130,11 @@ uint16_t GPS::getAvailableBytes() const
 /**
  * @brief   Write a UBX message to the GPS module.
  *
- * @param   msg The UBX message to be written.
  * @return  true if the message was successfully written, false otherwise.
  */
 bool GPS::writeUbxMessage() const
 {
-	UbxMessage ubxMessage = ubx.GetUBXMessage();
+	UbxMessage ubxMessage = ubx_.GetUBXMessage();
 	std::vector<uint8_t> tempBuf;
 	tempBuf.push_back(ubxMessage.sync1);
 	tempBuf.push_back(ubxMessage.sync2);
@@ -151,9 +148,9 @@ bool GPS::writeUbxMessage() const
 	tempBuf.push_back(ubxMessage.checksumA);
 	tempBuf.push_back(ubxMessage.checksumB);
 
-	if (write(i2c_fd, tempBuf.data(), tempBuf.size()) != tempBuf.size()) {
+	if (write(i2c_fd_, tempBuf.data(), tempBuf.size()) != tempBuf.size()) {
 		perror("Failed to write to I2C device");
-		close(i2c_fd);
+		close(i2c_fd_);
 		return false;
 	}
 
@@ -172,7 +169,7 @@ UbxMessage GPS::readUbxMessage()
 
   if (messageLength > 2 && messageLength < MAX_MESSAGE_LENGTH) {
 		for (int i = 0; i < messageLength; i++) {
-			int32_t byte_data = i2c_smbus_read_byte_data(i2c_fd, DATA_STREAM_REGISTER);
+			int32_t byte_data = i2c_smbus_read_byte_data(i2c_fd_, DATA_STREAM_REGISTER);
 			if (byte_data < -1) {
 				perror("Failed to read byte from I2C device");
 				UbxMessage badMsg = {
@@ -214,106 +211,105 @@ UbxMessage GPS::readUbxMessage()
  * @brief   Retrieve Position-Velocity-Time (PVT) data from the GPS module.
  *
  * @param   polling         Whether to poll the GPS module for new data (default is DEFAULT_POLLING_STATE).
- * @param   timeOutMillis   The timeout in milliseconds for data retrieval (default is DEFAULT_UPDATE_MILLS).
  * @return  The PVTData structure containing GPS-related information.
  */
 PVTData GPS::GetPvt(bool polling)
 {
 	if (polling) {
 		MessageInfo classANDFlag = { NAV_CLASS, NAV_PVT };
-		ubx.ComposeMessage(classANDFlag, {});
+		ubx_.ComposeMessage(classANDFlag, {});
 		this->writeUbxMessage();
 	}
 
 	UbxMessage message = this->readUbxMessage();
 
 	if (message.sync1 != INVALID_SYNC1_FLAG) {
-		pvtData.year = u2_to_int(
+		pvtData_.year = u2_to_int(
 			std::span<const uint8_t, 2>(&message.payload[4],2)
 		);
-		if (pvtData.year != currentYear) {
-			pvtData.year = INVALID_YEAR_FLAG;
-			return this->pvtData;
+		if (pvtData_.year != currentYear) {
+			pvtData_.year = INVALID_YEAR_FLAG;
+			return this->pvtData_;
 		}
-		pvtData.month = message.payload[6];
-		pvtData.day = message.payload[7];
-		pvtData.hour = message.payload[8];
-		pvtData.min = message.payload[9];
-		pvtData.sec = message.payload[10];
+		pvtData_.month = message.payload[6];
+		pvtData_.day = message.payload[7];
+		pvtData_.hour = message.payload[8];
+		pvtData_.min = message.payload[9];
+		pvtData_.sec = message.payload[10];
 		uint8_t valid_flag = message.payload[11];
 
 		// Extract and clarify flags
-		pvtData.validDateFlag = (valid_flag & VALID_DATE_FLAG) == VALID_DATE_FLAG ? 1 : 0;
-		pvtData.validTimeFlag = (valid_flag & VALID_TIME_FLAG) == VALID_TIME_FLAG ? 1 : 0;
-		pvtData.fullyResolved = (valid_flag & FULLY_RESOLVED_FLAG) == FULLY_RESOLVED_FLAG ? 1 : 0;
-		pvtData.validMagFlag = (valid_flag & VALID_MAG_FLAG) == VALID_MAG_FLAG ? 1 : 0;
+		pvtData_.validDateFlag = (valid_flag & VALID_DATE_FLAG) == VALID_DATE_FLAG ? 1 : 0;
+		pvtData_.validTimeFlag = (valid_flag & VALID_TIME_FLAG) == VALID_TIME_FLAG ? 1 : 0;
+		pvtData_.fullyResolved = (valid_flag & FULLY_RESOLVED_FLAG) == FULLY_RESOLVED_FLAG ? 1 : 0;
+		pvtData_.validMagFlag = (valid_flag & VALID_MAG_FLAG) == VALID_MAG_FLAG ? 1 : 0;
 
 		// Extract GNSS fix and related data
-		pvtData.gnssFix = message.payload[20];
-		memcpy(&pvtData.fixStatusFlags, &message.payload[21], 2);
-		pvtData.numberOfSatellites = message.payload[23];
+		pvtData_.gnssFix = message.payload[20];
+		memcpy(&pvtData_.fixStatusFlags, &message.payload[21], 2);
+		pvtData_.numberOfSatellites = message.payload[23];
 
 		// Extract longitude and latitude in degrees
-		pvtData.longitude = static_cast<float>(
+		pvtData_.longitude = static_cast<float>(
 			i4_to_int(std::span<const uint8_t, 4>(&message.payload[24],4)
 		)) * LONGTITUDE_SCALE;
-		pvtData.latitude = static_cast<float>(
+		pvtData_.latitude = static_cast<float>(
 			i4_to_int(std::span<const uint8_t, 4>(&message.payload[28],4)
 		)) * LATTITUDE_SCALE;
-		pvtData.height = i4_to_int(
+		pvtData_.height = i4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[32],4)
 		);
-		pvtData.heightMSL = i4_to_int(
+		pvtData_.heightMSL = i4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[36],4)
 		);
 		// Extract horizontal and vertical accuracy in millimeters
-		pvtData.horizontalAccuracy = u4_to_int(
+		pvtData_.horizontalAccuracy = u4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[40],4)
 		);
-		pvtData.verticalAccuracy = u4_to_int(
+		pvtData_.verticalAccuracy = u4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[44],4)
 		);
 		// Extract North East Down velocity in mm/s
-		pvtData.velocityNorth = i4_to_int(
+		pvtData_.velocityNorth = i4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[48],4)
 		);
-		pvtData.velocityEast = i4_to_int(
+		pvtData_.velocityEast = i4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[52],4)
 		);
-		pvtData.velocityDown = i4_to_int(
+		pvtData_.velocityDown = i4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[56],4)
 		);
 		// Extract ground speed in mm/s and motion heading in degrees
-		pvtData.groundSpeed = i4_to_int(
+		pvtData_.groundSpeed = i4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[60],4)
 		);
-		pvtData.motionHeading = static_cast<float>(
+		pvtData_.motionHeading = static_cast<float>(
 			i4_to_int(std::span<const uint8_t, 4>(&message.payload[64],4)
 		)) * MOTION_HEADING_SCALE;
 		// Extract speed accuracy in mm/s and heading accuracy in degrees
-		pvtData.speedAccuracy = u4_to_int(
+		pvtData_.speedAccuracy = u4_to_int(
 			std::span<const uint8_t, 4>(&message.payload[68],4)
 		);
-		pvtData.motionHeadingAccuracy = static_cast<float>(
+		pvtData_.motionHeadingAccuracy = static_cast<float>(
 			u4_to_int(std::span<const uint8_t, 4>(&message.payload[72],4)
 		)) * MOTION_HEADING_ACCURACY_SCALE;
 		// Extract vehicle heading in degrees
-		pvtData.vehicalHeading = static_cast<float>(
+		pvtData_.vehicalHeading = static_cast<float>(
 			i4_to_int(std::span<const uint8_t, 4>(&message.payload[84],4)
 		)) * VEHICLE_HEADING_SCALE;
 		// Extract magnetic declination and accuracy in degrees
-		pvtData.magneticDeclination = static_cast<float>(
+		pvtData_.magneticDeclination = static_cast<float>(
 			i2_to_int(std::span<const uint8_t, 2>(&message.payload[88],4)
 		)) * MAGNETIC_DECLINATION_SCALE;
-		pvtData.magnetDeclinationAccuracy = static_cast<float>(
+		pvtData_.magnetDeclinationAccuracy = static_cast<float>(
 			u2_to_int(std::span<const uint8_t, 2>(&message.payload[90],4)
 		)) * MAGNETIC_DECLINATION_ACCURACY_SCALE;
 
-		return this->pvtData;
+		return this->pvtData_;
 	}
 
-	pvtData.year = INVALID_YEAR_FLAG;
-	return this->pvtData;
+	pvtData_.year = INVALID_YEAR_FLAG;
+	return this->pvtData_;
 }
 
 /**
