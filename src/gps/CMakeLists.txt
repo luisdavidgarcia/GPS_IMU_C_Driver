@@ -1,5 +1,5 @@
-add_library(gps gps.cpp)
+add_library(GPS GPS.cpp)
 
-target_include_directories(gps PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(GPS PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(gps PRIVATE ubx)
+target_link_libraries(GPS PRIVATE UBX)

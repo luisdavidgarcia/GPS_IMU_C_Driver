@@ -1,3 +1,3 @@
-add_library(imu imu.cpp)
+add_library(IMU IMU.cpp)
 
-target_include_directories(imu PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(IMU PUBLIC ${CMAKE_SOURCE_DIR}/include)
