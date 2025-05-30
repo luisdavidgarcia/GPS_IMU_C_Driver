@@ -164,7 +164,7 @@ struct alignas(128) PVTData {
 
   // Coordinates
   float longitude;
-  float latitude;                      // Latitude (degrees * 1e7)
+  float latitude;                       // Latitude (degrees * 1e7)
   int32_t height;                       // Height above ellipsoid (millimeters)
   int32_t heightMSL;                    // Height above mean sea level (millimeters)
 
@@ -178,13 +178,13 @@ struct alignas(128) PVTData {
   int32_t velocityDown;                 // Velocity in the down direction (millimeters/second)
   int32_t groundSpeed;                  // Ground speed (millimeters/second)
   float vehicalHeading;
-  float motionHeading;                // Heading of motion (degrees * 1e5)
+  float motionHeading;                  // Heading of motion (degrees * 1e5)
   uint32_t speedAccuracy;               // Speed accuracy estimate (millimeters/second)
   float motionHeadingAccuracy;
 
   // Magnetic Declination
-  float magneticDeclination;          // Magnetic declination (degrees * 1e2)
-  float magnetDeclinationAccuracy;   // Declination accuracy (degrees * 1e2)
+  float magneticDeclination;            // Magnetic declination (degrees * 1e2)
+  float magnetDeclinationAccuracy;      // Declination accuracy (degrees * 1e2)
 };
 
 struct alignas(4) MeasurementParams {
@@ -194,11 +194,16 @@ struct alignas(4) MeasurementParams {
 };
 
 class GPS {
+public:
+  explicit GPS(int16_t currentYear);
+  ~GPS();
+  PVTData GetPvt(bool polling);
+
 private:
-  UBX ubx;
-  PVTData pvtData;
-  int i2c_fd;
-  int16_t currentYear;
+  UBX ubx_;
+  PVTData pvtData_;
+  int i2c_fd_;
+  int16_t currentYear_;
 
   void ubxSetup();
   bool writeUbxMessage() const;
@@ -213,10 +218,6 @@ private:
   static int32_t i4_to_int(std::span<const uint8_t, 4> bytes);
   static uint32_t u4_to_int(std::span<const uint8_t, 4> bytes);
 
-public:
-  explicit GPS(int16_t currentYear);
-  ~GPS();
-  PVTData GetPvt(bool polling);
 };
 
 #endif // GPS_H
