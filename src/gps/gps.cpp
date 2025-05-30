@@ -1,5 +1,5 @@
-#include "gps/gps.hpp"
-#include "ubx/ubx_msg.hpp"
+#include "GPS/GPS.hpp"
+#include "UBX/UBX_MSG.hpp"
 
 /**
  * @brief   Constructor for the GPS class.

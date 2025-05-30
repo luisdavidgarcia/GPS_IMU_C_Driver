@@ -1,4 +1,4 @@
-#include "ubx/ubx_msg.hpp"
+#include "UBX/UBX_MSG.hpp"
 
 /**
  * @brief   Compose a UBX message with the given message class, message ID, optional payloadLength, and payload.

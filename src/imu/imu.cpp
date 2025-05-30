@@ -1,4 +1,4 @@
-#include "imu/imu.hpp"
+#include "IMU/IMU.hpp"
 
 /**
  * @brief   Constructor for the IMU class.
@@ -9,8 +9,8 @@
 IMU::IMU() : accelerometer{}, gyroscope{}, magnetometer{}
 {
 	const char *deviceName = IMU_I2C_BUS;
-	i2c_fd = open(deviceName, O_RDWR | O_CLOEXEC);
-	if (i2c_fd < 0) {
+	i2c_fd_ = open(deviceName, O_RDWR | O_CLOEXEC);
+	if (i2c_fd_ < 0) {
 		perror("Unable to open I2C device");
 	}
 
