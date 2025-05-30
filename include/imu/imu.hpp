@@ -42,7 +42,6 @@ extern "C" {
 #include <cstdint>
 #include <sys/ioctl.h>
 #include <ctime>
-#include <chrono>
 #include <cstdio>
 #include <fcntl.h>
 #include <unistd.h>
@@ -192,13 +191,6 @@ struct alignas(16) ScaledMagUT
 
 class IMU
 {
-private:
-	int i2c_fd;
-	AccelMPS2 accelerometer;
-	GyroRPS gyroscope;
-	MagUT magnetometer;
-	void begin() const;
-
 public:
 	IMU();
 	~IMU();
@@ -215,35 +207,42 @@ public:
 		return magnetometer; 
 	}
 
-	ScaledAccelMPS2 GetScaledAcceleration() const { 
+	inline ScaledAccelMPS2 GetScaledAcceleration() const { 
 		ScaledAccelMPS2 acceleration = {
-			static_cast<float>(accelerometer.x) * ACCEL_MG_LSB_2G - ACCEL_X_OFFSET,
-			static_cast<float>(accelerometer.y) * ACCEL_MG_LSB_2G - ACCEL_Y_OFFSET,
-			static_cast<float>(accelerometer.z) * ACCEL_MG_LSB_2G - ACCEL_Z_OFFSET,
+			static_cast<float>(accelerometer_.x) * ACCEL_MG_LSB_2G - ACCEL_X_OFFSET,
+			static_cast<float>(accelerometer_.y) * ACCEL_MG_LSB_2G - ACCEL_Y_OFFSET,
+			static_cast<float>(accelerometer_.z) * ACCEL_MG_LSB_2G - ACCEL_Z_OFFSET,
 		};
 
 		return acceleration;
 	}
 	
-	ScaledGyroRPS GetScaledAngularVelocity() const {
+	inline ScaledGyroRPS GetScaledAngularVelocity() const {
 		ScaledGyroRPS angularVelocity = {
-			static_cast<float>(gyroscope.x) * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD - GYRO_X_BIAS,
-			static_cast<float>(gyroscope.x) * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD - GYRO_Y_BIAS,
-			static_cast<float>(gyroscope.x) * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD - GYRO_Z_BIAS,
+			static_cast<float>(gyroscope_.x) * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD - GYRO_X_BIAS,
+			static_cast<float>(gyroscope_.y) * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD - GYRO_Y_BIAS,
+			static_cast<float>(gyroscope_.z) * GYRO_SENSITIVITY_250DPS * DEG_TO_RAD - GYRO_Z_BIAS,
 		};
 
 		return angularVelocity;	
 	}
 	
-	ScaledMagUT GetScaledMagneticField() const {
+	inline ScaledMagUT GetScaledMagneticField() const {
 		ScaledMagUT magneticField = {
-			static_cast<float>(magnetometer.x) * MAG_UT_LSB,
-			static_cast<float>(magnetometer.y) * MAG_UT_LSB,
-			static_cast<float>(magnetometer.z) * MAG_UT_LSB,
+			static_cast<float>(magnetometer_.x) * MAG_UT_LSB,
+			static_cast<float>(magnetometer_.y) * MAG_UT_LSB,
+			static_cast<float>(magnetometer_.z) * MAG_UT_LSB,
 		};
 
 		return magneticField;
 	}
+
+private:
+	int i2c_fd_;
+	AccelMPS2 accelerometer_;
+	GyroRPS gyroscope_;
+	MagUT magnetometer_;
+	void begin() const;
 };
 
 #endif // IMU_H
